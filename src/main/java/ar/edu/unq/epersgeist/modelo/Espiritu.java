@@ -1,9 +1,12 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import lombok.Setter;
+
 import java.io.Serializable;
 
 public class Espiritu implements Serializable {
 
+    @Setter
     private Long id;
     private String tipo;
     private Integer nivelDeConexion;
@@ -16,8 +19,8 @@ public class Espiritu implements Serializable {
     }
 
     public Medium aumentarConexion(Medium medium) {
-        // TODO completar
-        return null;
+        this.nivelDeConexion += 10;
+        return medium;
     }
 
     public Long getId() {

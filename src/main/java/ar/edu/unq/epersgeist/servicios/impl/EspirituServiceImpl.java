@@ -2,43 +2,49 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
+import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.servicios.EspirituService;
 
 import java.util.List;
 
 public class EspirituServiceImpl implements EspirituService {
 
+    private EspirituDAO espirituDAO;
+    public EspirituServiceImpl(EspirituDAO espirituDAO) {
+        this.espirituDAO = espirituDAO;
+    }
+
     @Override
     public Espiritu crear(Espiritu espiritu) {
-        // TODO completar
-        return null;
+
+        return espirituDAO.crear(espiritu);
     }
 
     @Override
     public Espiritu recuperar(Long espirituId) {
-        // TODO completar
-        return null;
+        return espirituDAO.recuperar(espirituId);
     }
 
     @Override
     public List<Espiritu> recuperarTodos() {
-        // TODO completar
-        return null;
+        return espirituDAO.recuperarTodos();
     }
 
     @Override
     public void actualizar(Espiritu espiritu) {
-        // TODO completar
+        espirituDAO.actualizar(espiritu);
     }
 
     @Override
     public void eliminar(Long espirituId) {
-        // TODO completar
+        espirituDAO.eliminar(espirituId);
     }
 
     @Override
     public Medium conectar(Long espirituId, Medium medium) {
-        // TODO completar
-        return null;
-    }
+        Espiritu espiritu = espirituDAO.recuperar(espirituId);
+        medium.conectarseAEspiritu(espiritu);
+        this.actualizar(espiritu);
+        return medium;
+    };
 }

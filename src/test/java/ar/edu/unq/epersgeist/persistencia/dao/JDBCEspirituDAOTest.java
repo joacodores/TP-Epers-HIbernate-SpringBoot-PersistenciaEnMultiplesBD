@@ -10,11 +10,10 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JDBCEspirituDAOTest {
-    private EspirituDAO dao = new JDBCEspirituDAO();
+    private final EspirituDAO dao = new JDBCEspirituDAO();
     private Espiritu zorro;
     private List<Long> lastIds;
 
@@ -67,8 +66,18 @@ public class JDBCEspirituDAOTest {
         assertTrue(contains(espiritus, messi));
     }
 
+    @Test
+    void eliminarEspirituNoExistenteEnLaDBNoHaceNada(){
+        Long id = dao.crear(zorro).getId();
+        dao.eliminar(id);
+        int cantElementosAntesDeVolverAEliminar = dao.recuperarTodos().size();
+        assertDoesNotThrow(() -> dao.eliminar(id));
+        assertEquals(cantElementosAntesDeVolverAEliminar, dao.recuperarTodos().size());
+    }
+
     @AfterEach
     void eliminarModelo() {
-        lastIds.forEach(id-> dao.eliminar(id));
+        lastIds.forEach(dao::eliminar);
     }
+
 }

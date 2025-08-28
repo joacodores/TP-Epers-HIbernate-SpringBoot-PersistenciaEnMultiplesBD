@@ -3,8 +3,7 @@ package ar.edu.unq.epersgeist.modelo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class EspirituTest {
     private Espiritu zorro;
@@ -17,6 +16,14 @@ public class EspirituTest {
     }
 
     @Test
+    void crearEspirituConNivelDeConexionInvalidoLanzaExcepcion(){
+        assertThrows(RuntimeException.class, () -> new Espiritu("fuego", -1, "zorro"));
+        assertDoesNotThrow(() -> new Espiritu("fuego", 0, "zorro"));
+        assertDoesNotThrow(() -> new Espiritu("fuego", 100, "zorro"));
+        assertThrows(RuntimeException.class, () -> new Espiritu("fuego", 101, "zorro"));
+    }
+
+    @Test
     void conexionConMediumTest(){
         assertEquals(0, zorro.getNivelDeConexion());
         assertTrue(naruto.getEspiritus().isEmpty());
@@ -24,4 +31,5 @@ public class EspirituTest {
         assertEquals(10, zorro.getNivelDeConexion());
         assertTrue(naruto.getEspiritus().contains(zorro));
     }
+
 }

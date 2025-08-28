@@ -24,6 +24,17 @@ public class EspirituTest {
     }
 
     @Test
+    void aumentarConexionYaEstandoAlMaximoNoHaceNada() {
+        Espiritu espirituMaximo = new Espiritu("divinidad", 100, "espirituMaximo");
+        espirituMaximo.aumentarConexion(naruto);
+        assertEquals(100, espirituMaximo.getNivelDeConexion());
+
+        Espiritu espirituPotencial = new Espiritu("potencialDivinidad", 95, "espirituPotencial");
+        espirituPotencial.aumentarConexion(naruto);
+        assertEquals(100, espirituPotencial.getNivelDeConexion());
+    }
+
+    @Test
     void conexionConMediumTest(){
         assertEquals(0, zorro.getNivelDeConexion());
         assertTrue(naruto.getEspiritus().isEmpty());

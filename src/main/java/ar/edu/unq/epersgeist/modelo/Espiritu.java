@@ -25,9 +25,8 @@ public class Espiritu implements Serializable {
     }
 
     public Medium aumentarConexion(Medium medium) {
-        if (this.nivelDeConexion < maxNivelDeConexion) {
-            this.nivelDeConexion += 10;
-        }
+        this.nivelDeConexion += 10;
+        if (this.nivelDeConexion >= 100) this.nivelDeConexion = 100;
         return medium;
     }
 

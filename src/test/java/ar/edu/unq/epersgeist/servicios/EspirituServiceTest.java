@@ -38,6 +38,13 @@ public class EspirituServiceTest {
     }
 
     @Test
+    void recuperarTodosTest(){
+        assertTrue(service.recuperarTodos().isEmpty());
+        id = service.crear(zorro).getId();
+        assertEquals(1, service.recuperarTodos().size());
+    }
+
+    @Test
     void conectarEspirituConMediumTest(){
         id = service.crear(zorro).getId();
         assertEquals(0, service.recuperar(id).getNivelDeConexion());

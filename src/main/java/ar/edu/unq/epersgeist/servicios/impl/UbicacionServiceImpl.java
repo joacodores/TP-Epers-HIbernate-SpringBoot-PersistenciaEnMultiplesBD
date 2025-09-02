@@ -1,7 +1,5 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.UbicacionService;
@@ -55,17 +53,4 @@ public class UbicacionServiceImpl implements UbicacionService {
             return null;
         });
     }
-
-    /*
-    @Override
-    public List<Espiritu> espiritusEn(Long ubicacionId) {
-        return List.of();
-    }
-
-    @Override
-    public List<Medium> mediumsSinEspiritusEn(Long ubicacionId) {
-        return List.of();
-    }
-    */
-
 }

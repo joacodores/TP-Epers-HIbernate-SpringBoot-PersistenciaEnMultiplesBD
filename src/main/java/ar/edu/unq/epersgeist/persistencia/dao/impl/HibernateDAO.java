@@ -1,10 +1,7 @@
 package ar.edu.unq.epersgeist.persistencia.dao.impl;
 
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.servicios.runner.HibernateSessionContext;
 import org.hibernate.Session;
-
-import java.util.Collection;
 
 public class HibernateDAO<T> {
 

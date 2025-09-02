@@ -1,7 +1,5 @@
 package ar.edu.unq.epersgeist.persistencia.dao.impl;
 
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.runner.HibernateSessionContext;
@@ -30,18 +28,4 @@ public class HibernateUbicacionDAO extends HibernateDAO<Ubicacion> implements Ub
         return query.getResultList();
     }
 
-/*
-    @Override
-    public List<Espiritu> espiritusEn(Long ubicacionId) {
-        Session session = HibernateSessionContext.getCurrentSession();
-        String hql = "select e from espiritus where e.ubicacion = :ubicacionId";
-        Query<Espiritu> query = session.createQuery(hql, Espiritu.class);
-        return query.getResultList();
-    }
-
-    @Override
-    public List<Medium> mediumsSinEspiritusEn(Long ubicacionId) {
-        return List.of();
-    }
-*/
 }

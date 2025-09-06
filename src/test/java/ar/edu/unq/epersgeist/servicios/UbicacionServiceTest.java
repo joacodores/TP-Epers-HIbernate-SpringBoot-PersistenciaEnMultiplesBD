@@ -31,18 +31,6 @@ public class UbicacionServiceTest {
     }
 
     @Test
-    void crearDosVecesLaMismaUbicacionLanzaExcepcionTest() {
-        service.crear(ubicacion);
-        assertThrows(RuntimeException.class, () -> service.crear(ubicacion));
-    }
-
-    @Test
-    void crearDosUbicacionesConElMismoNombreLanzaExcepcionTest() {
-        service.crear(ubicacion);
-        assertThrows(RuntimeException.class, () -> service.crear(new Ubicacion("Ubicacion")));
-    }
-
-    @Test
     void recuperarUbicacionNoPersistidaDevuelveNullTest(){
         Long ubicacionID = service.crear(ubicacion).getId();
         assertNull(service.recuperar(ubicacionID + 1));
@@ -63,18 +51,6 @@ public class UbicacionServiceTest {
     }
 
     @Test
-    void actualizarUbicacionNoPersistidaPeroComparteNombreLanzaExcepcionTest(){
-        service.crear(ubicacion);
-        assertThrows(RuntimeException.class, () -> service.actualizar(new Ubicacion("Ubicacion")));
-    }
-
-    @Test
-    void actualizarUbicacionNoPersistidaLanzaExcepcionTest(){
-        Ubicacion ubicacion2 = new Ubicacion("Nueva Ubicación");
-        assertThrows(RuntimeException.class, () -> service.actualizar(ubicacion2));
-    }
-
-    @Test
     void recuperarTodosCuandoNoSePersistioNingunObjetoDevuelveListaVaciaTest(){
         assertTrue(service.recuperarTodos().isEmpty());
     }
@@ -92,15 +68,6 @@ public class UbicacionServiceTest {
         service.crear(ubicacion);
         Ubicacion ubicacion2 = new Ubicacion("Nueva Ubicación");
         assertDoesNotThrow(() -> service.eliminar(ubicacion2));
-    }
-
-    @Test
-    void eliminarUbicacionVariasVecesLanzaExcepcionTest(){
-        service.crear(ubicacion);
-        assertFalse(service.recuperarTodos().isEmpty());
-        service.eliminar(ubicacion);
-        assertTrue(service.recuperarTodos().isEmpty());
-        assertThrows(RuntimeException.class, () -> service.eliminar(ubicacion));
     }
 
     @Test

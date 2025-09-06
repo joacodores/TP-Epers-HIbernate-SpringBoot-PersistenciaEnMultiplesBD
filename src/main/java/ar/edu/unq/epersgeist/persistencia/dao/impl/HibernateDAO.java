@@ -21,10 +21,16 @@ public class HibernateDAO<T> {
         return session.get(entityType, id);
     }
 
+    public void actualizar(T entity) {
+        Session session = HibernateSessionContext.getCurrentSession();
+        session.update(entity);
+    }
+
     public void eliminar(T entity) {
         Session session = HibernateSessionContext.getCurrentSession();
         session.remove(entity);
     }
+
     public void eliminarTodo() {
         Session session = HibernateSessionContext.getCurrentSession();
         session.createQuery("delete from " + entityType.getSimpleName()).executeUpdate();

@@ -1,9 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
@@ -16,7 +13,7 @@ import static java.lang.Integer.min;
 @NoArgsConstructor
 
 @Entity
-public class Medium implements Serializable {
+public class Medium {
 
     @Id
     @GeneratedValue(strategy = AUTO)
@@ -27,6 +24,7 @@ public class Medium implements Serializable {
     private Integer manaMax;
     @Column(nullable = false)
     private Integer mana;
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Espiritu> espiritus = new HashSet<>();
 
     public Medium(String nombre, Integer manaMax, Integer mana) {

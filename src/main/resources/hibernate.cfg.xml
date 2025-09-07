@@ -19,6 +19,9 @@
 
         <mapping class="ar.edu.unq.epersgeist.modelo.Ubicacion" />
         <mapping class="ar.edu.unq.epersgeist.modelo.Medium" />
+        <mapping class="ar.edu.unq.epersgeist.modelo.Espiritu" />
+        <mapping class="ar.edu.unq.epersgeist.modelo.EspirituAngelical" />
+        <mapping class="ar.edu.unq.epersgeist.modelo.EspirituDemoniaco" />
 
     </session-factory>
 </hibernate-configuration>

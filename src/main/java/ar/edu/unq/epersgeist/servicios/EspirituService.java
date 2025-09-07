@@ -10,6 +10,7 @@ public interface EspirituService {
     Espiritu recuperar(Long espirituId);
     List<Espiritu> recuperarTodos();
     void actualizar(Espiritu espiritu);
-    void eliminar(Long espirituId);
-    Medium conectar(Long espirituId, Medium medium);
+    void eliminar(Espiritu espiritu);
+    void eliminarTodo();
+    /*Medium conectar(Long espirituId, Medium medium);*/
 }

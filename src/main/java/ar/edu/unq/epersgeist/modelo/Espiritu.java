@@ -42,8 +42,8 @@ public abstract class Espiritu {
         this.nivelDeConexion = nivelDeConexion;
     }
 
-    public Medium aumentarConexion(Medium medium) {
-        this.nivelDeConexion += 10;
+    public Medium aumentarConexion(Medium medium, int i) {
+        this.nivelDeConexion += i;
         if (this.nivelDeConexion >= 100) this.nivelDeConexion = 100;
         return medium;
     }

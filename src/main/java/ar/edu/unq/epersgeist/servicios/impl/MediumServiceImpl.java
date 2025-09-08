@@ -54,4 +54,12 @@ public class MediumServiceImpl implements MediumService {
         });
     }
 
+    @Override
+    public void descansar(Long mediumId){
+        HibernateTransactionRunner.runTrx(() -> {
+            mediumDAO.descansar(mediumId);
+            return null;
+        });
+    }
+
 }

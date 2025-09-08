@@ -36,7 +36,7 @@ public class Medium {
 
     public void conectarseAEspiritu(Espiritu espiritu) {
         espiritus.add(espiritu);
-        espiritu.aumentarConexion(this);
+        espiritu.aumentarConexion(this, 10);
     }
 
     public String getNombre() {
@@ -60,4 +60,12 @@ public class Medium {
     public void setId(Long id) { this.id = id; }
 
     public void setNombre(String nombre) { this.nombre = nombre; }
+
+    public void aumentarMana(int i) {
+        this.mana = Math.min(this.mana + i, this.manaMax);
+    }
+
+    public void recuperar_PuntosDeConexionATodosLosEspiritus(int i) {
+        espiritus.forEach(espiritu -> {espiritu.aumentarConexion(this,i);});
+    }
 }

@@ -2,16 +2,11 @@ package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.modelo.exceptions.NivelDeConexionFueraDeRangoException;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -30,9 +25,13 @@ public abstract class Espiritu {
     @ManyToOne
     private Medium owner;
 
+    @ManyToOne
+    private Ubicacion ubicacion;
+
     public Espiritu(@NonNull Integer nivelDeConexion, @NonNull String nombre) {
-        validarNivelDeConexion(nivelDeConexion);
         this.nombre = nombre;
+        validarNivelDeConexion(nivelDeConexion);
+
     }
 
     private void validarNivelDeConexion(Integer nivelDeConexion) {

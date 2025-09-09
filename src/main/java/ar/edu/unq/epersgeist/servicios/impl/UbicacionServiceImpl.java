@@ -1,6 +1,8 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.Espiritu;
+import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.UbicacionService;
 import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
@@ -10,9 +12,11 @@ import java.util.List;
 public class UbicacionServiceImpl implements UbicacionService {
 
     private final UbicacionDAO ubicacionDAO;
+    private final EspirituDAO espirituDAO;
 
-    public UbicacionServiceImpl(UbicacionDAO ubicacionDAO) {
+    public UbicacionServiceImpl(UbicacionDAO ubicacionDAO, EspirituDAO espirituDAO) {
         this.ubicacionDAO = ubicacionDAO;
+        this.espirituDAO = espirituDAO;
     }
 
     @Override
@@ -51,6 +55,13 @@ public class UbicacionServiceImpl implements UbicacionService {
         HibernateTransactionRunner.runTrx(() -> {
             ubicacionDAO.eliminarTodo();
             return null;
+        });
+    }
+
+    @Override
+    public List<Espiritu> espiritusEn(Long ubicacionId) {
+        return HibernateTransactionRunner.runTrx(() -> {
+            return espirituDAO.espiritusEn(ubicacionId);
         });
     }
 }

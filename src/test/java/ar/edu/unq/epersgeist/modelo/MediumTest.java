@@ -26,4 +26,19 @@ public class MediumTest {
 
     }
 
+    @Test
+    void mediumDescansaTieneMasManaYSusEspiritusMasEnergia()
+    {
+        Medium tai = new Medium("Tai", 100, 10);
+        Espiritu espirituDem = new EspirituDemoniaco(0, "zorro");
+
+        // Paso a paso, que hace la implementacion de descansar()
+        tai.conectarseAEspiritu(espirituDem);
+        tai.aumentarMana(15);
+        tai.recuperar_PuntosDeConexionATodosLosEspiritus(5);
+
+        assertEquals(25, tai.getMana());
+        assertEquals(15, espirituDem.getNivelDeConexion());
+    }
+
 }

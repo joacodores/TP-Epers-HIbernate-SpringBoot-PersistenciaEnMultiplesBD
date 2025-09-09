@@ -98,6 +98,15 @@ public class MediumServiceTest {
         assertTrue(service.recuperarTodos().isEmpty());
     }
 
+    @Test
+    void descansarTest(){
+        Medium m1 = service.crear(medium);
+        Long mediumID = m1.getId();
+        service.descansar(mediumID);
+        Medium m2 = service.recuperar(mediumID);
+        assertEquals(m2.getMana(), 45);
+    }
+
     @AfterEach
     void cleanup(){
         service.eliminarTodo();

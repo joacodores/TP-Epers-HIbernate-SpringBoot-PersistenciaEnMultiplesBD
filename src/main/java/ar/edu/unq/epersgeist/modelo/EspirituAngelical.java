@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 
 @Entity
 public class EspirituAngelical extends Espiritu{
-    public EspirituAngelical(Integer nivelDeConexion, String nombre) {
-        super(nivelDeConexion, nombre);
+    public EspirituAngelical(Integer nivelDeConexion, String nombre, Ubicacion ubicacion) {
+        super(nivelDeConexion, nombre, ubicacion);
     }
 
     @Override

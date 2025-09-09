@@ -1,11 +1,10 @@
 package ar.edu.unq.epersgeist.servicios;
 
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
-import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
-import ar.edu.unq.epersgeist.modelo.Medium;
+import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateEspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
 import ar.edu.unq.epersgeist.servicios.impl.EspirituServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,13 +19,16 @@ public class EspirituServiceTest {
     private EspirituService service;
     private EspirituAngelical angel;
     private EspirituDemoniaco demonio;
+    private Ubicacion eastblue;
 
     @BeforeEach
     void prepare() {
-        this.angel = new EspirituAngelical(58, "Luffy");
-        this.demonio = new EspirituDemoniaco(36, "Zoro");
-        EspirituDAO dao = new HibernateEspirituDAO();
-        this.service = new EspirituServiceImpl(dao);
+        eastblue = new Ubicacion("East Blue");
+        this.angel = new EspirituAngelical(58, "Luffy", eastblue);
+        this.demonio = new EspirituDemoniaco(36, "Zoro", eastblue);
+        EspirituDAO daoE = new HibernateEspirituDAO();
+        MediumDAO daoM = new HibernateMediumDAO();
+        this.service = new EspirituServiceImpl(daoE, daoM);
     }
 
     @Test
@@ -52,8 +54,8 @@ public class EspirituServiceTest {
     @Test
     void sePuedenPersistirVariosEspiritusConMismoNombreTest(){
         service.crear(angel);
-        service.crear(new EspirituAngelical(50, "Luffy"));
-        service.crear(new EspirituDemoniaco(30, "Luffy"));
+        service.crear(new EspirituAngelical(50, "Luffy", eastblue));
+        service.crear(new EspirituDemoniaco(30, "Luffy", eastblue));
         assertEquals(List.of("Luffy", "Luffy", "Luffy"), service.recuperarTodos().stream().map(Espiritu::getNombre).toList());
     }
 

@@ -12,5 +12,5 @@ public interface EspirituService {
     void actualizar(Espiritu espiritu);
     void eliminar(Espiritu espiritu);
     void eliminarTodo();
-    /*Medium conectar(Long espirituId, Medium medium);*/
+    Medium conectar(Long espirituId, Long mediumId);
 }

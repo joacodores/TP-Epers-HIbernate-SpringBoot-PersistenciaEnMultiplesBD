@@ -21,18 +21,21 @@ public abstract class Espiritu {
     @GeneratedValue(strategy = AUTO)
     private Long id;
     @Column(nullable = false)
-    private Integer nivelDeConexion;
+    private double nivelDeConexion;
     @Column(nullable = false, length = 500)
     private String nombre;
-    private final Integer maxNivelDeConexion = 100;
-    private final Integer minNivelDeConexion = 0;
+    private final double maxNivelDeConexion = 100;
+    private final double minNivelDeConexion = 0;
 
+    @ManyToOne
+    private Ubicacion ubicacion;
     @ManyToOne
     private Medium owner;
 
-    public Espiritu(@NonNull Integer nivelDeConexion, @NonNull String nombre) {
+    public Espiritu(@NonNull Integer nivelDeConexion, @NonNull String nombre, Ubicacion ubicacion) {
         validarNivelDeConexion(nivelDeConexion);
         this.nombre = nombre;
+        this.ubicacion = ubicacion;
     }
 
     private void validarNivelDeConexion(Integer nivelDeConexion) {
@@ -42,13 +45,28 @@ public abstract class Espiritu {
         this.nivelDeConexion = nivelDeConexion;
     }
 
-    public Medium aumentarConexion(Medium medium) {
-        this.nivelDeConexion += 10;
+    public void aumentarConexion(Medium medium) {
+        Integer manaDeMedium = medium.getMana();
+        this.nivelDeConexion += (manaDeMedium * 0.20);
         if (this.nivelDeConexion >= 100) this.nivelDeConexion = 100;
-        return medium;
     }
 
+    public void conectar(Medium medium){
+        aumentarConexion(medium);
+        setOwner(medium);
+    }
 
+    public boolean esEspirituLibre() {
+        return this.owner == null;
+    }
+
+    public Ubicacion getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(Ubicacion ubicacion) {
+        this.ubicacion = ubicacion;
+    }
 
     public abstract String getTipo();
 

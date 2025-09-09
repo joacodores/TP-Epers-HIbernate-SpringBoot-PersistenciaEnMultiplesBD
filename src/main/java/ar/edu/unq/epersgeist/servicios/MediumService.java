@@ -12,4 +12,5 @@ public interface MediumService {
     void actualizar(Medium medium);
     void eliminar(Medium medium);
     void eliminarTodo();
+    Espiritu invocar(Long mediumId, Long espirituId);
 }

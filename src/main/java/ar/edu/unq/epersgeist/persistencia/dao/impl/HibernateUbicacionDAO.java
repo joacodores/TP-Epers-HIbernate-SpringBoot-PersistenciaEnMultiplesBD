@@ -27,5 +27,4 @@ public class HibernateUbicacionDAO extends HibernateDAO<Ubicacion> implements Ub
         Query<Ubicacion> query = session.createQuery(hql, Ubicacion.class);
         return query.getResultList();
     }
-
 }

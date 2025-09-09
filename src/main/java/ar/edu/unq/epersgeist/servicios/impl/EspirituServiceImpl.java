@@ -3,6 +3,7 @@ package ar.edu.unq.epersgeist.servicios.impl;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.servicios.EspirituService;
 import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
 
@@ -10,9 +11,12 @@ import java.util.List;
 
 public class EspirituServiceImpl implements EspirituService {
 
-    private EspirituDAO espirituDAO;
-    public EspirituServiceImpl(EspirituDAO espirituDAO) {
+    private final EspirituDAO espirituDAO;
+    private final MediumDAO mediumDAO;
+
+    public EspirituServiceImpl(EspirituDAO espirituDAO,  MediumDAO mediumDAO) {
         this.espirituDAO = espirituDAO;
+        this.mediumDAO = mediumDAO;
     }
 
     @Override
@@ -52,13 +56,19 @@ public class EspirituServiceImpl implements EspirituService {
             return null;
         });
     }
+    @Override
+    public Medium conectar(Long espirituId, Long mediumId) {
+        return HibernateTransactionRunner.runTrx(() -> {
+            Medium medium = mediumDAO.recuperar(mediumId);
+            Espiritu espiritu = espirituDAO.recuperar(espirituId);
+            medium.conectarseAEspiritu(espiritu);
+            mediumDAO.actualizar(medium);
+            espirituDAO.actualizar(espiritu);
+            return medium;
+        });
+
+    };
 
 
-    /*@Override
-    public Medium conectar(Long espirituId, Medium medium) {
-        Espiritu espiritu = espirituDAO.recuperar(espirituId);
-        medium.conectarseAEspiritu(espiritu);
-        this.actualizar(espiritu);
-        return medium;
-    };*/
+
 }

@@ -2,7 +2,9 @@ package ar.edu.unq.epersgeist.servicios;
 
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateEspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
 import ar.edu.unq.epersgeist.servicios.impl.MediumServiceImpl;
 import ar.edu.unq.epersgeist.servicios.impl.UbicacionServiceImpl;
@@ -22,12 +24,15 @@ public class MediumServiceTest {
 
     private MediumService service;
     private Medium medium;
+    private Ubicacion ubi;
 
     @BeforeEach
     void prepare() {
-        this.medium = new Medium("Thiago", 50, 30);
+        ubi = new Ubicacion("ubi");
+        this.medium = new Medium("Thiago", 50, 30, ubi);
         MediumDAO dao = new HibernateMediumDAO();
-        this.service = new MediumServiceImpl(dao);
+        EspirituDAO daoEsp = new HibernateEspirituDAO();
+        this.service = new MediumServiceImpl(dao,  daoEsp);
     }
 
     @Test
@@ -69,16 +74,16 @@ public class MediumServiceTest {
     @Test
     void recuperarTodosTest(){
         service.crear(medium);
-        service.crear(new Medium("Juan", 80, 20));
-        service.crear(new Medium("Jorge", 20, 10));
+        service.crear(new Medium("Juan", 80, 20, ubi));
+        service.crear(new Medium("Jorge", 20, 10, ubi));
         assertEquals(List.of("Thiago", "Juan", "Jorge"), service.recuperarTodos().stream().map(Medium::getNombre).toList());
     }
 
     @Test
     void sePuedenPersistirVariosMediumConMismoNombreTest(){
         service.crear(medium);
-        service.crear(new Medium("Thiago", 80, 20));
-        service.crear(new Medium("Thiago", 20, 10));
+        service.crear(new Medium("Thiago", 80, 20, ubi));
+        service.crear(new Medium("Thiago", 20, 10, ubi));
         assertEquals(List.of("Thiago", "Thiago", "Thiago"), service.recuperarTodos().stream().map(Medium::getNombre).toList());
     }
 
@@ -86,7 +91,7 @@ public class MediumServiceTest {
     @Test
     void eliminarMediumNoPersistidoNoLanzaExcepcionTest(){
         service.crear(medium);
-        Medium medium2 = new Medium("Doble Tonka", 60, 30);
+        Medium medium2 = new Medium("Doble Tonka", 60, 30, ubi);
         assertDoesNotThrow(() -> service.eliminar(medium2));
     }
 

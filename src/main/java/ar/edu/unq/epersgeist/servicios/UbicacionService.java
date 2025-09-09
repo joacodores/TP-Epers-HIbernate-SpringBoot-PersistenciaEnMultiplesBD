@@ -3,7 +3,6 @@ package ar.edu.unq.epersgeist.servicios;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface UbicacionService {

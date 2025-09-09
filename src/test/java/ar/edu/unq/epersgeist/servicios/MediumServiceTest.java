@@ -1,11 +1,13 @@
 package ar.edu.unq.epersgeist.servicios;
 
-import ar.edu.unq.epersgeist.modelo.Medium;
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.helpers.RandomizerFalso;
+import ar.edu.unq.epersgeist.modelo.*;
+import ar.edu.unq.epersgeist.modelo.exceptions.ExorcistaSinAngelesException;
+import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateEspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
 import ar.edu.unq.epersgeist.servicios.impl.MediumServiceImpl;
-import ar.edu.unq.epersgeist.servicios.impl.UbicacionServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +29,8 @@ public class MediumServiceTest {
     void prepare() {
         this.medium = new Medium("Thiago", 50, 30);
         MediumDAO dao = new HibernateMediumDAO();
-        this.service = new MediumServiceImpl(dao);
+        EspirituDAO espirituDAO = new HibernateEspirituDAO();
+        this.service = new MediumServiceImpl(dao, espirituDAO);
     }
 
     @Test
@@ -36,7 +39,6 @@ public class MediumServiceTest {
         service.crear(medium);
         assertNotNull(medium.getId());
     }
-
 
     @Test
     void recuperarMediumNoPersistidoDevuelveNullTest(){
@@ -96,6 +98,44 @@ public class MediumServiceTest {
         assertFalse(service.recuperarTodos().isEmpty());
         service.eliminar(medium);
         assertTrue(service.recuperarTodos().isEmpty());
+    }
+
+    @Test
+    void exorcizarConExorcistaSinEspiritusAngelicalesLanzaExcepcionTest() {
+        Medium ozzy = new Medium("ozzy", 100, 100);
+        Long exorcistaId = service.crear(medium).getId();
+        Long ozzyId = service.crear(ozzy).getId();
+        assertThrows(ExorcistaSinAngelesException.class, () -> service.exorcizar(exorcistaId, ozzyId));
+    }
+
+    @Test
+    void exorcizarTest() {
+        Medium tai = new Medium("Tai", 100, 80);
+        Medium elNoba = new Medium("El Noba", 100, 100);
+
+        //TODO: Cuando creen conectar podemos obviar la conexion por modelo que hice acá y hacerla por service
+        EspirituAngelical angel = new EspirituAngelical(60, "angel");
+        EspirituDemoniaco demonio = new EspirituDemoniaco(20, "demonio");
+
+        RandomizerFalso randomizer = new RandomizerFalso();
+
+        angel.setCustomRandomizer(randomizer);
+        demonio.setCustomRandomizer(randomizer);
+
+        tai.conectarseAEspiritu(angel);
+        elNoba.conectarseAEspiritu(demonio);
+
+        Long taiId = service.crear(tai).getId();
+        Long elNobaId = service.crear(elNoba).getId();
+
+        randomizer.setSecuenciaDeAtaques(5);
+        randomizer.setSecuenciaDeDefensas(6);
+        service.exorcizar(taiId, elNobaId);
+
+        //TODO: Acá también, al llamar espiritus se espera que usemos el service
+        elNoba = service.recuperar(elNobaId);
+
+        assertTrue(elNoba.getEspiritus().isEmpty());
     }
 
     @Test

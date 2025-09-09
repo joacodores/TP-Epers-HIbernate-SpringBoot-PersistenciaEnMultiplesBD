@@ -1,11 +1,12 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.modelo.exceptions.ExorcistaSinAngelesException;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static jakarta.persistence.GenerationType.AUTO;
 import static java.lang.Integer.min;
@@ -14,58 +15,74 @@ import static java.lang.Integer.min;
 
 @Entity
 public class Medium {
-
+    @Getter @Setter
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;
+    @Getter @Setter
     @Column(nullable = false, length = 500)
     private String nombre;
+    @Getter
     @Column(nullable = false)
     private Integer manaMax;
+    @Getter
     @Column(nullable = false)
     private Integer mana;
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Set<Espiritu> espiritus = new HashSet<>();
+    @Getter
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private final List<Espiritu> espiritus = new ArrayList<>();
 
     public Medium(String nombre, Integer manaMax, Integer mana) {
-
-        this.nombre = nombre;
+        this.setNombre(nombre);
         this.manaMax = manaMax;
         this.mana = min(manaMax, mana);
     }
 
     public void conectarseAEspiritu(Espiritu espiritu) {
+        if (espiritus.contains(espiritu)) return;
         espiritus.add(espiritu);
+        // TODO: en rama conectar probablemente aumentarConexion tenga que cambiarse
         espiritu.aumentarConexion(this, 10);
+        espiritu.conectar(this);
     }
 
-    public String getNombre() {
-        return nombre;
+    public void desvincularEspiritu(Espiritu espiritu) {
+        espiritus.remove(espiritu);
     }
 
-    public Integer getManaMax() {
-        return manaMax;
+    private boolean tieneAlMenosUnEspirituAngelical(){
+        return espiritus.stream().anyMatch(Espiritu::puedeExorcizar);
     }
 
-    public Integer getMana() {
-        return mana;
+    private List<Espiritu> getEspiritusAngelicales(){
+        return this.espiritus.stream()
+                .filter(Espiritu::puedeExorcizar)
+                .toList();
     }
 
-    public Set<Espiritu> getEspiritus() {
-        return espiritus;
+    public Optional<Espiritu> getEspirituAExorcizar() {
+        return this.espiritus.stream()
+                .filter(e -> !e.puedeExorcizar())
+                .findFirst();
     }
 
-    public Long getId() { return id; }
+    public void exorcizar(Medium mediumAExorcizar){
+        if(!this.tieneAlMenosUnEspirituAngelical()){
+            throw new ExorcistaSinAngelesException("El medium exorcista %s no puede realizar un exorcismo, ya que no posee ningún Espiritu Angelical");
+        }
 
-    public void setId(Long id) { this.id = id; }
+        this.getEspiritusAngelicales().forEach(a -> mediumAExorcizar.getEspirituAExorcizar().ifPresent(a::atacar));
+    }
 
-    public void setNombre(String nombre) { this.nombre = nombre; }
+    public void vaciarEspiritus() {
+        espiritus.forEach(Espiritu::desvincularDeMedium);
+    }
 
     public void aumentarMana(int i) {
         this.mana = Math.min(this.mana + i, this.manaMax);
     }
 
-    public void recuperar_PuntosDeConexionATodosLosEspiritus(int i) {
-        espiritus.forEach(espiritu -> {espiritu.aumentarConexion(this,i);});
+    public void aumentarNivelDeConexionATodosLosEspiritus(int i) {
+        espiritus.forEach(espiritu -> espiritu.aumentarConexion(this, i));
     }
 }

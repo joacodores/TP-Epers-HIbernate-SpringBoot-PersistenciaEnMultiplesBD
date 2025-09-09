@@ -31,6 +31,6 @@ public class HibernateMediumDAO extends HibernateDAO<Medium> implements MediumDA
         String hql = "select m from Medium m where m.id = :mediumId";
         Medium medium = session.createQuery(hql, Medium.class).setParameter("mediumId", mediumId).getSingleResult();
         medium.aumentarMana(15);
-        medium.recuperar_PuntosDeConexionATodosLosEspiritus(5);
+        medium.aumentarNivelDeConexionATodosLosEspiritus(5);
     }
 }

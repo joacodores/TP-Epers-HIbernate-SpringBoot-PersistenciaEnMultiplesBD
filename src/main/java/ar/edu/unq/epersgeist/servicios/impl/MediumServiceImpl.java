@@ -1,6 +1,7 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.Medium;
+import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.servicios.MediumService;
 import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
@@ -10,9 +11,11 @@ import java.util.List;
 public class MediumServiceImpl implements MediumService {
 
     private final MediumDAO mediumDAO;
+    private final EspirituDAO espirituDAO;
 
-    public MediumServiceImpl(MediumDAO medium) {
-        this.mediumDAO = medium;
+    public MediumServiceImpl(MediumDAO mediumDAO, EspirituDAO espirituDAO) {
+        this.mediumDAO = mediumDAO;
+        this.espirituDAO = espirituDAO;
     }
 
     @Override
@@ -41,6 +44,7 @@ public class MediumServiceImpl implements MediumService {
     @Override
     public void eliminar(Medium medium){
         HibernateTransactionRunner.runTrx(() -> {
+            medium.vaciarEspiritus();
             mediumDAO.eliminar(medium);
             return null;
         });
@@ -49,7 +53,20 @@ public class MediumServiceImpl implements MediumService {
     @Override
     public void eliminarTodo() {
         HibernateTransactionRunner.runTrx(() -> {
+            espirituDAO.eliminarTodo();
             mediumDAO.eliminarTodo();
+            return null;
+        });
+    }
+
+    @Override
+    public void exorcizar(Long idMediumExorcista, Long idMediumAExorcizar) {
+        HibernateTransactionRunner.runTrx(() -> {
+            Medium exorcista = mediumDAO.recuperar(idMediumExorcista);
+            Medium mediumAExorcizar = mediumDAO.recuperar(idMediumAExorcizar);
+            exorcista.exorcizar(mediumAExorcizar);
+            mediumDAO.actualizar(exorcista);
+            mediumDAO.actualizar(mediumAExorcizar);
             return null;
         });
     }

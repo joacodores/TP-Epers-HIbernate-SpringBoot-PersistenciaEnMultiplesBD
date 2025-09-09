@@ -2,12 +2,14 @@ package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.modelo.exceptions.NivelDeConexionFueraDeRangoException;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-
+@Getter
+@Setter
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Espiritu {
@@ -21,17 +23,33 @@ public abstract class Espiritu {
     private String nombre;
     private final Integer maxNivelDeConexion = 100;
     private final Integer minNivelDeConexion = 0;
-
+    @Transient
+    protected Randomizer randomizer;
     @ManyToOne
     private Medium owner;
-
     @ManyToOne
     private Ubicacion ubicacion;
 
-    public Espiritu(@NonNull Integer nivelDeConexion, @NonNull String nombre) {
-        this.nombre = nombre;
-        validarNivelDeConexion(nivelDeConexion);
+    @SuppressWarnings("unused")
+    public Espiritu() {
+        this.randomizer = new RandomizerImpl();
+    }
 
+    public Espiritu(@NonNull Integer nivelDeConexion, @NonNull String nombre) {
+        validarNivelDeConexion(nivelDeConexion);
+        this.nombre = nombre;
+        this.randomizer = new RandomizerImpl();
+    }
+
+    public abstract boolean puedeExorcizar();
+
+    public void conectar(Medium medium) {
+        /*
+        TODO: Para la rama de conectar hay que aplicar la lógica del mana y del service
+            y probablemente también cambiar la lógica de aumentarConexion y los tests
+            de espiritu
+        */
+        this.owner = medium;
     }
 
     private void validarNivelDeConexion(Integer nivelDeConexion) {
@@ -47,8 +65,29 @@ public abstract class Espiritu {
         return medium;
     }
 
+    public void desvincularDeMedium() {
+        owner.desvincularEspiritu(this);
+        this.setOwner(null);
+    }
 
+    public void disminuirConexion(int cantidad) {
+        this.nivelDeConexion -= cantidad;
+        if (nivelDeConexion <= 0) {
+            this.nivelDeConexion = 0;
+            this.desvincularDeMedium();
+        }
+    }
 
-    public abstract String getTipo();
+    public void setCustomRandomizer(Randomizer randomizer) {
+        this.randomizer = randomizer;
+    }
+
+    public abstract void atacar(Espiritu espiritu);
+
+    public abstract void recibirAtaque(int ataque, Espiritu atacante);
+
+    public void sufrirDerrota(int dmg){
+        this.disminuirConexion(dmg);
+    }
 
 }

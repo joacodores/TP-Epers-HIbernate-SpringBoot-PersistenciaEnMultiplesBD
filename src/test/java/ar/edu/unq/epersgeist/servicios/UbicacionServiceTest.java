@@ -100,9 +100,9 @@ public class UbicacionServiceTest {
         service.crear(ubicacion);
 
         var espiritus = service.espiritusEn(ubicacion.getId());
-        assertEquals(espiritus.size(), 2);
-        assertTrue(espiritus.contains(espiritu));
-        assertTrue(espiritus.contains(demonio));
+        assertEquals(2, espiritus.size());
+        assertEquals("Luffy", espiritus.get(0).getNombre());
+        assertEquals("Zoro", espiritus.get(1).getNombre());
     }
 
     @AfterEach

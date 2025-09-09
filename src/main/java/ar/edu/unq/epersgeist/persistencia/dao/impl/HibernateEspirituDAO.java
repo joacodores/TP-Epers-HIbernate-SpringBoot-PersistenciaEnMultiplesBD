@@ -1,7 +1,6 @@
 package ar.edu.unq.epersgeist.persistencia.dao.impl;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.servicios.runner.HibernateSessionContext;
 import org.hibernate.Session;
@@ -14,12 +13,10 @@ public class HibernateEspirituDAO extends HibernateDAO<Espiritu> implements Espi
         super(Espiritu.class);
     }
 
-
     public Espiritu crear(Espiritu espiritu) {
         super.guardar(espiritu);
         return espiritu;
     }
-
 
     public List<Espiritu> recuperarTodos() {
         Session session = HibernateSessionContext.getCurrentSession();
@@ -35,6 +32,5 @@ public class HibernateEspirituDAO extends HibernateDAO<Espiritu> implements Espi
         query.setParameter("unValorDado", ubicacionId);
         return query.getResultList();
     }
-
 
 }

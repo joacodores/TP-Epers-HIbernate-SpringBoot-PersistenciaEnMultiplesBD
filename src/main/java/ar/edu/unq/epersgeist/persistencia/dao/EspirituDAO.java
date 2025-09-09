@@ -11,4 +11,5 @@ public interface EspirituDAO {
     void actualizar(Espiritu espiritu);
     void eliminar(Espiritu espiritu);
     void eliminarTodo();
+    List<Espiritu> espiritusEn(Long ubicacionId);
 }

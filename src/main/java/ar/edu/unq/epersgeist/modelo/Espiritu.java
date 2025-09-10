@@ -36,6 +36,7 @@ public abstract class Espiritu {
         validarNivelDeConexion(nivelDeConexion);
         this.nombre = nombre;
         this.ubicacion = ubicacion;
+        ubicacion.agregarEspiritu(this);
     }
 
     private void validarNivelDeConexion(Integer nivelDeConexion) {
@@ -66,6 +67,15 @@ public abstract class Espiritu {
 
     public void setUbicacion(Ubicacion ubicacion) {
         this.ubicacion = ubicacion;
+    }
+    public double getNivelDeConexion() {
+        return nivelDeConexion;
+    }
+
+    public void cambiarUbicacion(Ubicacion ubicacionNueva){
+        this.ubicacion.eliminarEspiritu(this);
+        ubicacionNueva.agregarEspiritu(this);
+        this.ubicacion = ubicacionNueva;
     }
 
     public abstract String getTipo();

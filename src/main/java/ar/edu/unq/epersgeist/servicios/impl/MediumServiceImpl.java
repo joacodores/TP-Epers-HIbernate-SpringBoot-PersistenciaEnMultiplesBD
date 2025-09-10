@@ -6,6 +6,7 @@ import ar.edu.unq.epersgeist.modelo.exceptions.EspirituNoEsLibreException;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.MediumService;
 import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
 
@@ -15,10 +16,12 @@ public class MediumServiceImpl implements MediumService {
 
     private final MediumDAO mediumDAO;
     private final EspirituDAO espirituDAO;
+    private final UbicacionDAO ubicacionDAO;
 
-    public MediumServiceImpl(MediumDAO medium, EspirituDAO espirituDAO) {
+    public MediumServiceImpl(MediumDAO medium, EspirituDAO espirituDAO,  UbicacionDAO ubicacionDAO) {
         this.mediumDAO = medium;
         this.espirituDAO = espirituDAO;
+        this.ubicacionDAO = ubicacionDAO;
     }
 
     @Override
@@ -65,10 +68,12 @@ public class MediumServiceImpl implements MediumService {
         return HibernateTransactionRunner.runTrx(() -> {
                     Medium invocador = mediumDAO.recuperar(mediumId);
                     Espiritu espirituAInvocar = espirituDAO.recuperar(espirituId);
-                        invocador.invocar(espirituAInvocar);
-                        mediumDAO.actualizar(invocador);
-                        espirituDAO.actualizar(espirituAInvocar);
-                        return espirituAInvocar;
+                    Ubicacion ubiDeInvocacion = ubicacionDAO.recuperar(invocador.getUbicacion().getId());
+                    invocador.invocar(espirituAInvocar);
+                    mediumDAO.actualizar(invocador);
+                    espirituDAO.actualizar(espirituAInvocar);
+                    ubicacionDAO.actualizar(ubiDeInvocacion);
+                    return espirituAInvocar;
                 });
     }
 

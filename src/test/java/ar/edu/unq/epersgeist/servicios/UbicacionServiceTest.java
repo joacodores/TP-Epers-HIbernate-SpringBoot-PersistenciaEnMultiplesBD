@@ -1,8 +1,15 @@
 package ar.edu.unq.epersgeist.servicios;
 
+import ar.edu.unq.epersgeist.modelo.Espiritu;
+import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
+import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateEspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateUbicacionDAO;
+import ar.edu.unq.epersgeist.servicios.impl.EspirituServiceImpl;
 import ar.edu.unq.epersgeist.servicios.impl.UbicacionServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +27,8 @@ public class UbicacionServiceTest {
     void prepare() {
         this.ubicacion = new Ubicacion("Ubicacion");
         UbicacionDAO dao = new HibernateUbicacionDAO();
-        this.service = new UbicacionServiceImpl(dao);
+        EspirituDAO espirituDAO = new HibernateEspirituDAO();
+        this.service = new UbicacionServiceImpl(dao, espirituDAO);
     }
 
     @Test
@@ -78,8 +86,30 @@ public class UbicacionServiceTest {
         assertTrue(service.recuperarTodos().isEmpty());
     }
 
+    @Test
+    void noHayEspiritusEnUnaUbicacionDadaTest() {
+        service.crear(ubicacion);
+        assertTrue(service.espiritusEn(ubicacion.getId()).isEmpty());
+    }
+
+    @Test
+    void existenEspiritusEnUnaUbicacionDadaTest() {
+        Espiritu espiritu = new EspirituAngelical(50, "Luffy", ubicacion);
+        Espiritu demonio = new EspirituDemoniaco(45, "Zoro", ubicacion);
+        ubicacion.agregarEspiritu(espiritu);
+        ubicacion.agregarEspiritu(demonio);
+        service.crear(ubicacion);
+
+        var espiritus = service.espiritusEn(ubicacion.getId());
+        assertEquals(espiritus.size(), 2);
+        assertTrue(espiritus.contains(espiritu));
+        assertTrue(espiritus.contains(demonio));
+    }
+
     @AfterEach
     void cleanup(){
+        EspirituService espirituService = new EspirituServiceImpl(new HibernateEspirituDAO(), new HibernateMediumDAO());
+        espirituService.eliminarTodo();
         service.eliminarTodo();
     }
 

@@ -37,13 +37,15 @@ public class Medium {
         this.manaMax = manaMax;
         this.mana = min(manaMax, mana);
         this.ubicacion = ubicacion;
+        ubicacion.agregarMedium(this);
     }
 
     public void conectarseAEspiritu(Espiritu espiritu) {
-        if(espiritu.esEspirituLibre() && this.comparteUbicacion(espiritu)){
-            espiritus.add(espiritu);
-            espiritu.conectar(this);
-        }else throw new EspirituNoPuedeConectarException(String.format("El espíritu no puede conectarse al medium"));
+        if(!espiritu.esEspirituLibre() || !comparteUbicacion(espiritu)){
+            throw new EspirituNoPuedeConectarException("El espíritu no puede conectarse al medium");
+        }
+        espiritus.add(espiritu);
+        espiritu.conectar(this);
     }
 
     public boolean comparteUbicacion(Espiritu espiritu) {
@@ -80,11 +82,18 @@ public class Medium {
 
     public void invocar(Espiritu espiritu){
         Ubicacion ubicacionDeMedium = this.getUbicacion();
-        if(espiritu.esEspirituLibre()){
-            if(getMana() >= 10) {
-                espiritu.setUbicacion(ubicacionDeMedium);
-                disminuirMana(10);
-            }
-        }else throw new EspirituNoEsLibreException("El espíritu no puede ser invocado, ya que no es libre");
+        Ubicacion ubicacionDeEspiritu = espiritu.getUbicacion();
+        if(!espiritu.esEspirituLibre()) {
+            throw new EspirituNoEsLibreException("El espíritu no puede ser invocado, ya que no es libre");
+        }
+        if(getMana() < 10) {
+            return;
+        }
+        espiritu.cambiarUbicacion(ubicacionDeMedium);
+        disminuirMana(10);
+    }
+
+    public void setUbicacion(Ubicacion ubicacion) {
+        this.ubicacion = ubicacion;
     }
 }

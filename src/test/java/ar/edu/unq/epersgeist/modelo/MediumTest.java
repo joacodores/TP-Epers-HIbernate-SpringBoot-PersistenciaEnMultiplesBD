@@ -2,11 +2,11 @@ package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.modelo.exceptions.EspirituNoEsLibreException;
 import ar.edu.unq.epersgeist.modelo.exceptions.EspirituNoPuedeConectarException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class MediumTest {
@@ -51,9 +51,11 @@ public class MediumTest {
         assertEquals(bocaPredio, juan.getUbicacion());
         juan.invocar(carlitos);
         assertEquals(bocaPredio, carlitos.getUbicacion());
+        assert(bocaPredio.getEspiritus().contains(carlitos));
+
     }
     @Test
-    void mediumNoPuedeInvocarEspirituPorBajaMana(){
+    void invocarSinManaNoCambiaNada(){
         juan.disminuirMana(11);
         assertEquals(9, juan.getMana());
         juan.invocar(carlitos);
@@ -76,12 +78,63 @@ public class MediumTest {
         palermo.conectarseAEspiritu(carlitos);
         assertThrows(EspirituNoEsLibreException.class, () -> juan.invocar(carlitos));
     }
-/*
+
     @Test
     void espirituNoPuedeConectarConMediumEnOtraUbicacion(){
         assertEquals(fuerteApache, carlitos.getUbicacion());
         assertEquals(bocaPredio, juan.getUbicacion());
-        assertThrows(EspirituNoPuedeConectarException.class, () -> carlitos.conectar(juan));
+        assertThrows(EspirituNoPuedeConectarException.class, () -> juan.conectarseAEspiritu(carlitos));
+
     }
-*/
+    @Test
+    void invocarDescuenta10YMueveYActualizaListas() {
+        int mana0 = juan.getMana(); // 20
+        assert(fuerteApache.getEspiritus().contains(carlitos));
+        juan.invocar(carlitos);
+        assertEquals(mana0 - 10, juan.getMana());
+        assertEquals(bocaPredio, carlitos.getUbicacion());
+        assertFalse(fuerteApache.getEspiritus().contains(carlitos));
+        assert(bocaPredio.getEspiritus().contains(carlitos));
+    }
+
+    @Test
+    void invocarConManaExacto10FuncionaYQuedaEnCero() {
+        juan.disminuirMana(10);
+        juan.invocar(carlitos);
+        assertEquals(0, juan.getMana());
+        assertEquals(bocaPredio, carlitos.getUbicacion());
+    }
+
+
+
+    @Test
+    void invocarCuandoYaEstaEnLaMismaUbicacion_Cobra10() {
+        // mismo lugar antes de invocar
+        carlitos.cambiarUbicacion(bocaPredio);
+        int mana0 = juan.getMana();
+        juan.invocar(carlitos);
+        assertEquals(mana0 - 10, juan.getMana());           // cobra igual
+        assertEquals(bocaPredio, carlitos.getUbicacion());  // no cambia lugar
+    }
+
+    @Test
+    void conectarSubeNivelConexion20Porciento() {
+        // nos aseguramos misma ubicación primero
+        juan.invocar(carlitos); // descuenta 10 acá
+        double nivel0 = carlitos.getNivelDeConexion();
+
+        juan.conectarseAEspiritu(carlitos);
+
+        double esperado = (juan.getMana() * 0.20);
+        assertEquals(nivel0 + esperado, carlitos.getNivelDeConexion());
+        assertTrue(juan.getEspiritus().contains(carlitos));
+    }
+
+    @Test
+    void noPuedeConectarDosVecesPorqueNoEstaLibre() {
+        juan.invocar(carlitos);
+        juan.conectarseAEspiritu(carlitos);
+        assertThrows(EspirituNoPuedeConectarException.class, () -> juan.conectarseAEspiritu(carlitos));
+    }
+
 }

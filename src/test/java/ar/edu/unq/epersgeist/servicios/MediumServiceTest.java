@@ -4,8 +4,10 @@ import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateEspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateUbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.impl.MediumServiceImpl;
 import ar.edu.unq.epersgeist.servicios.impl.UbicacionServiceImpl;
 import org.junit.jupiter.api.AfterEach;
@@ -32,7 +34,8 @@ public class MediumServiceTest {
         this.medium = new Medium("Thiago", 50, 30, ubi);
         MediumDAO dao = new HibernateMediumDAO();
         EspirituDAO daoEsp = new HibernateEspirituDAO();
-        this.service = new MediumServiceImpl(dao,  daoEsp);
+        UbicacionDAO daoUbi = new HibernateUbicacionDAO();
+        this.service = new MediumServiceImpl(dao,  daoEsp, daoUbi);
     }
 
     @Test

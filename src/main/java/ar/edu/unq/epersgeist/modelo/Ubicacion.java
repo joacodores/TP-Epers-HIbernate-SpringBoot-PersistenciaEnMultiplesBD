@@ -8,7 +8,10 @@ import java.util.List;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
-@Getter @Setter @NoArgsConstructor @ToString
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
 
 @Entity
 public class Ubicacion {
@@ -24,20 +27,21 @@ public class Ubicacion {
     @OneToMany(mappedBy = "ubicacion", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Medium> mediums = new ArrayList<>();
 
-    public Ubicacion(@NonNull String nombre){
+    public Ubicacion(@NonNull String nombre) {
         this.nombre = nombre;
     }
 
-    public void agregarMedium(Medium medium){
+    public void agregarMedium(Medium medium) {
         mediums.add(medium);
         medium.setUbicacion(this);
     }
 
-    public void agregarEspiritu(Espiritu espiritu){
+    public void agregarEspiritu(Espiritu espiritu) {
         this.espiritus.add(espiritu);
         espiritu.setUbicacion(this);
     }
-    public void eliminarEspiritu(Espiritu espiritu){
+
+    public void eliminarEspiritu(Espiritu espiritu) {
         this.espiritus.remove(espiritu);
         espiritu.setUbicacion(null);
     }

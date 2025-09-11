@@ -24,14 +24,14 @@ public class MediumTest {
     private RandomizerFalso randomizer;
 
     @BeforeEach
-    void prepare(){
+    void prepare() {
         fuerteApache = new Ubicacion("Fuerte Apache");
         bocaPredio = new Ubicacion("Boca Predio");
         palermo = new Medium("Martin Palermo", 100, 25, fuerteApache);
         juan = new Medium("Juan", 100, 20, bocaPredio);
-        carlitos = new EspirituAngelical(80, "Carlitos", fuerteApache );
+        carlitos = new EspirituAngelical(80, "Carlitos", fuerteApache);
         randomizer = new RandomizerFalso();
-        tai = new Medium("Tai", 100, 80,fuerteApache);
+        tai = new Medium("Tai", 100, 80, fuerteApache);
         elNoba = new Medium("El Noba", 100, 100, fuerteApache);
         angel = new EspirituAngelical(70, "angel", fuerteApache);
     }
@@ -189,7 +189,7 @@ public class MediumTest {
     @Test
     void exorcizarVariosDemoniosTest() {
         EspirituAngelical rika = new EspirituAngelical(44, "Rika", fuerteApache);
-        EspirituAngelical ivaar = new EspirituAngelical(64, "Ivaar",fuerteApache);
+        EspirituAngelical ivaar = new EspirituAngelical(64, "Ivaar", fuerteApache);
         EspirituAngelical hana = new EspirituAngelical(0, "Hana", fuerteApache);
         tai.conectarseAEspiritu(rika);
         tai.conectarseAEspiritu(ivaar);
@@ -224,7 +224,7 @@ public class MediumTest {
     void exorcizarUnicamenteExorcizaDemoniosYNoAngelesTest() {
 
         EspirituAngelical rika = new EspirituAngelical(44, "Rika", fuerteApache);
-        EspirituAngelical ivaar = new EspirituAngelical(64, "Ivaar",fuerteApache);
+        EspirituAngelical ivaar = new EspirituAngelical(64, "Ivaar", fuerteApache);
         EspirituAngelical hana = new EspirituAngelical(0, "Hana", fuerteApache);
         tai.conectarseAEspiritu(rika);
         tai.conectarseAEspiritu(ivaar);
@@ -258,8 +258,7 @@ public class MediumTest {
     }
 
     @Test
-    void mediumDescansaTieneMasManaYSusEspiritusMasEnergia()
-    {
+    void mediumDescansaTieneMasManaYSusEspiritusMasEnergia() {
         Medium tai = new Medium("Tai", 100, 10, fuerteApache);
         Espiritu espirituDem = new EspirituDemoniaco(0, "zorro", fuerteApache);
 
@@ -273,16 +272,17 @@ public class MediumTest {
     }
 
     @Test
-    void mediumInvocaEspirituASuUbicacion(){
+    void mediumInvocaEspirituASuUbicacion() {
         assertEquals(fuerteApache, carlitos.getUbicacion());
         assertEquals(bocaPredio, juan.getUbicacion());
         juan.invocar(carlitos);
         assertEquals(bocaPredio, carlitos.getUbicacion());
-        assert(bocaPredio.getEspiritus().contains(carlitos));
+        assert (bocaPredio.getEspiritus().contains(carlitos));
 
     }
+
     @Test
-    void invocarSinManaNoCambiaNada(){
+    void invocarSinManaNoCambiaNada() {
         juan.disminuirMana(11);
         assertEquals(9, juan.getMana());
         juan.invocar(carlitos);
@@ -292,23 +292,23 @@ public class MediumTest {
     }
 
     @Test
-    void espirituConectaConMedium(){
-        assert(palermo.getEspiritus().isEmpty());
+    void espirituConectaConMedium() {
+        assert (palermo.getEspiritus().isEmpty());
         assertNull(carlitos.getOwner());
         palermo.conectarseAEspiritu(carlitos);
-        assert(palermo.getEspiritus().contains(carlitos));
+        assert (palermo.getEspiritus().contains(carlitos));
         assertEquals(carlitos.getOwner(), palermo);
 
     }
 
     @Test
-    void mediumNoPuedeInvocarEspirituNoLibre(){
+    void mediumNoPuedeInvocarEspirituNoLibre() {
         palermo.conectarseAEspiritu(carlitos);
         assertThrows(EspirituNoEsLibreException.class, () -> juan.invocar(carlitos));
     }
 
     @Test
-    void espirituNoPuedeConectarConMediumEnOtraUbicacion(){
+    void espirituNoPuedeConectarConMediumEnOtraUbicacion() {
         assertEquals(fuerteApache, carlitos.getUbicacion());
         assertEquals(bocaPredio, juan.getUbicacion());
         assertThrows(EspirituNoPuedeConectarException.class, () -> juan.conectarseAEspiritu(carlitos));
@@ -318,12 +318,12 @@ public class MediumTest {
     @Test
     void invocarDescuenta10YMueveYActualizaListas() {
         int mana0 = juan.getMana(); // 20
-        assert(fuerteApache.getEspiritus().contains(carlitos));
+        assert (fuerteApache.getEspiritus().contains(carlitos));
         juan.invocar(carlitos);
         assertEquals(mana0 - 10, juan.getMana());
         assertEquals(bocaPredio, carlitos.getUbicacion());
         assertFalse(fuerteApache.getEspiritus().contains(carlitos));
-        assert(bocaPredio.getEspiritus().contains(carlitos));
+        assert (bocaPredio.getEspiritus().contains(carlitos));
     }
 
     @Test

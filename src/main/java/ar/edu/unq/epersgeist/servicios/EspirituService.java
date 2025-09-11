@@ -7,10 +7,16 @@ import java.util.List;
 
 public interface EspirituService {
     Espiritu crear(Espiritu espiritu);
+
     Espiritu recuperar(Long espirituId);
+
     List<Espiritu> recuperarTodos();
+
     void actualizar(Espiritu espiritu);
+
     void eliminar(Espiritu espiritu);
+
     void eliminarTodo();
+
     Medium conectar(Long espirituId, Long mediumId);
 }

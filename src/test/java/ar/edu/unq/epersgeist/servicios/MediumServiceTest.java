@@ -44,25 +44,25 @@ public class MediumServiceTest {
         ubicacionService.crear(ubi);
 
         this.medium = new Medium("Thiago", 50, 30, ubi);
-        this.service = new MediumServiceImpl(dao,  daoEsp, daoUbi);
+        this.service = new MediumServiceImpl(dao, daoEsp, daoUbi);
         this.espirituService = new EspirituServiceImpl(daoEsp, dao);
     }
 
     @Test
-    void crearMediumTest(){
+    void crearMediumTest() {
         assertNull(medium.getId());
         service.crear(medium);
         assertNotNull(medium.getId());
     }
 
     @Test
-    void recuperarMediumNoPersistidoDevuelveNullTest(){
+    void recuperarMediumNoPersistidoDevuelveNullTest() {
         Long mediumID = service.crear(medium).getId();
         assertNull(service.recuperar(mediumID + 1));
     }
 
     @Test
-    void recuperarMediumTest(){
+    void recuperarMediumTest() {
         Long mediumID = service.crear(medium).getId();
         assertEquals(medium.getNombre(), service.recuperar(mediumID).getNombre());
         assertEquals(medium.getMana(), service.recuperar(mediumID).getMana());
@@ -70,7 +70,7 @@ public class MediumServiceTest {
     }
 
     @Test
-    void actualizarMediumTest(){
+    void actualizarMediumTest() {
         Long mediumID = service.crear(medium).getId();
         medium.setNombre("Churrito");
         service.actualizar(medium);
@@ -78,12 +78,12 @@ public class MediumServiceTest {
     }
 
     @Test
-    void recuperarTodosCuandoNoSePersistioNingunObjetoDevuelveListaVaciaTest(){
+    void recuperarTodosCuandoNoSePersistioNingunObjetoDevuelveListaVaciaTest() {
         assertTrue(service.recuperarTodos().isEmpty());
     }
 
     @Test
-    void recuperarTodosTest(){
+    void recuperarTodosTest() {
         service.crear(medium);
         service.crear(new Medium("Juan", 80, 20, ubi));
         service.crear(new Medium("Jorge", 20, 10, ubi));
@@ -91,7 +91,7 @@ public class MediumServiceTest {
     }
 
     @Test
-    void sePuedenPersistirVariosMediumConMismoNombreTest(){
+    void sePuedenPersistirVariosMediumConMismoNombreTest() {
         service.crear(medium);
         service.crear(new Medium("Thiago", 80, 20, ubi));
         service.crear(new Medium("Thiago", 20, 10, ubi));
@@ -99,14 +99,14 @@ public class MediumServiceTest {
     }
 
     @Test
-    void eliminarMediumNoPersistidoNoLanzaExcepcionTest(){
+    void eliminarMediumNoPersistidoNoLanzaExcepcionTest() {
         service.crear(medium);
         Medium medium2 = new Medium("Doble Tonka", 60, 30, ubi);
         assertDoesNotThrow(() -> service.eliminar(medium2));
     }
 
     @Test
-    void eliminarMediumTest(){
+    void eliminarMediumTest() {
         service.crear(medium);
         assertFalse(service.recuperarTodos().isEmpty());
         service.eliminar(medium);
@@ -152,7 +152,7 @@ public class MediumServiceTest {
     }
 
     @Test
-    void descansarTest(){
+    void descansarTest() {
         Medium m1 = service.crear(medium);
         Long mediumID = m1.getId();
         service.descansar(mediumID);
@@ -161,11 +161,10 @@ public class MediumServiceTest {
     }
 
     @AfterEach
-    void cleanup(){
+    void cleanup() {
         espirituService.eliminarTodo();
         service.eliminarTodo();
         ubicacionService.eliminarTodo();
     }
-
 
 }

@@ -42,27 +42,27 @@ public class EspirituServiceTest {
     }
 
     @Test
-    void crearEspirituTest(){
+    void crearEspirituTest() {
         assertNull(angel.getId());
         service.crear(angel);
         assertNotNull(angel.getId());
     }
 
     @Test
-    void recuperarEspirituNoPersistidoDevuelveNullTest(){
+    void recuperarEspirituNoPersistidoDevuelveNullTest() {
         Long demonioID = service.crear(demonio).getId();
         assertNull(service.recuperar(demonioID + 1));
     }
 
     @Test
-    void recuperarEspirituTest(){
+    void recuperarEspirituTest() {
         Long angelID = service.crear(angel).getId();
         assertEquals(angel.getNombre(), service.recuperar(angelID).getNombre());
         assertEquals(angel.getNivelDeConexion(), service.recuperar(angelID).getNivelDeConexion());
     }
 
     @Test
-    void sePuedenPersistirVariosEspiritusConMismoNombreTest(){
+    void sePuedenPersistirVariosEspiritusConMismoNombreTest() {
         service.crear(angel);
         service.crear(new EspirituAngelical(50, "Luffy", eastblue));
         service.crear(new EspirituDemoniaco(30, "Luffy", eastblue));
@@ -70,13 +70,13 @@ public class EspirituServiceTest {
     }
 
     @Test
-    void eliminarEspirituNoPersistidoNoLanzaExcepcionTest(){
+    void eliminarEspirituNoPersistidoNoLanzaExcepcionTest() {
         service.crear(angel);
         assertDoesNotThrow(() -> service.eliminar(demonio));
     }
 
     @Test
-    void eliminarEspirituTest(){
+    void eliminarEspirituTest() {
         service.crear(demonio);
         assertFalse(service.recuperarTodos().isEmpty());
         service.eliminar(demonio);
@@ -84,7 +84,7 @@ public class EspirituServiceTest {
     }
 
     @AfterEach
-    void cleanup(){
+    void cleanup() {
         service.eliminarTodo();
         ubicacionService.eliminarTodo();
     }

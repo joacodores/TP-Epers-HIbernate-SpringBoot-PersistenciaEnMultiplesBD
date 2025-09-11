@@ -9,7 +9,7 @@ import static java.lang.Math.min;
 public class EspirituAngelical extends Espiritu {
 
     @SuppressWarnings("unused")
-    public EspirituAngelical(){
+    public EspirituAngelical() {
         super();
     }
 
@@ -23,7 +23,7 @@ public class EspirituAngelical extends Espiritu {
     }
 
 
-    private int calcularPorcentajeDeAtaqueExitoso(){
+    private int calcularPorcentajeDeAtaqueExitoso() {
         int dado = this.randomizer.lanzarDadoDeAtaque();
         return min(dado + this.getNivelDeConexion(), 100);
     }
@@ -34,6 +34,7 @@ public class EspirituAngelical extends Espiritu {
     }
 
     @Override
-    public void recibirAtaque(int ataque, Espiritu atacante) {}
+    public void recibirAtaque(int ataque, Espiritu atacante) {
+    }
 
 }

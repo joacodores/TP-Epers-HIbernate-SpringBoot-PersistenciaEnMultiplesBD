@@ -6,10 +6,16 @@ import java.util.List;
 
 public interface EspirituDAO {
     Espiritu crear(Espiritu espiritu);
+
     Espiritu recuperar(Long idDelEspiritu);
+
     List<Espiritu> recuperarTodos();
+
     void actualizar(Espiritu espiritu);
+
     void eliminar(Espiritu espiritu);
+
     void eliminarTodo();
+
     List<Espiritu> espiritusEn(Long ubicacionId);
 }

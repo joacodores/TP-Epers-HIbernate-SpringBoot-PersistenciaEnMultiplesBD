@@ -7,12 +7,20 @@ import java.util.List;
 
 public interface MediumService {
     Medium crear(Medium medium);
+
     Medium recuperar(Long mediumId);
+
     List<Medium> recuperarTodos();
+
     void actualizar(Medium medium);
+
     void eliminar(Medium medium);
+
     void eliminarTodo();
+
     Espiritu invocar(Long mediumId, Long espirituId);
+
     void exorcizar(Long idMediumExorcista, Long idMediumAExorcizar);
+
     void descansar(Long mediumId);
 }

@@ -6,10 +6,14 @@ import java.util.List;
 
 public interface UbicacionDAO {
     Ubicacion crear(Ubicacion ubicacion);
-    Ubicacion recuperar(Long ubicacionId);
-    void actualizar(Ubicacion ubicacion);
-    void eliminar(Ubicacion ubicacion);
-    List<Ubicacion> recuperarTodos();
-    void eliminarTodo();
 
+    Ubicacion recuperar(Long ubicacionId);
+
+    void actualizar(Ubicacion ubicacion);
+
+    void eliminar(Ubicacion ubicacion);
+
+    List<Ubicacion> recuperarTodos();
+
+    void eliminarTodo();
 }

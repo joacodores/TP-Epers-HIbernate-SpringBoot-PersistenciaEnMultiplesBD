@@ -20,7 +20,7 @@ public class EspirituTest {
     }
 
     @Test
-    void crearEspirituConNivelDeConexionInvalidoLanzaExcepcion(){
+    void crearEspirituConNivelDeConexionInvalidoLanzaExcepcion() {
         assertThrows(NivelDeConexionFueraDeRangoException.class, () -> new EspirituAngelical(-1, "Aura Negativa", puebloPaleta));
         assertDoesNotThrow(() -> new EspirituAngelical(0, "Chill guy", puebloPaleta));
         assertDoesNotThrow(() -> new EspirituDemoniaco(100, "Monster Ultra", puebloPaleta));
@@ -29,7 +29,7 @@ public class EspirituTest {
 
     @Test
     void aumentarConexionYaEstandoAlMaximoNoHaceNada() {
-        Espiritu sukuna = new EspirituDemoniaco(100, "Sukuna" , puebloPaleta);
+        Espiritu sukuna = new EspirituDemoniaco(100, "Sukuna", puebloPaleta);
         sukuna.aumentarConexion(yuta);
         assertEquals(100, sukuna.getNivelDeConexion());
 
@@ -39,7 +39,7 @@ public class EspirituTest {
     }
 
     @Test
-    void conexionConMediumTest(){
+    void conexionConMediumTest() {
         assertEquals(50, rika.getNivelDeConexion());
         assertTrue(yuta.getEspiritus().isEmpty());
         yuta.conectarseAEspiritu(rika);
@@ -48,7 +48,7 @@ public class EspirituTest {
     }
 
     @Test
-    void disminuirConexionTest(){
+    void disminuirConexionTest() {
         yuta.conectarseAEspiritu(rika);
         assertEquals(70, rika.getNivelDeConexion());
         rika.disminuirConexion(10);
@@ -56,7 +56,7 @@ public class EspirituTest {
     }
 
     @Test
-    void disminuirCeroConexionNoHaceNadaTest(){
+    void disminuirCeroConexionNoHaceNadaTest() {
         yuta.conectarseAEspiritu(rika);
         assertEquals(70, rika.getNivelDeConexion());
         rika.disminuirConexion(0);
@@ -64,7 +64,7 @@ public class EspirituTest {
     }
 
     @Test
-    void disminuirConexionACeroDesvinculaDeMediumTest(){
+    void disminuirConexionACeroDesvinculaDeMediumTest() {
         yuta.conectarseAEspiritu(rika);
         assertFalse(yuta.getEspiritus().isEmpty());
         rika.disminuirConexion(70);
@@ -73,7 +73,7 @@ public class EspirituTest {
     }
 
     @Test
-    void seCapeaACeroElNivelDeConexionAlDisminuirConexionMuchoTest(){
+    void seCapeaACeroElNivelDeConexionAlDisminuirConexionMuchoTest() {
         yuta.conectarseAEspiritu(rika);
         assertFalse(yuta.getEspiritus().isEmpty());
         rika.disminuirConexion(1000);

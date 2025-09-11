@@ -6,7 +6,8 @@ import lombok.*;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
-@Getter @Setter
+@Getter
+@Setter
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -33,6 +34,7 @@ public abstract class Espiritu {
     public Espiritu() {
         this.randomizer = new RandomizerImpl();
     }
+
     public Espiritu(int nivelDeConexion, @NonNull String nombre, Ubicacion ubicacion) {
         validarNivelDeConexion(nivelDeConexion);
         this.nombre = nombre;
@@ -52,7 +54,7 @@ public abstract class Espiritu {
 
     public void aumentarConexion(Medium medium) {
         Integer manaDeMedium = medium.getMana();
-        this.nivelDeConexion += (manaDeMedium * 20)/100;
+        this.nivelDeConexion += (manaDeMedium * 20) / 100;
         if (this.nivelDeConexion >= 100) this.nivelDeConexion = 100;
     }
 
@@ -68,7 +70,8 @@ public abstract class Espiritu {
             this.desvincularDeMedium();
         }
     }
-    public void conectar(Medium medium){
+
+    public void conectar(Medium medium) {
         aumentarConexion(medium);
         setOwner(medium);
     }
@@ -77,11 +80,12 @@ public abstract class Espiritu {
         return this.owner == null;
     }
 
-    public void cambiarUbicacion(Ubicacion ubicacionNueva){
+    public void cambiarUbicacion(Ubicacion ubicacionNueva) {
         this.ubicacion.eliminarEspiritu(this);
         ubicacionNueva.agregarEspiritu(this);
         this.ubicacion = ubicacionNueva;
     }
+
     public void setCustomRandomizer(Randomizer randomizer) {
         this.randomizer = randomizer;
     }
@@ -90,7 +94,7 @@ public abstract class Espiritu {
 
     public abstract void recibirAtaque(int ataque, Espiritu atacante);
 
-    public void sufrirDerrota(int dmg){
+    public void sufrirDerrota(int dmg) {
         this.disminuirConexion(dmg);
     }
 

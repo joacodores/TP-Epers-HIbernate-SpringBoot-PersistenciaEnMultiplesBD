@@ -14,6 +14,7 @@ import ar.edu.unq.epersgeist.servicios.impl.UbicacionServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,26 +33,26 @@ public class UbicacionServiceTest {
     }
 
     @Test
-    void crearUbicacionTest(){
+    void crearUbicacionTest() {
         assertNull(ubicacion.getId());
         service.crear(ubicacion);
         assertNotNull(ubicacion.getId());
     }
 
     @Test
-    void recuperarUbicacionNoPersistidaDevuelveNullTest(){
+    void recuperarUbicacionNoPersistidaDevuelveNullTest() {
         Long ubicacionID = service.crear(ubicacion).getId();
         assertNull(service.recuperar(ubicacionID + 1));
     }
 
     @Test
-    void recuperarUbicacionTest(){
+    void recuperarUbicacionTest() {
         Long ubicacionID = service.crear(ubicacion).getId();
         assertEquals(ubicacion.getNombre(), service.recuperar(ubicacionID).getNombre());
     }
 
     @Test
-    void actualizarUbicacionTest(){
+    void actualizarUbicacionTest() {
         Long ubicacionID = service.crear(ubicacion).getId();
         ubicacion.setNombre("Berazategui");
         service.actualizar(ubicacion);
@@ -59,12 +60,12 @@ public class UbicacionServiceTest {
     }
 
     @Test
-    void recuperarTodosCuandoNoSePersistioNingunObjetoDevuelveListaVaciaTest(){
+    void recuperarTodosCuandoNoSePersistioNingunObjetoDevuelveListaVaciaTest() {
         assertTrue(service.recuperarTodos().isEmpty());
     }
 
     @Test
-    void recuperarTodosDevuelveLasUbicacionesEnOrdenAscendentePorNombreTest(){
+    void recuperarTodosDevuelveLasUbicacionesEnOrdenAscendentePorNombreTest() {
         service.crear(ubicacion);
         service.crear(new Ubicacion("Bernal"));
         service.crear(new Ubicacion("Mordor"));
@@ -72,14 +73,14 @@ public class UbicacionServiceTest {
     }
 
     @Test
-    void eliminarUbicacionNoPersistidaNoLanzaExcepcionTest(){
+    void eliminarUbicacionNoPersistidaNoLanzaExcepcionTest() {
         service.crear(ubicacion);
         Ubicacion ubicacion2 = new Ubicacion("Nueva Ubicación");
         assertDoesNotThrow(() -> service.eliminar(ubicacion2));
     }
 
     @Test
-    void eliminarUbicacionTest(){
+    void eliminarUbicacionTest() {
         service.crear(ubicacion);
         assertFalse(service.recuperarTodos().isEmpty());
         service.eliminar(ubicacion);
@@ -107,7 +108,7 @@ public class UbicacionServiceTest {
     }
 
     @AfterEach
-    void cleanup(){
+    void cleanup() {
         EspirituService espirituService = new EspirituServiceImpl(new HibernateEspirituDAO(), new HibernateMediumDAO());
         espirituService.eliminarTodo();
         service.eliminarTodo();

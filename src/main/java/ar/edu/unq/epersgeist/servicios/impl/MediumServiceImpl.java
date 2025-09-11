@@ -19,29 +19,29 @@ public class MediumServiceImpl implements MediumService {
     private final EspirituDAO espirituDAO;
     private final UbicacionDAO ubicacionDAO;
 
-    public MediumServiceImpl(MediumDAO medium, EspirituDAO espirituDAO,  UbicacionDAO ubicacionDAO) {
+    public MediumServiceImpl(MediumDAO medium, EspirituDAO espirituDAO, UbicacionDAO ubicacionDAO) {
         this.mediumDAO = medium;
         this.espirituDAO = espirituDAO;
         this.ubicacionDAO = ubicacionDAO;
     }
 
     @Override
-    public Medium crear(Medium medium){
+    public Medium crear(Medium medium) {
         return HibernateTransactionRunner.runTrx(() -> mediumDAO.crear(medium));
     }
 
     @Override
-    public Medium recuperar(Long id){
+    public Medium recuperar(Long id) {
         return HibernateTransactionRunner.runTrx(() -> mediumDAO.recuperar(id));
     }
 
     @Override
-    public List<Medium> recuperarTodos(){
+    public List<Medium> recuperarTodos() {
         return HibernateTransactionRunner.runTrx(mediumDAO::recuperarTodos);
     }
 
     @Override
-    public void actualizar(Medium medium){
+    public void actualizar(Medium medium) {
         HibernateTransactionRunner.runTrx(() -> {
             mediumDAO.actualizar(medium);
             return null;
@@ -49,7 +49,7 @@ public class MediumServiceImpl implements MediumService {
     }
 
     @Override
-    public void eliminar(Medium medium){
+    public void eliminar(Medium medium) {
         HibernateTransactionRunner.runTrx(() -> {
             medium.vaciarEspiritus();
             mediumDAO.eliminar(medium);
@@ -79,7 +79,7 @@ public class MediumServiceImpl implements MediumService {
     }
 
     @Override
-    public void descansar(Long mediumId){
+    public void descansar(Long mediumId) {
         HibernateTransactionRunner.runTrx(() -> {
             mediumDAO.descansar(mediumId);
             return null;
@@ -87,17 +87,17 @@ public class MediumServiceImpl implements MediumService {
     }
 
     @Override
-    public Espiritu invocar(Long mediumId, Long espirituId){
+    public Espiritu invocar(Long mediumId, Long espirituId) {
         return HibernateTransactionRunner.runTrx(() -> {
-                    Medium invocador = mediumDAO.recuperar(mediumId);
-                    Espiritu espirituAInvocar = espirituDAO.recuperar(espirituId);
-                    Ubicacion ubiDeInvocacion = ubicacionDAO.recuperar(invocador.getUbicacion().getId());
-                    invocador.invocar(espirituAInvocar);
-                    mediumDAO.actualizar(invocador);
-                    espirituDAO.actualizar(espirituAInvocar);
-                    ubicacionDAO.actualizar(ubiDeInvocacion);
-                    return espirituAInvocar;
-                });
+            Medium invocador = mediumDAO.recuperar(mediumId);
+            Espiritu espirituAInvocar = espirituDAO.recuperar(espirituId);
+            Ubicacion ubiDeInvocacion = ubicacionDAO.recuperar(invocador.getUbicacion().getId());
+            invocador.invocar(espirituAInvocar);
+            mediumDAO.actualizar(invocador);
+            espirituDAO.actualizar(espirituAInvocar);
+            ubicacionDAO.actualizar(ubiDeInvocacion);
+            return espirituAInvocar;
+        });
     }
 
 }

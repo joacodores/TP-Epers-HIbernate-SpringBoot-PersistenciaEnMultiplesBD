@@ -3,7 +3,7 @@ package ar.edu.unq.epersgeist.modelo;
 import jakarta.persistence.Entity;
 
 @Entity
-public class EspirituDemoniaco extends Espiritu{
+public class EspirituDemoniaco extends Espiritu {
 
     @SuppressWarnings("unused")
     public EspirituDemoniaco() {
@@ -19,11 +19,12 @@ public class EspirituDemoniaco extends Espiritu{
         return false;
     }
 
-    private boolean fueAtaqueExitoso(int ataque){
+    private boolean fueAtaqueExitoso(int ataque) {
         return ataque > this.randomizer.lanzarDadoDeDefensa();
     }
 
-    public void atacar(Espiritu espiritu){}
+    public void atacar(Espiritu espiritu) {
+    }
 
     public void recibirAtaque(int ataque, Espiritu atacante) {
         if (fueAtaqueExitoso(ataque)) {

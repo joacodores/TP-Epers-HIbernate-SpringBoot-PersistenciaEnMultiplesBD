@@ -14,35 +14,36 @@ public class EspirituServiceImpl implements EspirituService {
     private final EspirituDAO espirituDAO;
     private final MediumDAO mediumDAO;
 
-    public EspirituServiceImpl(EspirituDAO espirituDAO,  MediumDAO mediumDAO) {
+    public EspirituServiceImpl(EspirituDAO espirituDAO, MediumDAO mediumDAO) {
         this.espirituDAO = espirituDAO;
         this.mediumDAO = mediumDAO;
     }
 
     @Override
-    public Espiritu crear(Espiritu espiritu){
+    public Espiritu crear(Espiritu espiritu) {
         return HibernateTransactionRunner.runTrx(() -> espirituDAO.crear(espiritu));
     }
 
     @Override
-    public void eliminar(Espiritu espiritu){
+    public void eliminar(Espiritu espiritu) {
         HibernateTransactionRunner.runTrx(() -> {
             espirituDAO.eliminar(espiritu);
             return null;
         });
     }
+
     @Override
-    public Espiritu recuperar(Long id){
+    public Espiritu recuperar(Long id) {
         return HibernateTransactionRunner.runTrx(() -> espirituDAO.recuperar(id));
     }
 
     @Override
-    public List<Espiritu> recuperarTodos(){
+    public List<Espiritu> recuperarTodos() {
         return HibernateTransactionRunner.runTrx(espirituDAO::recuperarTodos);
     }
 
     @Override
-    public void actualizar(Espiritu espiritu){
+    public void actualizar(Espiritu espiritu) {
         HibernateTransactionRunner.runTrx(() -> {
             espirituDAO.actualizar(espiritu);
             return null;
@@ -56,6 +57,7 @@ public class EspirituServiceImpl implements EspirituService {
             return null;
         });
     }
+
     @Override
     public Medium conectar(Long espirituId, Long mediumId) {
         return HibernateTransactionRunner.runTrx(() -> {
@@ -67,8 +69,9 @@ public class EspirituServiceImpl implements EspirituService {
             return medium;
         });
 
-    };
+    }
 
+    ;
 
 
 }

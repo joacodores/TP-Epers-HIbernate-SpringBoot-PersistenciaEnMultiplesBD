@@ -31,15 +31,14 @@ public class Medium {
     @Getter
     @Column(nullable = false)
     private Integer mana;
-    @Getter @Setter
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
-    private Ubicacion ubicacion;
     @Getter @Setter(AccessLevel.NONE)
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, /*fetch = FetchType.EAGER,*/ orphanRemoval = true)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Espiritu> espiritus = new ArrayList<>();
+    @Getter @Setter
+    @ManyToOne
+    private Ubicacion ubicacion;
 
     public Medium(String nombre, Integer manaMax, Integer mana, Ubicacion ubicacion) {
-
         this.nombre = nombre;
         this.manaMax = manaMax;
         this.mana = min(manaMax, mana);
@@ -96,13 +95,12 @@ public class Medium {
         this.mana = Math.min(this.mana + i, this.manaMax);
     }
 
-    public void aumentarNivelDeConexionATodosLosEspiritus(int i) {
+    public void aumentarNivelDeConexionATodosLosEspiritus() {
         espiritus.forEach(espiritu -> espiritu.aumentarConexion(this));
     }
 
     public void invocar(Espiritu espiritu){
         Ubicacion ubicacionDeMedium = this.getUbicacion();
-        Ubicacion ubicacionDeEspiritu = espiritu.getUbicacion();
         if(!espiritu.esEspirituLibre()) {
             throw new EspirituNoEsLibreException("El espíritu no puede ser invocado, ya que no es libre");
         }

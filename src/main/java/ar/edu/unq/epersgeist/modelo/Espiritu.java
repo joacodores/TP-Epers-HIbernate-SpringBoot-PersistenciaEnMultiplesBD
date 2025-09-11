@@ -22,19 +22,18 @@ public abstract class Espiritu {
     private final int maxNivelDeConexion = 100;
     private final int minNivelDeConexion = 0;
 
-    @Transient
-    protected Randomizer randomizer;
     @ManyToOne
     private Ubicacion ubicacion;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
+    @ManyToOne
     private Medium owner;
+    @Transient
+    protected Randomizer randomizer;
 
     @SuppressWarnings("unused")
     public Espiritu() {
         this.randomizer = new RandomizerImpl();
     }
-    public Espiritu(@NonNull int nivelDeConexion, @NonNull String nombre, Ubicacion ubicacion) {
+    public Espiritu(int nivelDeConexion, @NonNull String nombre, Ubicacion ubicacion) {
         validarNivelDeConexion(nivelDeConexion);
         this.nombre = nombre;
         this.ubicacion = ubicacion;

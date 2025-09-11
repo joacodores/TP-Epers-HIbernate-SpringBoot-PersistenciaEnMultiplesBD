@@ -17,7 +17,6 @@ public class EspirituTest {
         puebloPaleta = new Ubicacion("Pueblo Paleta");
         rika = new EspirituAngelical(50, "Rika", puebloPaleta);
         yuta = new Medium("Yuta", 100, 100, puebloPaleta);
-
     }
 
     @Test

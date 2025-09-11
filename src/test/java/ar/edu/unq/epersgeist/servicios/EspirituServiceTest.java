@@ -3,9 +3,12 @@ package ar.edu.unq.epersgeist.servicios;
 import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateEspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateUbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.impl.EspirituServiceImpl;
+import ar.edu.unq.epersgeist.servicios.impl.UbicacionServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,15 +23,22 @@ public class EspirituServiceTest {
     private EspirituAngelical angel;
     private EspirituDemoniaco demonio;
     private Ubicacion eastblue;
+    private UbicacionService ubicacionService;
 
     @BeforeEach
     void prepare() {
+        UbicacionDAO daoUbi = new HibernateUbicacionDAO();
+        EspirituDAO daoEsp = new HibernateEspirituDAO();
+        MediumDAO daoMed = new HibernateMediumDAO();
+
+        this.ubicacionService = new UbicacionServiceImpl(daoUbi, daoEsp);
         eastblue = new Ubicacion("East Blue");
+        ubicacionService.crear(eastblue);
+
         this.angel = new EspirituAngelical(58, "Luffy", eastblue);
         this.demonio = new EspirituDemoniaco(36, "Zoro", eastblue);
-        EspirituDAO daoE = new HibernateEspirituDAO();
-        MediumDAO daoM = new HibernateMediumDAO();
-        this.service = new EspirituServiceImpl(daoE, daoM);
+
+        this.service = new EspirituServiceImpl(daoEsp, daoMed);
     }
 
     @Test
@@ -76,5 +86,6 @@ public class EspirituServiceTest {
     @AfterEach
     void cleanup(){
         service.eliminarTodo();
+        ubicacionService.eliminarTodo();
     }
 }

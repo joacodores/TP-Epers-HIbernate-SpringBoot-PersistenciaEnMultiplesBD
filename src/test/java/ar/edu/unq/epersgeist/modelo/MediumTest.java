@@ -2,18 +2,14 @@ package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.modelo.exceptions.EspirituNoEsLibreException;
 import ar.edu.unq.epersgeist.modelo.exceptions.EspirituNoPuedeConectarException;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import ar.edu.unq.epersgeist.helpers.RandomizerFalso;
 import ar.edu.unq.epersgeist.modelo.exceptions.ExorcistaSinAngelesException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class MediumTest {
 
@@ -270,7 +266,7 @@ public class MediumTest {
         // Paso a paso, que hace la implementacion de descansar()
         tai.conectarseAEspiritu(espirituDem);
         tai.aumentarMana(15);
-        tai.aumentarNivelDeConexionATodosLosEspiritus(5);
+        tai.aumentarNivelDeConexionATodosLosEspiritus();
 
         assertEquals(25, tai.getMana());
         assertEquals(7, espirituDem.getNivelDeConexion());
@@ -305,7 +301,6 @@ public class MediumTest {
 
     }
 
-
     @Test
     void mediumNoPuedeInvocarEspirituNoLibre(){
         palermo.conectarseAEspiritu(carlitos);
@@ -319,6 +314,7 @@ public class MediumTest {
         assertThrows(EspirituNoPuedeConectarException.class, () -> juan.conectarseAEspiritu(carlitos));
 
     }
+
     @Test
     void invocarDescuenta10YMueveYActualizaListas() {
         int mana0 = juan.getMana(); // 20
@@ -337,8 +333,6 @@ public class MediumTest {
         assertEquals(0, juan.getMana());
         assertEquals(bocaPredio, carlitos.getUbicacion());
     }
-
-
 
     @Test
     void invocarCuandoYaEstaEnLaMismaUbicacion_Cobra10() {

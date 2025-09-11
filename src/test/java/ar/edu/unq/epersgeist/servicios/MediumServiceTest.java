@@ -6,13 +6,12 @@ import ar.edu.unq.epersgeist.modelo.exceptions.ExorcistaSinAngelesException;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
-import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateEspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateEspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateUbicacionDAO;
+import ar.edu.unq.epersgeist.servicios.impl.EspirituServiceImpl;
 import ar.edu.unq.epersgeist.servicios.impl.MediumServiceImpl;
 import ar.edu.unq.epersgeist.servicios.impl.UbicacionServiceImpl;
 import org.junit.jupiter.api.AfterEach;
@@ -27,40 +26,40 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
 public class MediumServiceTest {
-
     private Ubicacion ubi;
     private MediumService service;
     private Medium medium;
     private UbicacionService ubicacionService;
+    private EspirituService espirituService;
 
     @BeforeEach
     void prepare() {
-        ubi = new Ubicacion("ubi");
-        this.medium = new Medium("Thiago", 50, 30, ubi);
+        UbicacionDAO daoUbi = new HibernateUbicacionDAO();
         MediumDAO dao = new HibernateMediumDAO();
         EspirituDAO daoEsp = new HibernateEspirituDAO();
-        UbicacionDAO daoUbi = new HibernateUbicacionDAO();
+
+        ubi = new Ubicacion("ubi");
         this.ubicacionService = new UbicacionServiceImpl(daoUbi, daoEsp);
+        ubicacionService.crear(ubi);
+
+        this.medium = new Medium("Thiago", 50, 30, ubi);
         this.service = new MediumServiceImpl(dao,  daoEsp, daoUbi);
+        this.espirituService = new EspirituServiceImpl(daoEsp, dao);
     }
 
     @Test
     void crearMediumTest(){
         assertNull(medium.getId());
-        ubicacionService.crear(ubi);
         service.crear(medium);
         assertNotNull(medium.getId());
     }
 
-/*
     @Test
     void recuperarMediumNoPersistidoDevuelveNullTest(){
         Long mediumID = service.crear(medium).getId();
         assertNull(service.recuperar(mediumID + 1));
     }
-
 
     @Test
     void recuperarMediumTest(){
@@ -99,7 +98,6 @@ public class MediumServiceTest {
         assertEquals(List.of("Thiago", "Thiago", "Thiago"), service.recuperarTodos().stream().map(Medium::getNombre).toList());
     }
 
-
     @Test
     void eliminarMediumNoPersistidoNoLanzaExcepcionTest(){
         service.crear(medium);
@@ -129,8 +127,8 @@ public class MediumServiceTest {
         Medium elNoba = new Medium("El Noba", 100, 100, ubi);
 
         //TODO: Cuando creen conectar podemos obviar la conexion por modelo que hice acá y hacerla por service
-        EspirituAngelical angel = new EspirituAngelical(60, "angel", ubi);
-        EspirituDemoniaco demonio = new EspirituDemoniaco(20, "demonio", ubi);
+        EspirituAngelical angel = new EspirituAngelical(100, "angel", ubi);
+        EspirituDemoniaco demonio = new EspirituDemoniaco(0, "demonio", ubi);
 
         RandomizerFalso randomizer = new RandomizerFalso();
 
@@ -143,8 +141,8 @@ public class MediumServiceTest {
         Long taiId = service.crear(tai).getId();
         Long elNobaId = service.crear(elNoba).getId();
 
-        randomizer.setSecuenciaDeAtaques(5);
-        randomizer.setSecuenciaDeDefensas(6);
+        randomizer.setSecuenciaDeAtaques(10);
+        randomizer.setSecuenciaDeDefensas(0);
         service.exorcizar(taiId, elNobaId);
 
         //TODO: Acá también, al llamar espiritus se espera que usemos el service
@@ -159,12 +157,14 @@ public class MediumServiceTest {
         Long mediumID = m1.getId();
         service.descansar(mediumID);
         Medium m2 = service.recuperar(mediumID);
-        assertEquals(m2.getMana(), 45);
+        assertEquals(45, m2.getMana());
     }
-*/
+
     @AfterEach
     void cleanup(){
+        espirituService.eliminarTodo();
         service.eliminarTodo();
+        ubicacionService.eliminarTodo();
     }
 
 

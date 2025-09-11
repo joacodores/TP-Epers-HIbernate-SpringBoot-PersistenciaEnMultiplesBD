@@ -21,7 +21,7 @@ public class Ubicacion {
     @OneToMany(mappedBy = "ubicacion", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Espiritu> espiritus = new ArrayList<>();
 
-    @OneToMany(mappedBy = "ubicacion", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "ubicacion", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Medium> mediums = new ArrayList<>();
 
     public Ubicacion(@NonNull String nombre){

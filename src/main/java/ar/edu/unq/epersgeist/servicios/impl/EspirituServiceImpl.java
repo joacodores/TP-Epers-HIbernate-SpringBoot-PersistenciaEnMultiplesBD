@@ -1,8 +1,8 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
+import ar.edu.unq.epersgeist.servicios.enums.Direccion;
 import ar.edu.unq.epersgeist.servicios.EspirituService;
 import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
 
@@ -10,35 +10,37 @@ import java.util.List;
 
 public class EspirituServiceImpl implements EspirituService {
 
-    private EspirituDAO espirituDAO;
+    private final EspirituDAO espirituDAO;
+
     public EspirituServiceImpl(EspirituDAO espirituDAO) {
         this.espirituDAO = espirituDAO;
     }
 
     @Override
-    public Espiritu crear(Espiritu espiritu){
+    public Espiritu crear(Espiritu espiritu) {
         return HibernateTransactionRunner.runTrx(() -> espirituDAO.crear(espiritu));
     }
 
     @Override
-    public void eliminar(Espiritu espiritu){
+    public void eliminar(Espiritu espiritu) {
         HibernateTransactionRunner.runTrx(() -> {
             espirituDAO.eliminar(espiritu);
             return null;
         });
     }
+
     @Override
-    public Espiritu recuperar(Long id){
+    public Espiritu recuperar(Long id) {
         return HibernateTransactionRunner.runTrx(() -> espirituDAO.recuperar(id));
     }
 
     @Override
-    public List<Espiritu> recuperarTodos(){
+    public List<Espiritu> recuperarTodos() {
         return HibernateTransactionRunner.runTrx(espirituDAO::recuperarTodos);
     }
 
     @Override
-    public void actualizar(Espiritu espiritu){
+    public void actualizar(Espiritu espiritu) {
         HibernateTransactionRunner.runTrx(() -> {
             espirituDAO.actualizar(espiritu);
             return null;
@@ -53,8 +55,12 @@ public class EspirituServiceImpl implements EspirituService {
         });
     }
 
+    @Override
+    public List<Espiritu> espiritusDemoniacos(Direccion direccion, Integer pagina, Integer cantidadPorPagina) {
+        return HibernateTransactionRunner.runTrx(() -> espirituDAO.espiritusDemoniacos(direccion, pagina, cantidadPorPagina));
+    }
 
-    /*@Override
+     /*@Override
     public Medium conectar(Long espirituId, Medium medium) {
         Espiritu espiritu = espirituDAO.recuperar(espirituId);
         medium.conectarseAEspiritu(espiritu);

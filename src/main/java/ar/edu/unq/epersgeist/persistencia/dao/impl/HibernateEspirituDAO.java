@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.persistencia.dao.impl;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
+import ar.edu.unq.epersgeist.servicios.enums.Direccion;
 import ar.edu.unq.epersgeist.servicios.runner.HibernateSessionContext;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -23,6 +24,13 @@ public class HibernateEspirituDAO extends HibernateDAO<Espiritu> implements Espi
         String hql = "select e from Espiritu e";
         Query<Espiritu> query = session.createQuery(hql, Espiritu.class);
         return query.getResultList();
+    }
+
+    public List<Espiritu> espiritusDemoniacos(Direccion direccion, Integer pagina, Integer cantidadPorPagina){
+       Session session = HibernateSessionContext.getCurrentSession();
+       String hql = "from EspirituDemoniaco e order by e.nivelDeConexion " + direccion.getQueryDir();
+       Query<Espiritu> query = session.createQuery(hql, Espiritu.class).setFirstResult((pagina -1) * cantidadPorPagina).setMaxResults(cantidadPorPagina);
+       return query.getResultList();
     }
 
     public List<Espiritu> espiritusEn(Long ubicacionId) {

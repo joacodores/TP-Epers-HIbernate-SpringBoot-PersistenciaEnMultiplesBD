@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.servicios;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
+import ar.edu.unq.epersgeist.servicios.enums.Direccion;
 
 import java.util.List;
 
@@ -19,4 +20,6 @@ public interface EspirituService {
     void eliminarTodo();
 
     Medium conectar(Long espirituId, Long mediumId);
+
+    List<Espiritu> espiritusDemoniacos(Direccion direccion, Integer pagina, Integer cantidadPorPagina);
 }

@@ -28,4 +28,11 @@ public class HibernateMediumDAO extends HibernateDAO<Medium> implements MediumDA
         return query.getResultList();
     }
 
+    public void descansar(Long mediumId) {
+        Session session = HibernateSessionContext.getCurrentSession();
+        String hql = "select m from Medium m where m.id = :mediumId";
+        Medium medium = session.createQuery(hql, Medium.class).setParameter("mediumId", mediumId).getSingleResult();
+        medium.aumentarMana(15);
+        medium.aumentarNivelDeConexionATodosLosEspiritus(5);
+    }
 }

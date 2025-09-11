@@ -1,46 +1,94 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.modelo.exceptions.NivelDeConexionFueraDeRangoException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class EspirituTest {
-    /*private Espiritu zorro;
-    private Medium naruto;
+
+    private Espiritu rika;
+    private Medium yuta;
+    private Ubicacion puebloPaleta;
 
     @BeforeEach
     void crearModelo() {
-        zorro = new EspirituDemoniaco("fuego", 0, "zorro");
-        naruto = new Medium("Naruto", 100, 100);
+        puebloPaleta = new Ubicacion("Pueblo Paleta");
+        rika = new EspirituAngelical(50, "Rika", puebloPaleta);
+        yuta = new Medium("Yuta", 100, 100, puebloPaleta);
+
     }
 
     @Test
     void crearEspirituConNivelDeConexionInvalidoLanzaExcepcion(){
-        assertThrows(RuntimeException.class, () -> new Espiritu("fuego", -1, "zorro"));
-        assertDoesNotThrow(() -> new Espiritu("fuego", 0, "zorro"));
-        assertDoesNotThrow(() -> new Espiritu("fuego", 100, "zorro"));
-        assertThrows(RuntimeException.class, () -> new Espiritu("fuego", 101, "zorro"));
+        assertThrows(NivelDeConexionFueraDeRangoException.class, () -> new EspirituAngelical(-1, "Aura Negativa", puebloPaleta));
+        assertDoesNotThrow(() -> new EspirituAngelical(0, "Chill guy", puebloPaleta));
+        assertDoesNotThrow(() -> new EspirituDemoniaco(100, "Monster Ultra", puebloPaleta));
+        assertThrows(NivelDeConexionFueraDeRangoException.class, () -> new EspirituDemoniaco(101, "Faker", puebloPaleta));
     }
 
     @Test
     void aumentarConexionYaEstandoAlMaximoNoHaceNada() {
-        Espiritu espirituMaximo = new Espiritu("divinidad", 100, "espirituMaximo");
-        espirituMaximo.aumentarConexion(naruto);
-        assertEquals(100, espirituMaximo.getNivelDeConexion());
+        Espiritu sukuna = new EspirituDemoniaco(100, "Sukuna" , puebloPaleta);
+        sukuna.aumentarConexion(yuta);
+        assertEquals(100, sukuna.getNivelDeConexion());
 
-        Espiritu espirituPotencial = new Espiritu("potencialDivinidad", 95, "espirituPotencial");
-        espirituPotencial.aumentarConexion(naruto);
-        assertEquals(100, espirituPotencial.getNivelDeConexion());
+        Espiritu mahoraga = new EspirituDemoniaco(95, "Mahoraga", puebloPaleta);
+        mahoraga.aumentarConexion(yuta);
+        assertEquals(100, mahoraga.getNivelDeConexion());
     }
 
     @Test
     void conexionConMediumTest(){
-        assertEquals(0, zorro.getNivelDeConexion());
-        assertTrue(naruto.getEspiritus().isEmpty());
-        naruto.conectarseAEspiritu(zorro);
-        assertEquals(10, zorro.getNivelDeConexion());
-        assertTrue(naruto.getEspiritus().contains(zorro));
-    }*/
+        assertEquals(50, rika.getNivelDeConexion());
+        assertTrue(yuta.getEspiritus().isEmpty());
+        yuta.conectarseAEspiritu(rika);
+        assertEquals(70, rika.getNivelDeConexion());
+        assertTrue(yuta.getEspiritus().contains(rika));
+    }
 
+    @Test
+    void disminuirConexionTest(){
+        yuta.conectarseAEspiritu(rika);
+        assertEquals(70, rika.getNivelDeConexion());
+        rika.disminuirConexion(10);
+        assertEquals(60, rika.getNivelDeConexion());
+    }
+
+    @Test
+    void disminuirCeroConexionNoHaceNadaTest(){
+        yuta.conectarseAEspiritu(rika);
+        assertEquals(70, rika.getNivelDeConexion());
+        rika.disminuirConexion(0);
+        assertEquals(70, rika.getNivelDeConexion());
+    }
+
+    @Test
+    void disminuirConexionACeroDesvinculaDeMediumTest(){
+        yuta.conectarseAEspiritu(rika);
+        assertFalse(yuta.getEspiritus().isEmpty());
+        rika.disminuirConexion(70);
+        assertEquals(0, rika.getNivelDeConexion());
+        assertTrue(yuta.getEspiritus().isEmpty());
+    }
+
+    @Test
+    void seCapeaACeroElNivelDeConexionAlDisminuirConexionMuchoTest(){
+        yuta.conectarseAEspiritu(rika);
+        assertFalse(yuta.getEspiritus().isEmpty());
+        rika.disminuirConexion(1000);
+        assertEquals(0, rika.getNivelDeConexion());
+        assertTrue(yuta.getEspiritus().isEmpty());
+    }
+
+    @Test
+    void angelesPuedenExorcizarTest() {
+        assertTrue(new EspirituAngelical(100, "Galaiel", puebloPaleta).puedeExorcizar());
+    }
+
+    @Test
+    void demoniosNoPuedenExorcizarTest() {
+        assertFalse(new EspirituDemoniaco(100, "Baal", puebloPaleta).puedeExorcizar());
+    }
 }

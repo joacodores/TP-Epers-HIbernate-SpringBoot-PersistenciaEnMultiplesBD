@@ -2,16 +2,11 @@ package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.modelo.exceptions.NivelDeConexionFueraDeRangoException;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Getter @Setter
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -21,23 +16,33 @@ public abstract class Espiritu {
     @GeneratedValue(strategy = AUTO)
     private Long id;
     @Column(nullable = false)
-    private double nivelDeConexion;
+    private int nivelDeConexion;
     @Column(nullable = false, length = 500)
     private String nombre;
-    private final double maxNivelDeConexion = 100;
-    private final double minNivelDeConexion = 0;
+    private final int maxNivelDeConexion = 100;
+    private final int minNivelDeConexion = 0;
 
+    @Transient
+    protected Randomizer randomizer;
     @ManyToOne
     private Ubicacion ubicacion;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
     private Medium owner;
 
-    public Espiritu(@NonNull Integer nivelDeConexion, @NonNull String nombre, Ubicacion ubicacion) {
+    @SuppressWarnings("unused")
+    public Espiritu() {
+        this.randomizer = new RandomizerImpl();
+    }
+    public Espiritu(@NonNull int nivelDeConexion, @NonNull String nombre, Ubicacion ubicacion) {
         validarNivelDeConexion(nivelDeConexion);
         this.nombre = nombre;
         this.ubicacion = ubicacion;
+        this.randomizer = new RandomizerImpl();
         ubicacion.agregarEspiritu(this);
     }
+
+    public abstract boolean puedeExorcizar();
 
     private void validarNivelDeConexion(Integer nivelDeConexion) {
         if (nivelDeConexion < minNivelDeConexion || nivelDeConexion > maxNivelDeConexion) {
@@ -48,10 +53,22 @@ public abstract class Espiritu {
 
     public void aumentarConexion(Medium medium) {
         Integer manaDeMedium = medium.getMana();
-        this.nivelDeConexion += (manaDeMedium * 0.20);
+        this.nivelDeConexion += (manaDeMedium * 20)/100;
         if (this.nivelDeConexion >= 100) this.nivelDeConexion = 100;
     }
 
+    public void desvincularDeMedium() {
+        owner.desvincularEspiritu(this);
+        this.setOwner(null);
+    }
+
+    public void disminuirConexion(int cantidad) {
+        this.nivelDeConexion -= cantidad;
+        if (nivelDeConexion <= 0) {
+            this.nivelDeConexion = 0;
+            this.desvincularDeMedium();
+        }
+    }
     public void conectar(Medium medium){
         aumentarConexion(medium);
         setOwner(medium);
@@ -61,23 +78,21 @@ public abstract class Espiritu {
         return this.owner == null;
     }
 
-    public Ubicacion getUbicacion() {
-        return ubicacion;
-    }
-
-    public void setUbicacion(Ubicacion ubicacion) {
-        this.ubicacion = ubicacion;
-    }
-    public double getNivelDeConexion() {
-        return nivelDeConexion;
-    }
-
     public void cambiarUbicacion(Ubicacion ubicacionNueva){
         this.ubicacion.eliminarEspiritu(this);
         ubicacionNueva.agregarEspiritu(this);
         this.ubicacion = ubicacionNueva;
     }
+    public void setCustomRandomizer(Randomizer randomizer) {
+        this.randomizer = randomizer;
+    }
 
-    public abstract String getTipo();
+    public abstract void atacar(Espiritu espiritu);
+
+    public abstract void recibirAtaque(int ataque, Espiritu atacante);
+
+    public void sufrirDerrota(int dmg){
+        this.disminuirConexion(dmg);
+    }
 
 }

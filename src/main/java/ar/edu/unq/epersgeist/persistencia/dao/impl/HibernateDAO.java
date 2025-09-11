@@ -23,7 +23,7 @@ public class HibernateDAO<T> {
 
     public void actualizar(T entity) {
         Session session = HibernateSessionContext.getCurrentSession();
-        session.update(entity);
+        session.merge(entity);
     }
 
     public void eliminar(T entity) {

@@ -103,4 +103,8 @@ public class MediumServiceImpl implements MediumService {
         });
     }
 
+    public List<Espiritu> espiritus(Long mediumId) {
+        return HibernateTransactionRunner.runTrx(() -> mediumDAO.recuperar(mediumId).getEspiritus());
+    }
+
 }

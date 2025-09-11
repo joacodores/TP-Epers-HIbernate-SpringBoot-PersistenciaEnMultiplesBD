@@ -182,6 +182,31 @@ public class MediumServiceTest {
         assertEquals(e1.getUbicacion().getId(), ubi.getId());
     }
 
+    @Test
+    void unMediumNoTieneNingunEspirituTest() {
+        service.crear(medium);
+
+        assertTrue(service.espiritus(medium.getId()).isEmpty());
+    }
+
+    @Test
+    void unMediumTieneEspiritusTest() {
+        Medium m1 = service.crear(medium);
+
+        Espiritu e2 = new EspirituDemoniaco(100, "demonio", ubi2);
+        espirituService.crear(e2);
+
+        service.invocar(m1.getId(), e1.getId());
+        service.invocar(m1.getId(), e2.getId());
+
+        espirituService.conectar(e1.getId(), m1.getId());
+        espirituService.conectar(e2.getId(), m1.getId());
+
+        List<Espiritu> espiritus = service.espiritus(medium.getId());
+
+        assertEquals(espiritus.size(), 2);
+    }
+
     @AfterEach
     void cleanup() {
         espirituService.eliminarTodo();

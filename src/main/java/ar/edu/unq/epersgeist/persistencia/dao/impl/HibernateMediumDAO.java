@@ -33,4 +33,11 @@ public class HibernateMediumDAO extends HibernateDAO<Medium> implements MediumDA
         medium.aumentarMana(15);
         medium.aumentarNivelDeConexionATodosLosEspiritus();
     }
+
+    public List<Medium> mediumsSinEspiritusEn(Long ubicacionId) {
+        Session session = HibernateSessionContext.getCurrentSession();
+        String hql = "select m from Medium m where m.ubicacion.id = :ubicacionId and m.espiritus is empty";
+        Query<Medium> query = session.createQuery(hql, Medium.class).setParameter("ubicacionId", ubicacionId);
+        return query.getResultList();
+    }
 }

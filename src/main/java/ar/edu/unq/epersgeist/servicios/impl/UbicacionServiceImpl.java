@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
@@ -64,6 +65,12 @@ public class UbicacionServiceImpl implements UbicacionService {
     @Override
     public List<Espiritu> espiritusEn(Long ubicacionId) {
         return HibernateTransactionRunner.runTrx(() -> espirituDAO.espiritusEn(ubicacionId));
+    }
+
+    @Override
+    public List<Medium> mediumsSinEspiritusEn(Long ubicacionId){
+        return HibernateTransactionRunner.runTrx(() -> mediumDAO.mediumsSinEspiritusEn(ubicacionId));
+
     }
 
 }

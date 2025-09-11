@@ -19,4 +19,6 @@ public interface MediumDAO {
     void eliminarTodo();
 
     void descansar(Long mediumId);
+
+    List<Medium> mediumsSinEspiritusEn(Long ubicacionId);
 }

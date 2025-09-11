@@ -1,9 +1,6 @@
 package ar.edu.unq.epersgeist.servicios;
 
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
-import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
@@ -11,6 +8,7 @@ import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateEspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateUbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.impl.EspirituServiceImpl;
+import ar.edu.unq.epersgeist.servicios.impl.MediumServiceImpl;
 import ar.edu.unq.epersgeist.servicios.impl.UbicacionServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +22,8 @@ public class UbicacionServiceTest {
 
     private UbicacionService service;
     private Ubicacion ubicacion;
+    private MediumService mediumService;
+    private EspirituService espirituService;
 
     @BeforeEach
     void prepare() {
@@ -31,7 +31,9 @@ public class UbicacionServiceTest {
         UbicacionDAO dao = new HibernateUbicacionDAO();
         EspirituDAO espirituDAO = new HibernateEspirituDAO();
         MediumDAO mediumDAO = new HibernateMediumDAO();
+        mediumService = new MediumServiceImpl(mediumDAO,espirituDAO,dao);
         this.service = new UbicacionServiceImpl(dao, espirituDAO, mediumDAO);
+        espirituService = new EspirituServiceImpl(espirituDAO, mediumDAO);
     }
 
     @Test
@@ -109,11 +111,28 @@ public class UbicacionServiceTest {
         assertEquals("Zoro", espiritus.get(1).getNombre());
     }
 
+    @Test
+    void existeUnMediumSinEspirituEn() {
+        service.crear(ubicacion);
+        Ubicacion u2 = new Ubicacion("Templo de Jade");
+        service.crear(u2);
+
+        Medium tai = new Medium("Tai", 100, 10, ubicacion);
+        Espiritu espiritu = new EspirituAngelical(50, "Maestro Shifu", u2);
+
+        mediumService.crear(tai);
+        espirituService.crear(espiritu);
+
+        assertEquals(1, service.mediumsSinEspiritusEn(ubicacion.getId()).size());
+    }
+
     @AfterEach
     void cleanup() {
-        EspirituService espirituService = new EspirituServiceImpl(new HibernateEspirituDAO(), new HibernateMediumDAO());
         espirituService.eliminarTodo();
+        mediumService.eliminarTodo();
         service.eliminarTodo();
     }
+
+
 
 }

@@ -37,12 +37,12 @@ public class Ubicacion {
     }
 
     public void agregarEspiritu(Espiritu espiritu) {
-        this.espiritus.add(espiritu);
+        espiritus.add(espiritu);
         espiritu.setUbicacion(this);
     }
 
     public void eliminarEspiritu(Espiritu espiritu) {
         this.espiritus.remove(espiritu);
-        espiritu.setUbicacion(null);
+        //espiritu.setUbicacion(null);
     }
 }

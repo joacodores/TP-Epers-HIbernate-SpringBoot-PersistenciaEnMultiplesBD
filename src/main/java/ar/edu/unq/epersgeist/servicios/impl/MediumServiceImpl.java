@@ -91,8 +91,11 @@ public class MediumServiceImpl implements MediumService {
         return HibernateTransactionRunner.runTrx(() -> {
             Medium invocador = mediumDAO.recuperar(mediumId);
             Espiritu espirituAInvocar = espirituDAO.recuperar(espirituId);
-            Ubicacion ubiDeInvocacion = ubicacionDAO.recuperar(invocador.getUbicacion().getId());
+
+            Ubicacion ubiDeInvocacion = invocador.getUbicacion();
+
             invocador.invocar(espirituAInvocar);
+
             mediumDAO.actualizar(invocador);
             espirituDAO.actualizar(espirituAInvocar);
             ubicacionDAO.actualizar(ubiDeInvocacion);

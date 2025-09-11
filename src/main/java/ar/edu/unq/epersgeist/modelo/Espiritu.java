@@ -73,7 +73,7 @@ public abstract class Espiritu {
 
     public void conectar(Medium medium) {
         aumentarConexion(medium);
-        setOwner(medium);
+        this.setOwner(medium);
     }
 
     public boolean esEspirituLibre() {
@@ -82,8 +82,8 @@ public abstract class Espiritu {
 
     public void cambiarUbicacion(Ubicacion ubicacionNueva) {
         this.ubicacion.eliminarEspiritu(this);
+
         ubicacionNueva.agregarEspiritu(this);
-        this.ubicacion = ubicacionNueva;
     }
 
     public void setCustomRandomizer(Randomizer randomizer) {

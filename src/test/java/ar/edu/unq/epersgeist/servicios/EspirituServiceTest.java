@@ -12,6 +12,7 @@ import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateUbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.enums.Direccion;
 import ar.edu.unq.epersgeist.servicios.impl.EspirituServiceImpl;
+import ar.edu.unq.epersgeist.servicios.impl.MediumServiceImpl;
 import ar.edu.unq.epersgeist.servicios.impl.UbicacionServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,8 +27,10 @@ public class EspirituServiceTest {
     private EspirituService service;
     private EspirituAngelical angel;
     private EspirituDemoniaco demonio;
-    private Ubicacion eastblue;
     private UbicacionService ubicacionService;
+    private Ubicacion eastblue;
+    private MediumService mediumService;
+    private Medium sanji;
 
     @BeforeEach
     void prepare() {
@@ -35,10 +38,13 @@ public class EspirituServiceTest {
         EspirituDAO daoEsp = new HibernateEspirituDAO();
         MediumDAO daoMed = new HibernateMediumDAO();
 
-        this.ubicacionService = new UbicacionServiceImpl(daoUbi, daoEsp);
+        this.ubicacionService = new UbicacionServiceImpl(daoUbi, daoEsp, daoMed);
         eastblue = new Ubicacion("East Blue");
         ubicacionService.crear(eastblue);
 
+        this.mediumService = new MediumServiceImpl(daoMed, daoEsp, daoUbi);
+        sanji = new Medium("Sanji", 60, 30, eastblue);
+        mediumService.crear(sanji);
         this.angel = new EspirituAngelical(58, "Luffy", eastblue);
         this.demonio = new EspirituDemoniaco(36, "Zoro", eastblue);
 
@@ -137,9 +143,19 @@ private void crearEspiritusDemoniacosParaPruebas(int cantidad) {
         assertTrue(espiritusRecuperados.isEmpty());
     }
 
+    @Test
+    void conectarTest(){
+        Long zoroId = service.crear(demonio).getId();
+        Long sanjiId = sanji.getId();
+        service.conectar(zoroId, sanjiId);
+        sanji = mediumService.recuperar(sanjiId);
+        assertEquals("Zoro", sanji.getEspiritus().getFirst().getNombre());
+    }
+
     @AfterEach
     void cleanup(){
         service.eliminarTodo();
+        mediumService.eliminarTodo();
         ubicacionService.eliminarTodo();
     }
 }

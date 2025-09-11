@@ -28,10 +28,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MediumServiceTest {
     private Ubicacion ubi;
+    private Ubicacion ubi2;
     private MediumService service;
     private Medium medium;
     private UbicacionService ubicacionService;
     private EspirituService espirituService;
+    private Espiritu e1;
 
     @BeforeEach
     void prepare() {
@@ -40,12 +42,18 @@ public class MediumServiceTest {
         EspirituDAO daoEsp = new HibernateEspirituDAO();
 
         ubi = new Ubicacion("ubi");
-        this.ubicacionService = new UbicacionServiceImpl(daoUbi, daoEsp);
+        this.ubicacionService = new UbicacionServiceImpl(daoUbi, daoEsp, dao);
         ubicacionService.crear(ubi);
+        ubi2 = new Ubicacion("Ubicación 2");
+        ubicacionService.crear(ubi2);
+
+        this.espirituService = new EspirituServiceImpl(daoEsp, dao);
+        e1 = new EspirituAngelical(100, "angel", ubi2);
+        espirituService.crear(e1);
 
         this.medium = new Medium("Thiago", 50, 30, ubi);
         this.service = new MediumServiceImpl(dao, daoEsp, daoUbi);
-        this.espirituService = new EspirituServiceImpl(daoEsp, dao);
+
     }
 
     @Test
@@ -158,6 +166,20 @@ public class MediumServiceTest {
         service.descansar(mediumID);
         Medium m2 = service.recuperar(mediumID);
         assertEquals(45, m2.getMana());
+    }
+
+    @Test
+    void invocarTest() {
+        Medium m1 = service.crear(medium);
+        m1.aumentarMana(30);
+        Long mediumID = m1.getId();
+        Long espirituId = e1.getId();
+
+        assertEquals(e1.getUbicacion(), ubi2);
+
+        e1 = service.invocar(mediumID, espirituId);
+
+        assertEquals(e1.getUbicacion().getId(), ubi.getId());
     }
 
     @AfterEach

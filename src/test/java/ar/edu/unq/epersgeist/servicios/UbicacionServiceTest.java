@@ -5,6 +5,7 @@ import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateEspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
@@ -29,7 +30,8 @@ public class UbicacionServiceTest {
         this.ubicacion = new Ubicacion("Ubicacion");
         UbicacionDAO dao = new HibernateUbicacionDAO();
         EspirituDAO espirituDAO = new HibernateEspirituDAO();
-        this.service = new UbicacionServiceImpl(dao, espirituDAO);
+        MediumDAO mediumDAO = new HibernateMediumDAO();
+        this.service = new UbicacionServiceImpl(dao, espirituDAO, mediumDAO);
     }
 
     @Test

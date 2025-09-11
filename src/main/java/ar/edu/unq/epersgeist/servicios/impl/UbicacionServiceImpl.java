@@ -14,12 +14,12 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     private final UbicacionDAO ubicacionDAO;
     private final EspirituDAO espirituDAO;
-    //private final MediumDAO mediumDAO;
+    private final MediumDAO mediumDAO;
 
-    public UbicacionServiceImpl(UbicacionDAO ubicacionDAO, EspirituDAO espirituDAO/*,  MediumDAO mediumDAO*/) {
+    public UbicacionServiceImpl(UbicacionDAO ubicacionDAO, EspirituDAO espirituDAO,  MediumDAO mediumDAO) {
         this.ubicacionDAO = ubicacionDAO;
         this.espirituDAO = espirituDAO;
-        //this.mediumDAO = mediumDAO;
+        this.mediumDAO = mediumDAO;
     }
 
     @Override

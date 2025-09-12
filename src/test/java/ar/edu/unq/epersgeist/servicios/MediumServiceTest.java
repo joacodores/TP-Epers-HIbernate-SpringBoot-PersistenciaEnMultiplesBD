@@ -122,6 +122,30 @@ public class MediumServiceTest {
     }
 
     @Test
+    void unMediumNoTieneNingunEspirituTest() {
+        service.crear(medium);
+        assertTrue(service.espiritus(medium.getId()).isEmpty());
+    }
+
+    @Test
+    void unMediumTieneEspiritusTest() {
+        Medium m1 = service.crear(medium);
+
+        Espiritu e2 = new EspirituDemoniaco(100, "demonio", ubi2);
+        espirituService.crear(e2);
+
+        service.invocar(m1.getId(), e1.getId());
+        service.invocar(m1.getId(), e2.getId());
+
+        espirituService.conectar(e1.getId(), m1.getId());
+        espirituService.conectar(e2.getId(), m1.getId());
+
+        List<Espiritu> espiritus = service.espiritus(medium.getId());
+
+        assertEquals(2, espiritus.size());
+    }
+
+    @Test
     void exorcizarConExorcistaSinEspiritusAngelicalesLanzaExcepcionTest() {
         Medium ozzy = new Medium("ozzy", 100, 100, ubi);
         Long exorcistaId = service.crear(medium).getId();
@@ -134,7 +158,9 @@ public class MediumServiceTest {
         Medium tai = new Medium("Tai", 100, 80, ubi);
         Medium elNoba = new Medium("El Noba", 100, 100, ubi);
 
-        //TODO: Cuando creen conectar podemos obviar la conexion por modelo que hice acá y hacerla por service
+        Long taiId = service.crear(tai).getId();
+        Long elNobaId = service.crear(elNoba).getId();
+
         EspirituAngelical angel = new EspirituAngelical(100, "angel", ubi);
         EspirituDemoniaco demonio = new EspirituDemoniaco(0, "demonio", ubi);
 
@@ -143,20 +169,18 @@ public class MediumServiceTest {
         angel.setCustomRandomizer(randomizer);
         demonio.setCustomRandomizer(randomizer);
 
-        tai.conectarseAEspiritu(angel);
-        elNoba.conectarseAEspiritu(demonio);
-
-        Long taiId = service.crear(tai).getId();
-        Long elNobaId = service.crear(elNoba).getId();
+        Long angelId = espirituService.crear(angel).getId();
+        Long demonioId = espirituService.crear(demonio).getId();
 
         randomizer.setSecuenciaDeAtaques(10);
         randomizer.setSecuenciaDeDefensas(0);
+
+        espirituService.conectar(angelId, taiId);
+        espirituService.conectar(demonioId, elNobaId);
+
         service.exorcizar(taiId, elNobaId);
 
-        //TODO: Acá también, al llamar espiritus se espera que usemos el service
-        elNoba = service.recuperar(elNobaId);
-
-        assertTrue(elNoba.getEspiritus().isEmpty());
+        assertTrue(service.espiritus(elNobaId).isEmpty());
     }
 
     @Test
@@ -180,31 +204,6 @@ public class MediumServiceTest {
         e1 = service.invocar(mediumID, espirituId);
 
         assertEquals(e1.getUbicacion().getId(), ubi.getId());
-    }
-
-    @Test
-    void unMediumNoTieneNingunEspirituTest() {
-        service.crear(medium);
-
-        assertTrue(service.espiritus(medium.getId()).isEmpty());
-    }
-
-    @Test
-    void unMediumTieneEspiritusTest() {
-        Medium m1 = service.crear(medium);
-
-        Espiritu e2 = new EspirituDemoniaco(100, "demonio", ubi2);
-        espirituService.crear(e2);
-
-        service.invocar(m1.getId(), e1.getId());
-        service.invocar(m1.getId(), e2.getId());
-
-        espirituService.conectar(e1.getId(), m1.getId());
-        espirituService.conectar(e2.getId(), m1.getId());
-
-        List<Espiritu> espiritus = service.espiritus(medium.getId());
-
-        assertEquals(espiritus.size(), 2);
     }
 
     @AfterEach

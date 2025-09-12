@@ -28,6 +28,16 @@ public class EspirituTest {
     }
 
     @Test
+    void crearEspirituConUbicacionNullLanzaExcepcion() {
+        assertThrows(NullPointerException.class, () -> new EspirituAngelical(10, "hola", null));
+    }
+
+    @Test
+    void crearEspirituConNombreNullLanzaExcepcion() {
+        assertThrows(NullPointerException.class, () -> new EspirituAngelical(10, null, puebloPaleta));
+    }
+
+    @Test
     void aumentarConexionYaEstandoAlMaximoNoHaceNada() {
         Espiritu sukuna = new EspirituDemoniaco(100, "Sukuna", puebloPaleta);
         sukuna.aumentarConexion(yuta);
@@ -89,5 +99,21 @@ public class EspirituTest {
     @Test
     void demoniosNoPuedenExorcizarTest() {
         assertFalse(new EspirituDemoniaco(100, "Baal", puebloPaleta).puedeExorcizar());
+    }
+
+    @Test
+    void demonioAtacarNoHaceNada() {
+        EspirituDemoniaco sukuna = new EspirituDemoniaco(100, "Sukuna", puebloPaleta);
+        sukuna.atacar(rika);
+        assertEquals(50, rika.getNivelDeConexion());
+        assertEquals(100, sukuna.getNivelDeConexion());
+    }
+
+    @Test
+    void angelRecibirAtaqueNoHaceNada() {
+        EspirituDemoniaco sukuna = new EspirituDemoniaco(100, "Sukuna", puebloPaleta);
+        rika.recibirAtaque(100, sukuna);
+        assertEquals(50, rika.getNivelDeConexion());
+        assertEquals(100, sukuna.getNivelDeConexion());
     }
 }

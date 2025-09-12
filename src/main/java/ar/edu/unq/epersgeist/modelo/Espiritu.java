@@ -35,7 +35,7 @@ public abstract class Espiritu {
         this.randomizer = new RandomizerImpl();
     }
 
-    public Espiritu(int nivelDeConexion, @NonNull String nombre, Ubicacion ubicacion) {
+    public Espiritu(int nivelDeConexion, @NonNull String nombre, @NonNull Ubicacion ubicacion) {
         validarNivelDeConexion(nivelDeConexion);
         this.nombre = nombre;
         this.ubicacion = ubicacion;

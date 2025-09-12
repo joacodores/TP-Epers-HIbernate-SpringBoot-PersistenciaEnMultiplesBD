@@ -72,6 +72,14 @@ public class EspirituServiceTest {
     }
 
     @Test
+    void actualizarEspirituTest() {
+        Long angelID = service.crear(angel).getId();
+        angel.setNombre("Antonio");
+        service.actualizar(angel);
+        assertEquals("Antonio", service.recuperar(angelID).getNombre());
+    }
+
+    @Test
     void sePuedenPersistirVariosEspiritusConMismoNombreTest() {
         service.crear(angel);
         service.crear(new EspirituAngelical(50, "Luffy", eastblue));
@@ -93,12 +101,12 @@ public class EspirituServiceTest {
         assertTrue(service.recuperarTodos().isEmpty());
     }
 
-private void crearEspiritusDemoniacosParaPruebas(int cantidad) {
-    for (int i = 1; i <= cantidad; i++) {
-        Espiritu e = new EspirituDemoniaco(30 + i, "Demonio" + i, eastblue);
-        service.crear(e);
+    private void crearEspiritusDemoniacosParaPruebas(int cantidad) {
+        for (int i = 1; i <= cantidad; i++) {
+            Espiritu e = new EspirituDemoniaco(30 + i, "Demonio" + i, eastblue);
+            service.crear(e);
+        }
     }
-}
     @Test
     void recuperarEspiritusDemoniacosOrdenadosAscendiente(){
         crearEspiritusDemoniacosParaPruebas(20);
@@ -148,8 +156,7 @@ private void crearEspiritusDemoniacosParaPruebas(int cantidad) {
         Long zoroId = service.crear(demonio).getId();
         Long sanjiId = sanji.getId();
         service.conectar(zoroId, sanjiId);
-        sanji = mediumService.recuperar(sanjiId);
-        assertEquals("Zoro", sanji.getEspiritus().getFirst().getNombre());
+        assertEquals("Zoro", mediumService.espiritus(sanjiId).getFirst().getNombre());
     }
 
     @AfterEach

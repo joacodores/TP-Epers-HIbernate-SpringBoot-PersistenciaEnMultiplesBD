@@ -43,6 +43,8 @@ public class UbicacionServiceTest {
         assertNotNull(ubicacion.getId());
     }
 
+
+
     @Test
     void recuperarUbicacionNoPersistidaDevuelveNullTest() {
         Long ubicacionID = service.crear(ubicacion).getId();

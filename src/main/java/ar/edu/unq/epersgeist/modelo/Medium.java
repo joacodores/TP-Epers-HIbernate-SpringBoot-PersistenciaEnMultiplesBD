@@ -118,4 +118,8 @@ public class Medium {
         disminuirMana(10);
     }
 
+    public void descansar() {
+        this.aumentarMana(15);
+        this.aumentarNivelDeConexionATodosLosEspiritus();
+    }
 }

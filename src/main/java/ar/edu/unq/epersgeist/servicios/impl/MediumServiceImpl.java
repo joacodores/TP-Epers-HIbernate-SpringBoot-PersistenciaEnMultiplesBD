@@ -8,6 +8,7 @@ import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
+import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
 import ar.edu.unq.epersgeist.servicios.MediumService;
 import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
 
@@ -81,7 +82,9 @@ public class MediumServiceImpl implements MediumService {
     @Override
     public void descansar(Long mediumId) {
         HibernateTransactionRunner.runTrx(() -> {
-            mediumDAO.descansar(mediumId);
+            Medium mediumADescansar = mediumDAO.recuperar(mediumId);
+            mediumADescansar.descansar();
+            mediumDAO.actualizar(mediumADescansar);
             return null;
         });
     }

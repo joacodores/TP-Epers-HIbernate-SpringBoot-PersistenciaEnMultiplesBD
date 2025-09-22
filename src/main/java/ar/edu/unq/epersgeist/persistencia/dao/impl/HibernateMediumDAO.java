@@ -28,15 +28,6 @@ public class HibernateMediumDAO extends HibernateDAO<Medium> implements MediumDA
         return query.getResultList();
     }
 
-    public void descansar(Long mediumId) {
-        HibernateTransactionRunner.runTrx(() -> {
-            MediumDAO mediumDAO = new HibernateMediumDAO();
-            Medium medium = mediumDAO.recuperar(mediumId);
-            medium.descansar();
-            mediumDAO.actualizar(medium);
-            return null;
-        });
-    }
 
     public List<Medium> mediumsSinEspiritusEn(Long ubicacionId) {
         Session session = HibernateSessionContext.getCurrentSession();

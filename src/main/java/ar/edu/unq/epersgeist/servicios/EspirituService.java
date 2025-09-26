@@ -3,13 +3,16 @@ package ar.edu.unq.epersgeist.servicios;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.servicios.enums.Direccion;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 
 public interface EspirituService {
     Espiritu crear(Espiritu espiritu);
 
-    Espiritu recuperar(Long espirituId);
+    /*Espiritu recuperar(Long espirituId);
 
     List<Espiritu> recuperarTodos();
 
@@ -21,5 +24,5 @@ public interface EspirituService {
 
     Medium conectar(Long espirituId, Long mediumId);
 
-    List<Espiritu> espiritusDemoniacos(Direccion direccion, Integer pagina, Integer cantidadPorPagina);
+    List<Espiritu> espiritusDemoniacos(Direccion direccion, Integer pagina, Integer cantidadPorPagina);*/
 }

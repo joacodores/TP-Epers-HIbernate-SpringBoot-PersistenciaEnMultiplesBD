@@ -2,11 +2,16 @@ package ar.edu.unq.epersgeist.persistencia.dao;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.servicios.enums.Direccion;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface EspirituDAO {
-    Espiritu crear(Espiritu espiritu);
+@Repository
+public interface EspirituDAO extends CrudRepository<Espiritu, Long> {
+    /*Espiritu crear(Espiritu espiritu);
 
     Espiritu recuperar(Long idDelEspiritu);
 
@@ -19,6 +24,9 @@ public interface EspirituDAO {
     void eliminarTodo();
 
     List<Espiritu> espiritusDemoniacos(Direccion direccion, Integer pagina, Integer cantidadPorPagina);
-
-    List<Espiritu> espiritusEn(Long ubicacionId);
+    */
+    @Query(
+            "FROM Espiritu e where e.ubicacion.id = :ubicacionId"
+    )
+    List<Espiritu> espiritusEn(@Param("ubicacionId") Long ubicacionId);
 }

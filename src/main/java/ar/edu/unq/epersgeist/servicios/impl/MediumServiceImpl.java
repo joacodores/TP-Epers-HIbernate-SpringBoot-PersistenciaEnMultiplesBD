@@ -8,29 +8,33 @@ import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
+
 import ar.edu.unq.epersgeist.servicios.MediumService;
-import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 
+@Service
+@Transactional
 public class MediumServiceImpl implements MediumService {
 
     private final MediumDAO mediumDAO;
-    private final EspirituDAO espirituDAO;
-    private final UbicacionDAO ubicacionDAO;
+    /*private final EspirituDAO espirituDAO;
+    private final UbicacionDAO ubicacionDAO;*/
 
-    public MediumServiceImpl(MediumDAO medium, EspirituDAO espirituDAO, UbicacionDAO ubicacionDAO) {
+    public MediumServiceImpl(MediumDAO medium/*, EspirituDAO espirituDAO, UbicacionDAO ubicacionDAO*/) {
         this.mediumDAO = medium;
-        this.espirituDAO = espirituDAO;
-        this.ubicacionDAO = ubicacionDAO;
+        /*this.espirituDAO = espirituDAO;
+        this.ubicacionDAO = ubicacionDAO;*/
     }
 
     @Override
     public Medium crear(Medium medium) {
-        return HibernateTransactionRunner.runTrx(() -> mediumDAO.crear(medium));
+        return mediumDAO.save(medium);
     }
-
+/*
     @Override
     public Medium recuperar(Long id) {
         return HibernateTransactionRunner.runTrx(() -> mediumDAO.recuperar(id));
@@ -108,6 +112,6 @@ public class MediumServiceImpl implements MediumService {
 
     public List<Espiritu> espiritus(Long mediumId) {
         return HibernateTransactionRunner.runTrx(() -> mediumDAO.recuperar(mediumId).getEspiritus());
-    }
+    }*/
 
 }

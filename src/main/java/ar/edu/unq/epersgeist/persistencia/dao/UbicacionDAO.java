@@ -1,19 +1,11 @@
 package ar.edu.unq.epersgeist.persistencia.dao;
 
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
-public interface UbicacionDAO {
-    Ubicacion crear(Ubicacion ubicacion);
+@Repository
+public interface UbicacionDAO extends CrudRepository<Ubicacion, Long> {
 
-    Ubicacion recuperar(Long ubicacionId);
-
-    void actualizar(Ubicacion ubicacion);
-
-    void eliminar(Ubicacion ubicacion);
-
-    List<Ubicacion> recuperarTodos();
-
-    void eliminarTodo();
 }

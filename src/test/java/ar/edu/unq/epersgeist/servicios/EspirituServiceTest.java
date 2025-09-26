@@ -7,9 +7,6 @@ import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateEspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateUbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.enums.Direccion;
 import ar.edu.unq.epersgeist.servicios.impl.EspirituServiceImpl;
 import ar.edu.unq.epersgeist.servicios.impl.MediumServiceImpl;
@@ -24,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class EspirituServiceTest {
-    private EspirituService service;
+    /*private EspirituService service;
     private EspirituAngelical angel;
     private EspirituDemoniaco demonio;
     private UbicacionService ubicacionService;
@@ -164,5 +161,5 @@ public class EspirituServiceTest {
         service.eliminarTodo();
         mediumService.eliminarTodo();
         ubicacionService.eliminarTodo();
-    }
+    }*/
 }

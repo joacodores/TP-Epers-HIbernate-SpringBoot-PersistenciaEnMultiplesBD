@@ -7,10 +7,16 @@ import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.UbicacionService;
-import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
+@Service
+@Transactional
 public class UbicacionServiceImpl implements UbicacionService {
 
     private final UbicacionDAO ubicacionDAO;
@@ -25,51 +31,43 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public Ubicacion crear(Ubicacion ubicacion) {
-        return HibernateTransactionRunner.runTrx(() -> ubicacionDAO.crear(ubicacion));
+        return ubicacionDAO.save(ubicacion);
     }
 
     @Override
-    public Ubicacion recuperar(Long ubicacionId) {
-        return HibernateTransactionRunner.runTrx(() -> ubicacionDAO.recuperar(ubicacionId));
+    public Optional<Ubicacion> recuperar(Long ubicacionId) {
+        return ubicacionDAO.findById(ubicacionId);
     }
 
     @Override
     public void actualizar(Ubicacion ubicacion) {
-        HibernateTransactionRunner.runTrx(() -> {
-            ubicacionDAO.actualizar(ubicacion);
-            return null;
-        });
+        ubicacionDAO.save(ubicacion);
     }
 
     @Override
     public void eliminar(Ubicacion ubicacion) {
-        HibernateTransactionRunner.runTrx(() -> {
-            ubicacionDAO.eliminar(ubicacion);
-            return null;
-        });
+        ubicacionDAO.delete(ubicacion);
     }
 
     @Override
     public List<Ubicacion> recuperarTodos() {
-        return HibernateTransactionRunner.runTrx(ubicacionDAO::recuperarTodos);
+        Iterable<Ubicacion> iterable = ubicacionDAO.findAll();
+        return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
     }
 
     @Override
     public void eliminarTodo() {
-        HibernateTransactionRunner.runTrx(() -> {
-            ubicacionDAO.eliminarTodo();
-            return null;
-        });
+        ubicacionDAO.deleteAll();
     }
 
     @Override
     public List<Espiritu> espiritusEn(Long ubicacionId) {
-        return HibernateTransactionRunner.runTrx(() -> espirituDAO.espiritusEn(ubicacionId));
+        return espirituDAO.espiritusEn(ubicacionId);
     }
 
     @Override
     public List<Medium> mediumsSinEspiritusEn(Long ubicacionId){
-        return HibernateTransactionRunner.runTrx(() -> mediumDAO.mediumsSinEspiritusEn(ubicacionId));
+        return mediumDAO.mediumsSinEspiritusEn(ubicacionId);
 
     }
 

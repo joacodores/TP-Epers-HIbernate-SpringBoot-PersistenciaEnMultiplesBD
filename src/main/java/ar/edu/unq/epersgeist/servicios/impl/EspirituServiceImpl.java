@@ -6,25 +6,28 @@ import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.servicios.enums.Direccion;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.servicios.EspirituService;
-import ar.edu.unq.epersgeist.servicios.runner.HibernateTransactionRunner;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Service
+@Transactional
 public class EspirituServiceImpl implements EspirituService {
 
     private final EspirituDAO espirituDAO;
-    private final MediumDAO mediumDAO;
+    //private final MediumDAO mediumDAO;
 
-    public EspirituServiceImpl(EspirituDAO espirituDAO, MediumDAO mediumDAO) {
+    public EspirituServiceImpl(EspirituDAO espirituDAO/*, MediumDAO mediumDAO*/) {
         this.espirituDAO = espirituDAO;
-        this.mediumDAO = mediumDAO;
+        //this.mediumDAO = mediumDAO;
     }
 
     @Override
     public Espiritu crear(Espiritu espiritu) {
-        return HibernateTransactionRunner.runTrx(() -> espirituDAO.crear(espiritu));
+        return espirituDAO.save(espiritu);
     }
-
+    /*
     @Override
     public void eliminar(Espiritu espiritu) {
         HibernateTransactionRunner.runTrx(() -> {
@@ -75,6 +78,6 @@ public class EspirituServiceImpl implements EspirituService {
             return medium;
         });
 
-    }
+    }*/
 
 }

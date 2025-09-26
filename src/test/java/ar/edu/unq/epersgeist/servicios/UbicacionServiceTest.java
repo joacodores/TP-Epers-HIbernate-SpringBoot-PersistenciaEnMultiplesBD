@@ -1,39 +1,34 @@
 package ar.edu.unq.epersgeist.servicios;
 
 import ar.edu.unq.epersgeist.modelo.*;
-import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateEspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateMediumDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.impl.HibernateUbicacionDAO;
-import ar.edu.unq.epersgeist.servicios.impl.EspirituServiceImpl;
-import ar.edu.unq.epersgeist.servicios.impl.MediumServiceImpl;
-import ar.edu.unq.epersgeist.servicios.impl.UbicacionServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 public class UbicacionServiceTest {
 
+    @Autowired
     private UbicacionService service;
+
     private Ubicacion ubicacion;
+
+    @Autowired
     private MediumService mediumService;
+
+    @Autowired
     private EspirituService espirituService;
 
     @BeforeEach
     void prepare() {
         this.ubicacion = new Ubicacion("Ubicacion");
-        UbicacionDAO dao = new HibernateUbicacionDAO();
-        EspirituDAO espirituDAO = new HibernateEspirituDAO();
-        MediumDAO mediumDAO = new HibernateMediumDAO();
-        mediumService = new MediumServiceImpl(mediumDAO,espirituDAO,dao);
-        this.service = new UbicacionServiceImpl(dao, espirituDAO, mediumDAO);
-        espirituService = new EspirituServiceImpl(espirituDAO, mediumDAO);
+
     }
 
     @Test
@@ -48,13 +43,15 @@ public class UbicacionServiceTest {
     @Test
     void recuperarUbicacionNoPersistidaDevuelveNullTest() {
         Long ubicacionID = service.crear(ubicacion).getId();
-        assertNull(service.recuperar(ubicacionID + 1));
+
+        assertTrue(service.recuperar(ubicacionID + 1).isEmpty());
     }
+
 
     @Test
     void recuperarUbicacionTest() {
         Long ubicacionID = service.crear(ubicacion).getId();
-        assertEquals(ubicacion.getNombre(), service.recuperar(ubicacionID).getNombre());
+        assertEquals(ubicacion.getNombre(), service.recuperar(ubicacionID).get().getNombre());
     }
 
     @Test
@@ -62,7 +59,7 @@ public class UbicacionServiceTest {
         Long ubicacionID = service.crear(ubicacion).getId();
         ubicacion.setNombre("Berazategui");
         service.actualizar(ubicacion);
-        assertEquals(ubicacion.getNombre(), service.recuperar(ubicacionID).getNombre());
+        assertEquals(ubicacion.getNombre(), service.recuperar(ubicacionID).get().getNombre());
     }
 
     @Test
@@ -75,7 +72,7 @@ public class UbicacionServiceTest {
         service.crear(ubicacion);
         service.crear(new Ubicacion("Bernal"));
         service.crear(new Ubicacion("Mordor"));
-        assertEquals(List.of("Bernal", "Mordor", "Ubicacion"), service.recuperarTodos().stream().map(Ubicacion::getNombre).toList());
+        assertEquals(List.of("Ubicacion","Bernal", "Mordor"), service.recuperarTodos().stream().map(Ubicacion::getNombre).toList());
     }
 
     @Test
@@ -113,6 +110,7 @@ public class UbicacionServiceTest {
         assertEquals("Zoro", espiritus.get(1).getNombre());
     }
 
+
     @Test
     void existeUnMediumSinEspirituEn() {
         service.crear(ubicacion);
@@ -130,8 +128,8 @@ public class UbicacionServiceTest {
 
     @AfterEach
     void cleanup() {
-        espirituService.eliminarTodo();
-        mediumService.eliminarTodo();
+        // espirituService.eliminarTodo();
+        //mediumService.eliminarTodo();
         service.eliminarTodo();
     }
 

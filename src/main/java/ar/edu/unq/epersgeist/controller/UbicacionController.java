@@ -56,8 +56,14 @@ public class UbicacionController {
 
     @GetMapping("/{id}/espiritus")
     public ResponseEntity<List<RecuperarEspirituDTO>> espiritusEnUbicacion(@PathVariable Long id) {
-        // TODO: Implementar
-        return ResponseEntity.ok(List.of());
+        var espiritusEnUbicacion =  ubicacionService.espiritusEn(id);
+        if (espiritusEnUbicacion.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var dtos = espiritusEnUbicacion.stream()
+                                        .map(RecuperarEspirituDTO::desdeModelo)
+                                        .toList();
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/{id}/mediumsSinEspiritus")

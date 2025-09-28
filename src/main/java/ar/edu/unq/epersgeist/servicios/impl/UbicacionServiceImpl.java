@@ -31,6 +31,7 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public Ubicacion crear(Ubicacion ubicacion) {
+        System.out.println("Creando un ubicacion");
         return ubicacionDAO.save(ubicacion);
     }
 

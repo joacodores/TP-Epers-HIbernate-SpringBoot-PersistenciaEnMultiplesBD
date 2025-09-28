@@ -4,32 +4,54 @@ import ar.edu.unq.epersgeist.controller.dto.espiritu.RecuperarEspirituDTO;
 import ar.edu.unq.epersgeist.controller.dto.medium.RecuperarMediumDTO;
 import ar.edu.unq.epersgeist.controller.dto.ubicacion.CrearUbicacionDTO;
 import ar.edu.unq.epersgeist.controller.dto.ubicacion.RecuperarUbicacionDTO;
+import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.servicios.UbicacionService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/ubicacion")
 public class UbicacionController {
 
+    private final UbicacionService ubicacionService;
+
+    public UbicacionController(UbicacionService ubicacionService) {
+        this.ubicacionService = ubicacionService;
+    }
+
     @PostMapping
     public ResponseEntity<RecuperarUbicacionDTO> crearUbicacion(@RequestBody CrearUbicacionDTO ubicacionRequest) {
-        // TODO: Implementar
-        return ResponseEntity.status(201).body(null);
+        var ubicacionCreada = ubicacionService.crear(ubicacionRequest.aModelo());
+        var dto = RecuperarUbicacionDTO.desdeModelo(ubicacionCreada);
+        URI location = URI.create("/ubicacion/" + dto.id());
+        return ResponseEntity
+                .created(location)
+                .body(dto);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<RecuperarUbicacionDTO> recuperarUbicacion(@PathVariable Long id) {
-        // TODO: Implementar
-        return ResponseEntity.ok().build();
+        Optional<Ubicacion> ubicacionRecuperada = ubicacionService.recuperar(id);
+        if (ubicacionRecuperada.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var dto = RecuperarUbicacionDTO.desdeModelo(ubicacionRecuperada.get());
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping
     public ResponseEntity<List<RecuperarUbicacionDTO>> recuperarTodasLasUbicaciones() {
-        // TODO: Implementar
-        return ResponseEntity.ok(List.of());
+        var ubicacionesRecuperadas = ubicacionService.recuperarTodos();
+        var dtos = ubicacionesRecuperadas.stream()
+                                        .map(RecuperarUbicacionDTO::desdeModelo)
+                                        .toList();
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/{id}/espiritus")

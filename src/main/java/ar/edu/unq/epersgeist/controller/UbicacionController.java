@@ -6,7 +6,6 @@ import ar.edu.unq.epersgeist.controller.dto.ubicacion.CrearUbicacionDTO;
 import ar.edu.unq.epersgeist.controller.dto.ubicacion.RecuperarUbicacionDTO;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.servicios.UbicacionService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,9 +56,6 @@ public class UbicacionController {
     @GetMapping("/{id}/espiritus")
     public ResponseEntity<List<RecuperarEspirituDTO>> espiritusEnUbicacion(@PathVariable Long id) {
         var espiritusEnUbicacion =  ubicacionService.espiritusEn(id);
-        if (espiritusEnUbicacion.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
         var dtos = espiritusEnUbicacion.stream()
                                         .map(RecuperarEspirituDTO::desdeModelo)
                                         .toList();
@@ -68,8 +64,11 @@ public class UbicacionController {
 
     @GetMapping("/{id}/mediumsSinEspiritus")
     public ResponseEntity<List<RecuperarMediumDTO>> mediumsSinEspiritusEnUbicacion(@PathVariable Long id) {
-        // TODO: Implementar
-        return ResponseEntity.ok(List.of());
+        var mediumsSinEspiritusEnUbicacion = ubicacionService.mediumsSinEspiritusEn(id);
+        var dtos = mediumsSinEspiritusEnUbicacion.stream()
+                                                .map(RecuperarMediumDTO::desdeModelo)
+                                                .toList();
+        return ResponseEntity.ok(dtos);
     }
 
 }

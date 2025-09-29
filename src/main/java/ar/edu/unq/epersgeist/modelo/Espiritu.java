@@ -8,15 +8,15 @@ import static jakarta.persistence.GenerationType.AUTO;
 
 @Getter
 @Setter
-
 @Entity
+@Table(name="espiritu")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Espiritu {
 
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;
-    @Column(nullable = false)
+    @Column(name="nivel_de_conexion", nullable = false, columnDefinition = "INTEGER CHECK(nivel_de_conexion BETWEEN 0 AND 100)")
     private int nivelDeConexion;
     @Column(nullable = false, length = 500)
     private String nombre;

@@ -13,7 +13,7 @@ import java.util.List;
 public interface EspirituDAO extends CrudRepository<Espiritu, Long> {
     /*Espiritu crear(Espiritu espiritu);
 
-    Espiritu recuperar(Long idDelEspiritu);
+
 
     List<Espiritu> recuperarTodos();
 
@@ -29,4 +29,10 @@ public interface EspirituDAO extends CrudRepository<Espiritu, Long> {
             "FROM Espiritu e where e.ubicacion.id = :ubicacionId"
     )
     List<Espiritu> espiritusEn(@Param("ubicacionId") Long ubicacionId);
+
+
+    @Query(
+            "From Espiritu e where e.id = :idDelEspiritu"
+    )
+    Espiritu recuperar(Long idDelEspiritu);
 }

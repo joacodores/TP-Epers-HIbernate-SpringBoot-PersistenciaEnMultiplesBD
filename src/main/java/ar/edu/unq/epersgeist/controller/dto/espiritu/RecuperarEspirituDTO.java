@@ -16,7 +16,7 @@ public record RecuperarEspirituDTO(Long id,
                 null,
                 espiritu.getNombre(),
                 espiritu.getNivelDeConexion(),
-                espiritu.getOwner().getId(),
+                espiritu.getOwner()!= null ? espiritu.getOwner().getId(): null,
                 RecuperarUbicacionDTO.desdeModelo(espiritu.getUbicacion())
                 );
     }

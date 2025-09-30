@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -34,7 +34,7 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public Medium crear(Medium medium) {
-        System.out.println("Creando un medium");
+
         return mediumDAO.save(medium);
     }
 

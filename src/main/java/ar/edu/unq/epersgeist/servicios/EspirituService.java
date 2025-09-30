@@ -7,22 +7,34 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface EspirituService {
     Espiritu crear(Espiritu espiritu);
 
-    /*Espiritu recuperar(Long espirituId);
+    Optional<Espiritu> recuperar(Long espirituId);
 
     List<Espiritu> recuperarTodos();
+    
+    //List<Espiritu> espiritusDemoniacos(Direccion direccion, Integer pagina, Integer cantidadPorPagina);
+
+    void actualizar(Espiritu espiritu);
+
+
+    Medium conectar(Long espirituId, Long mediumId);
+
+    /*
+
+    void actualizar(Espiritu espiritu);
+
+    /*List<Espiritu> recuperarTodos();
 
     void actualizar(Espiritu espiritu);
 
     void eliminar(Espiritu espiritu);
 
     void eliminarTodo();
+    */
 
-    Medium conectar(Long espirituId, Long mediumId);
-
-    List<Espiritu> espiritusDemoniacos(Direccion direccion, Integer pagina, Integer cantidadPorPagina);*/
 }

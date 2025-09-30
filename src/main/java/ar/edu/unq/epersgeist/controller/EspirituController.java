@@ -3,68 +3,142 @@ package ar.edu.unq.epersgeist.controller;
 import ar.edu.unq.epersgeist.controller.dto.espiritu.ActualizarEspirituDTO;
 import ar.edu.unq.epersgeist.controller.dto.espiritu.CrearEspirituDTO;
 import ar.edu.unq.epersgeist.controller.dto.espiritu.RecuperarEspirituDTO;
+import ar.edu.unq.epersgeist.controller.dto.ubicacion.RecuperarUbicacionDTO;
+import ar.edu.unq.epersgeist.modelo.Espiritu;
+import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.servicios.EspirituService;
+import ar.edu.unq.epersgeist.servicios.MediumService;
+import ar.edu.unq.epersgeist.servicios.UbicacionService;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/espiritu")
 public class EspirituController {
 
+    private final MediumService mediumService;
+    private EspirituService espirituService;
+    private UbicacionService ubicacionService;
+
+    public EspirituController(EspirituService espirituService, UbicacionService ubicacionService, MediumService mediumService) {
+        this.espirituService = espirituService;
+        this.ubicacionService = ubicacionService;
+        this.mediumService = mediumService;
+    }
+
     @PostMapping
     public ResponseEntity<RecuperarEspirituDTO> crearEspiritu(@RequestBody CrearEspirituDTO espirituDTO) {
-        // TODO: Implementar
-        return ResponseEntity.status(HttpStatus.CREATED).body(null);
+
+        Optional<Ubicacion> ubicacion = ubicacionService.recuperar(espirituDTO.ubicacionId());
+
+        if (ubicacion.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        var espiritu = espirituService.crear(espirituDTO.aModelo(ubicacion.get()));
+        var dto = RecuperarEspirituDTO.desdeModelo(espiritu);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<RecuperarEspirituDTO> recuperarEspiritu(@PathVariable("id") Long id) {
-        // TODO: Implementar
+        Optional<Espiritu> espirituOptional = espirituService.recuperar(id);
+        if (espirituOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<RecuperarEspirituDTO> actualizarEspiritu(@PathVariable("id") Long id,
                                                                    @RequestBody ActualizarEspirituDTO espirituDTO) {
-        // TODO: Implementar
-        return null;
+        Optional<Espiritu> espirituOptional = espirituService.recuperar(id);
+        if (espirituOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Espiritu espiritu = espirituOptional.get();
+        espiritu.setNombre(espirituDTO.nombre());
+
+        espirituService.actualizar(espiritu);
+
+        return ResponseEntity.ok(RecuperarEspirituDTO.desdeModelo(espiritu));
+
+
     }
 
     @GetMapping
     public ResponseEntity<List<RecuperarEspirituDTO>> recuperarTodosLosEspiritus() {
-        // TODO: Implementar
-        return ResponseEntity.ok(List.of());
+        var espiritusRecuperados = espirituService.recuperarTodos();
+        var dtos = espiritusRecuperados.stream()
+                .map(RecuperarEspirituDTO::desdeModelo)
+                .toList();
+        return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/demonios")
     public ResponseEntity<List<RecuperarEspirituDTO>> recuperarDemonios(@RequestParam Sort.Direction direccion,
                                                                         @RequestParam Integer pagina,
                                                                         @RequestParam Integer cantidadPorPagina) {
-        // TODO: Implementar
+
+        //TODO
+
+
         return ResponseEntity.ok(List.of());
     }
+
 
     @PatchMapping("/{id}/conectar/{mediumId}")
     public ResponseEntity<RecuperarEspirituDTO> conectar(@PathVariable Long id,
                                                          @PathVariable Long mediumId) {
-        // TODO: Implementar
+
+        var espirituRecuperado =  espirituService.recuperar(id);
+        if (espirituRecuperado.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        espirituService.conectar(id, mediumId);
+
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{mediumId}/espiritus")
     public ResponseEntity<List<RecuperarEspirituDTO>> espiritusConectadosA(@PathVariable Long mediumId) {
-        // TODO: Implementar
-        return ResponseEntity.ok(List.of());
+
+        var mediumRecurepado = mediumService.recuperar(mediumId);
+        if (mediumRecurepado.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<Espiritu> espiritus = mediumService.espiritus(mediumId);
+
+        List<RecuperarEspirituDTO> espiritusRecuperados = espiritus.stream().map(RecuperarEspirituDTO::desdeModelo).toList();
+
+        return ResponseEntity.ok(espiritusRecuperados);
     }
 
     @PatchMapping("/{mediumId}/invocar/{espirituId}")
     public ResponseEntity<RecuperarEspirituDTO> invocar(@PathVariable Long mediumId,
                                                         @PathVariable Long espirituId) {
-        // TODO: Implementar
+
+        var mediumRecuperado = mediumService.recuperar(mediumId);
+        var espirituRecuperado = espirituService.recuperar(espirituId);
+
+        if (espirituRecuperado.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else if (mediumRecuperado.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        mediumService.invocar(mediumId, espirituId);
+
         return ResponseEntity.ok().build();
     }
 

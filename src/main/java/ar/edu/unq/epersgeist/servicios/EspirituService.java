@@ -19,22 +19,15 @@ public interface EspirituService {
     
     //List<Espiritu> espiritusDemoniacos(Direccion direccion, Integer pagina, Integer cantidadPorPagina);
 
-    void actualizar(Espiritu espiritu);
-
 
     Medium conectar(Long espirituId, Long mediumId);
 
-    /*
-
-    void actualizar(Espiritu espiritu);
-
-    /*List<Espiritu> recuperarTodos();
 
     void actualizar(Espiritu espiritu);
 
     void eliminar(Espiritu espiritu);
 
     void eliminarTodo();
-    */
+
 
 }

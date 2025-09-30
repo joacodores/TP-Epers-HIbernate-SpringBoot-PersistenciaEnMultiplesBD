@@ -14,6 +14,8 @@ import ar.edu.unq.epersgeist.servicios.impl.UbicacionServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
@@ -23,35 +25,38 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@SpringBootTest
 public class MediumServiceTest {
-    /*private Ubicacion ubi;
+    private Ubicacion ubi;
     private Ubicacion ubi2;
+
+    @Autowired
     private MediumService service;
     private Medium medium;
+
+    @Autowired
     private UbicacionService ubicacionService;
+
+    @Autowired
     private EspirituService espirituService;
     private Espiritu e1;
 
     @BeforeEach
     void prepare() {
-        UbicacionDAO daoUbi = new HibernateUbicacionDAO();
-        MediumDAO dao = new HibernateMediumDAO();
-        EspirituDAO daoEsp = new HibernateEspirituDAO();
 
         ubi = new Ubicacion("ubi");
-        this.ubicacionService = new UbicacionServiceImpl(daoUbi, daoEsp, dao);
         ubicacionService.crear(ubi);
         ubi2 = new Ubicacion("Ubicación 2");
         ubicacionService.crear(ubi2);
 
-        this.espirituService = new EspirituServiceImpl(daoEsp, dao);
+
         e1 = new EspirituAngelical(100, "angel", ubi2);
         espirituService.crear(e1);
 
         this.medium = new Medium("Thiago", 50, 30, ubi);
-        this.service = new MediumServiceImpl(dao, daoEsp, daoUbi);
 
     }
+
 
     @Test
     void crearMediumTest() {
@@ -63,15 +68,15 @@ public class MediumServiceTest {
     @Test
     void recuperarMediumNoPersistidoDevuelveNullTest() {
         Long mediumID = service.crear(medium).getId();
-        assertNull(service.recuperar(mediumID + 1));
+        assertTrue(service.recuperar(mediumID + 1).isEmpty());
     }
 
     @Test
     void recuperarMediumTest() {
         Long mediumID = service.crear(medium).getId();
-        assertEquals(medium.getNombre(), service.recuperar(mediumID).getNombre());
-        assertEquals(medium.getMana(), service.recuperar(mediumID).getMana());
-        assertEquals(medium.getManaMax(), service.recuperar(mediumID).getManaMax());
+        assertEquals(medium.getNombre(), service.recuperar(mediumID).get().getNombre());
+        assertEquals(medium.getMana(), service.recuperar(mediumID).get().getMana());
+        assertEquals(medium.getManaMax(), service.recuperar(mediumID).get().getManaMax());
     }
 
     @Test
@@ -79,7 +84,7 @@ public class MediumServiceTest {
         Long mediumID = service.crear(medium).getId();
         medium.setNombre("Churrito");
         service.actualizar(medium);
-        assertEquals(medium.getNombre(), service.recuperar(mediumID).getNombre());
+        assertEquals(medium.getNombre(), service.recuperar(mediumID).get().getNombre());
     }
 
     @Test
@@ -117,6 +122,7 @@ public class MediumServiceTest {
         service.eliminar(medium);
         assertTrue(service.recuperarTodos().isEmpty());
     }
+
 
     @Test
     void unMediumNoTieneNingunEspirituTest() {
@@ -185,7 +191,7 @@ public class MediumServiceTest {
         Medium m1 = service.crear(medium);
         Long mediumID = m1.getId();
         service.descansar(mediumID);
-        Medium m2 = service.recuperar(mediumID);
+        Medium m2 = service.recuperar(mediumID).get();
         assertEquals(45, m2.getMana());
     }
 
@@ -205,9 +211,9 @@ public class MediumServiceTest {
 
     @AfterEach
     void cleanup() {
-        espirituService.eliminarTodo();
+        //espirituService.eliminarTodo();
         service.eliminarTodo();
         ubicacionService.eliminarTodo();
-    }*/
+    }
 
 }

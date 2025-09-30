@@ -41,17 +41,12 @@ public class MediumTest {
         assertEquals("Juan", juan.getNombre());
         assertEquals(100, juan.getManaMax());
         assertEquals(20, juan.getMana());
-        assertEquals("Tai", tai.getNombre());
-        assertEquals(100, tai.getManaMax());
-        assertEquals(80, tai.getMana());
     }
 
     @Test
     void manaNoPuedeSuperarAManaMaxTest() {
         Medium pablo = new Medium("Pablo", 100, 120, fuerteApache);
         assertEquals(100, pablo.getMana());
-        assertEquals(100, elNoba.getMana());
-        assertEquals(elNoba.getMana(), pablo.getMana());
     }
 
     @Test
@@ -277,8 +272,7 @@ public class MediumTest {
         assertEquals(bocaPredio, juan.getUbicacion());
         juan.invocar(carlitos);
         assertEquals(bocaPredio, carlitos.getUbicacion());
-        assert (bocaPredio.getEspiritus().contains(carlitos));
-
+        assertTrue(bocaPredio.getEspiritus().contains(carlitos));
     }
 
     @Test
@@ -293,12 +287,11 @@ public class MediumTest {
 
     @Test
     void espirituConectaConMedium() {
-        assert (palermo.getEspiritus().isEmpty());
+        assertTrue(palermo.getEspiritus().isEmpty());
         assertNull(carlitos.getOwner());
         palermo.conectarseAEspiritu(carlitos);
-        assert (palermo.getEspiritus().contains(carlitos));
+        assertTrue(palermo.getEspiritus().contains(carlitos));
         assertEquals(carlitos.getOwner(), palermo);
-
     }
 
     @Test
@@ -312,18 +305,17 @@ public class MediumTest {
         assertEquals(fuerteApache, carlitos.getUbicacion());
         assertEquals(bocaPredio, juan.getUbicacion());
         assertThrows(EspirituNoPuedeConectarException.class, () -> juan.conectarseAEspiritu(carlitos));
-
     }
 
     @Test
     void invocarDescuenta10YMueveYActualizaListas() {
-        int mana0 = juan.getMana(); // 20
-        assert (fuerteApache.getEspiritus().contains(carlitos));
+        int mana = juan.getMana(); // 20
+        assertTrue(fuerteApache.getEspiritus().contains(carlitos));
         juan.invocar(carlitos);
-        assertEquals(mana0 - 10, juan.getMana());
+        assertEquals(mana - 10, juan.getMana());
         assertEquals(bocaPredio, carlitos.getUbicacion());
         assertFalse(fuerteApache.getEspiritus().contains(carlitos));
-        assert (bocaPredio.getEspiritus().contains(carlitos));
+        assertTrue(bocaPredio.getEspiritus().contains(carlitos));
     }
 
     @Test

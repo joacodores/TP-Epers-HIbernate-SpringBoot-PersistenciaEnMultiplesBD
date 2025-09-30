@@ -3,6 +3,7 @@ package ar.edu.unq.epersgeist.modelo;
 import ar.edu.unq.epersgeist.modelo.exceptions.EspirituNoEsLibreException;
 import ar.edu.unq.epersgeist.modelo.exceptions.EspirituNoPuedeConectarException;
 import ar.edu.unq.epersgeist.modelo.exceptions.ExorcistaSinAngelesException;
+import ar.edu.unq.epersgeist.modelo.exceptions.MediumNoPuedeTenerMasManaQueSuManaMax;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -27,6 +28,7 @@ public class Medium {
     @Setter
     @Column(nullable = false, length = 500)
     private String nombre;
+    @Setter
     @Getter
     @Column(nullable = false)
     private Integer manaMax;
@@ -121,5 +123,9 @@ public class Medium {
     public void descansar() {
         this.aumentarMana(15);
         this.aumentarNivelDeConexionATodosLosEspiritus();
+    }
+    public void setMana(Integer mana) {
+        if(mana > manaMax) throw new MediumNoPuedeTenerMasManaQueSuManaMax("El Medium no puede tener mas mana que su cantidad maxima permitida");
+        this.mana = mana;
     }
 }

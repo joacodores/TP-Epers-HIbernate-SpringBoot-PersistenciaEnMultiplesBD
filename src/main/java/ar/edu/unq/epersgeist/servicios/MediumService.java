@@ -4,11 +4,12 @@ import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MediumService {
     Medium crear(Medium medium);
 
-    /*Medium recuperar(Long mediumId);
+    Optional<Medium> recuperar(Long mediumId);
 
     List<Medium> recuperarTodos();
 
@@ -24,5 +25,5 @@ public interface MediumService {
 
     void descansar(Long mediumId);
 
-    List<Espiritu> espiritus(Long mediumId);*/
+    List<Espiritu> espiritus(Long mediumId);
 }

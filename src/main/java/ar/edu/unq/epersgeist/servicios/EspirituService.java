@@ -24,17 +24,7 @@ public interface EspirituService {
 
     Medium conectar(Long espirituId, Long mediumId);
 
-    /*
-
-    void actualizar(Espiritu espiritu);
-
-    /*List<Espiritu> recuperarTodos();
-
-    void actualizar(Espiritu espiritu);
-
     void eliminar(Espiritu espiritu);
 
     void eliminarTodo();
-    */
-
 }

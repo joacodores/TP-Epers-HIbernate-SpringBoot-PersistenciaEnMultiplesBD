@@ -32,15 +32,12 @@ public class EspirituServiceImpl implements EspirituService {
     public Espiritu crear(Espiritu espiritu) {
         return espirituDAO.save(espiritu);
     }
-    /*
+
     @Override
     public void eliminar(Espiritu espiritu) {
-        HibernateTransactionRunner.runTrx(() -> {
-            espirituDAO.eliminar(espiritu);
-            return null;
-        });
+        espirituDAO.delete(espiritu);
     }
-    */
+
     @Override
     public Optional<Espiritu> recuperar(Long ubicacionId) {
         return espirituDAO.findById(ubicacionId);
@@ -55,25 +52,25 @@ public class EspirituServiceImpl implements EspirituService {
 
     @Override
     public void actualizar(Espiritu espiritu) {
-        espirituDAO.save(espiritu);
+        Optional<Espiritu> espirituAActualizar = espirituDAO.findById(espiritu.getId());
+        if(espiritu.getNombre() != null){ espirituAActualizar.get().setNombre(espiritu.getNombre());}
+
+        espirituDAO.save(espirituAActualizar.get());
     }
 
-    /*
+
     @Override
     public void eliminarTodo() {
-        HibernateTransactionRunner.runTrx(() -> {
-            espirituDAO.eliminarTodo();
-            return null;
-        });
+        espirituDAO.deleteAll();
     }
 
-
+/*
     @Override
     public Page<Espiritu> espiritusDemoniacos(Pageable pageable){
         return espirituDAO.findAll(pageable);
-    }
+    }*/
 
-    */
+
 
     @Override
     public Medium conectar(Long espirituId, Long mediumId) {

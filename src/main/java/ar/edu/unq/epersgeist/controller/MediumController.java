@@ -1,10 +1,12 @@
 package ar.edu.unq.epersgeist.controller;
 
+import ar.edu.unq.epersgeist.controller.dto.espiritu.RecuperarEspirituDTO;
 import ar.edu.unq.epersgeist.controller.dto.medium.ActualizarMediumDTO;
 import ar.edu.unq.epersgeist.controller.dto.medium.CrearMediumDTO;
 import ar.edu.unq.epersgeist.controller.dto.medium.RecuperarMediumDTO;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.servicios.EspirituService;
 import ar.edu.unq.epersgeist.servicios.MediumService;
 import ar.edu.unq.epersgeist.servicios.UbicacionService;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +23,12 @@ public class MediumController {
 
     private final MediumService mediumService;
     private final UbicacionService ubicacionService;
+    private final EspirituService espirituService;
 
-    public MediumController(MediumService mediumService, UbicacionService ubicacionService) {
+    public MediumController(MediumService mediumService, UbicacionService ubicacionService, EspirituService espirituService) {
         this.ubicacionService = ubicacionService;
         this.mediumService = mediumService;
+        this.espirituService = espirituService;
     }
 
 
@@ -57,14 +61,6 @@ public class MediumController {
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping("/sinEspiritusEn/{ubicacionId}")
-    public ResponseEntity<List<RecuperarMediumDTO>> mediumsSinEspiritusEn(@PathVariable Long ubicacionId) {
-        Optional<Ubicacion> ubicacion = ubicacionService.recuperar(ubicacionId);
-        if (ubicacion.isEmpty()){return ResponseEntity.notFound().build();} //checkeo que la ubi exista porque el ubiService no maneja ese error
-        List<Medium> mediumsSinEspiritusEn = ubicacionService.mediumsSinEspiritusEn(ubicacionId);
-        var dtos = mediumsSinEspiritusEn.stream().map(RecuperarMediumDTO::desdeModelo).toList();
-        return ResponseEntity.ok(dtos);
-    }
 
     @PutMapping("/{id}")
     public ResponseEntity<RecuperarMediumDTO> actualizarMedium(@PathVariable Long id,
@@ -105,6 +101,33 @@ public class MediumController {
         mediumService.descansar(medium.get().getId());
         return ResponseEntity.ok().build();
     }
+
+    @PatchMapping("/{mediumId}/invocar/{espirituId}")
+    public ResponseEntity<RecuperarEspirituDTO> invocar(@PathVariable Long mediumId,
+                                                        @PathVariable Long espirituId) {
+
+        var mediumRecuperado = mediumService.recuperar(mediumId);
+        var espirituRecuperado = espirituService.recuperar(espirituId);
+
+        if (espirituRecuperado.isEmpty() || mediumRecuperado.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        mediumService.invocar(mediumId, espirituId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/sinEspiritusEn/{ubicacionId}")
+    public ResponseEntity<List<RecuperarMediumDTO>> mediumsSinEspiritusEn(@PathVariable Long ubicacionId) {
+        Optional<Ubicacion> ubicacion = ubicacionService.recuperar(ubicacionId);
+        if (ubicacion.isEmpty()){return ResponseEntity.notFound().build();} //checkeo que la ubi exista porque el ubiService no maneja ese error
+        List<Medium> mediumsSinEspiritusEn = ubicacionService.mediumsSinEspiritusEn(ubicacionId);
+        var dtos = mediumsSinEspiritusEn.stream().map(RecuperarMediumDTO::desdeModelo).toList();
+        return ResponseEntity.ok(dtos);
+    }
+
+
 
 
 

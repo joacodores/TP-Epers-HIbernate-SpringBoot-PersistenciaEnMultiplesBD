@@ -54,24 +54,22 @@ public class EspirituController {
         if (espirituOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok().build();
+        var dto = RecuperarEspirituDTO.desdeModelo(espirituOptional.get());
+        return ResponseEntity.ok(dto);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<RecuperarEspirituDTO> actualizarEspiritu(@PathVariable("id") Long id,
                                                                    @RequestBody ActualizarEspirituDTO espirituDTO) {
-        Optional<Espiritu> espirituOptional = espirituService.recuperar(id);
+        var espirituOptional = espirituService.recuperar(id);
         if (espirituOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        Espiritu espiritu = espirituOptional.get();
-        espiritu.setNombre(espirituDTO.nombre());
 
-        espirituService.actualizar(espiritu);
-
-        return ResponseEntity.ok(RecuperarEspirituDTO.desdeModelo(espiritu));
-
-
+        espirituService.actualizar(espirituDTO.aModelo(id));
+        var espirituActualizado = espirituService.recuperar(id);
+        var dto = RecuperarEspirituDTO.desdeModelo(espirituActualizado.get());
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping
@@ -124,23 +122,6 @@ public class EspirituController {
         return ResponseEntity.ok(espiritusRecuperados);
     }
 
-    @PatchMapping("/{mediumId}/invocar/{espirituId}")
-    public ResponseEntity<RecuperarEspirituDTO> invocar(@PathVariable Long mediumId,
-                                                        @PathVariable Long espirituId) {
-
-        var mediumRecuperado = mediumService.recuperar(mediumId);
-        var espirituRecuperado = espirituService.recuperar(espirituId);
-
-        if (espirituRecuperado.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else if (mediumRecuperado.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        mediumService.invocar(mediumId, espirituId);
-
-        return ResponseEntity.ok().build();
-    }
 
     @PatchMapping("/{mediumId}/mover/{ubicacionId}")
     public ResponseEntity<RecuperarEspirituDTO> mover(@PathVariable Long mediumId,

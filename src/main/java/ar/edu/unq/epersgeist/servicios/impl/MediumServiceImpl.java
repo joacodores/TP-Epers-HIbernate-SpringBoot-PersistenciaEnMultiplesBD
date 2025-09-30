@@ -103,6 +103,7 @@ public class MediumServiceImpl implements MediumService {
         return espirituAInvocar;
     }
 
+    @Override
     public List<Espiritu> espiritus(Long mediumId) {
         Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new NoSuchElementException("Medium not found with id: " + mediumId));
         return medium.getEspiritus();

@@ -12,7 +12,7 @@ public record RecuperarEspirituDTO(Long id,
     public static RecuperarEspirituDTO desdeModelo(Espiritu espiritu) {
         return new RecuperarEspirituDTO(
                 espiritu.getId(),
-                null,
+                TipoEspirituDTO.desdeModelo(espiritu),
                 espiritu.getNombre(),
                 espiritu.getNivelDeConexion(),
                 espiritu.getOwner() != null ? espiritu.getOwner().getId() : null,

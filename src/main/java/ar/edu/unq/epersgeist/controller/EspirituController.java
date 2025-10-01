@@ -77,8 +77,11 @@ public class EspirituController {
     public ResponseEntity<List<RecuperarEspirituDTO>> recuperarDemonios(@RequestParam Sort.Direction direccion,
                                                                         @RequestParam Integer pagina,
                                                                         @RequestParam Integer cantidadPorPagina) {
-        //TODO
-        return ResponseEntity.ok(List.of());
+        var demonios = espirituService.espiritusDemoniacos(direccion, pagina, cantidadPorPagina);
+        var dtos = demonios.stream()
+                .map(RecuperarEspirituDTO::desdeModelo)
+                .toList();
+        return ResponseEntity.ok(dtos);
     }
 
     @PatchMapping("/{id}/conectar/{mediumId}")

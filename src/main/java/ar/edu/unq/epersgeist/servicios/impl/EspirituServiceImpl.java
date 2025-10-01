@@ -5,7 +5,6 @@ import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.servicios.EspirituService;
-import ar.edu.unq.epersgeist.servicios.enums.Direccion;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -64,12 +63,11 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     @Override
-    public List<Espiritu> espiritusDemoniacos(Direccion direccion, Integer pagina, Integer cantidadPorPagina) {
-        Sort.Direction sortDirection = direccion == Direccion.ASCENDENTE ? Sort.Direction.ASC : Sort.Direction.DESC;
+    public List<Espiritu> espiritusDemoniacos(Sort.Direction direccion, Integer pagina, Integer cantidadPorPagina) {
         Pageable pageable = PageRequest.of(
                 pagina - 1,
                 cantidadPorPagina,
-                Sort.by(sortDirection, "nivelDeConexion")
+                Sort.by(direccion, "nivelDeConexion")
         );
         return espirituDAO.espiritusDemoniacos(pageable).getContent();
     }

@@ -22,6 +22,6 @@ public interface EspirituDAO extends CrudRepository<Espiritu, Long> {
     )
     Espiritu recuperar(Long idDelEspiritu);
 
-    @Query("from Espiritu e")
+    @Query("from EspirituDemoniaco e")
     Page<Espiritu> espiritusDemoniacos(Pageable pageable);
 }

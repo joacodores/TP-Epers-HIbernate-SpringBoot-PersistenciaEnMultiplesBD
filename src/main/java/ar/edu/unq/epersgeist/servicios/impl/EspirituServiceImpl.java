@@ -2,12 +2,13 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.servicios.EspirituService;
-import org.springframework.data.domain.Page;
+import ar.edu.unq.epersgeist.servicios.enums.Direccion;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +20,6 @@ import java.util.stream.StreamSupport;
 @Service
 @Transactional
 public class EspirituServiceImpl implements EspirituService {
-
     private final EspirituDAO espirituDAO;
     private final MediumDAO mediumDAO;
 
@@ -34,15 +34,14 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     @Override
-    public void eliminar(Espiritu espiritu) {
-        espirituDAO.delete(espiritu);
+    public void eliminar(Long espirituId) {
+        espirituDAO.deleteById(espirituId);
     }
 
     @Override
     public Optional<Espiritu> recuperar(Long ubicacionId) {
         return espirituDAO.findById(ubicacionId);
     }
-
 
     @Override
     public List<Espiritu> recuperarTodos() {
@@ -52,22 +51,28 @@ public class EspirituServiceImpl implements EspirituService {
 
     @Override
     public void actualizar(Espiritu espiritu) {
-        espirituDAO.save(espiritu);
+        Optional<Espiritu> espirituAActualizar = espirituDAO.findById(espiritu.getId());
+        if (espiritu.getNombre() != null) {
+            espirituAActualizar.get().setNombre(espiritu.getNombre());
+        }
+        espirituDAO.save(espirituAActualizar.get());
     }
-
 
     @Override
     public void eliminarTodo() {
         espirituDAO.deleteAll();
     }
 
-/*
     @Override
-    public Page<Espiritu> espiritusDemoniacos(Pageable pageable){
-        return espirituDAO.findAll(pageable);
+    public List<Espiritu> espiritusDemoniacos(Direccion direccion, Integer pagina, Integer cantidadPorPagina) {
+        Sort.Direction sortDirection = direccion == Direccion.ASCENDENTE ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(
+                pagina - 1,
+                cantidadPorPagina,
+                Sort.by(sortDirection, "nivelDeConexion")
+        );
+        return espirituDAO.espiritusDemoniacos(pageable).getContent();
     }
-
-    */
 
     @Override
     public Medium conectar(Long espirituId, Long mediumId) {
@@ -77,5 +82,4 @@ public class EspirituServiceImpl implements EspirituService {
         espirituDAO.save(espiritu);
         return medium;
     }
-
 }

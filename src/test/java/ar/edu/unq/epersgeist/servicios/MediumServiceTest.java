@@ -3,14 +3,6 @@ package ar.edu.unq.epersgeist.servicios;
 import ar.edu.unq.epersgeist.helpers.RandomizerFalso;
 import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.modelo.exceptions.ExorcistaSinAngelesException;
-import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
-import ar.edu.unq.epersgeist.modelo.Medium;
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
-import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
-import ar.edu.unq.epersgeist.servicios.impl.EspirituServiceImpl;
-import ar.edu.unq.epersgeist.servicios.impl.MediumServiceImpl;
-import ar.edu.unq.epersgeist.servicios.impl.UbicacionServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,10 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 public class MediumServiceTest {
@@ -43,20 +31,14 @@ public class MediumServiceTest {
 
     @BeforeEach
     void prepare() {
-
         ubi = new Ubicacion("ubi");
         ubicacionService.crear(ubi);
         ubi2 = new Ubicacion("Ubicación 2");
         ubicacionService.crear(ubi2);
-
-
         e1 = new EspirituAngelical(100, "angel", ubi2);
         espirituService.crear(e1);
-
         this.medium = new Medium("Thiago", 50, 30, ubi);
-
     }
-
 
     @Test
     void crearMediumTest() {
@@ -74,9 +56,10 @@ public class MediumServiceTest {
     @Test
     void recuperarMediumTest() {
         Long mediumID = service.crear(medium).getId();
-        assertEquals(medium.getNombre(), service.recuperar(mediumID).get().getNombre());
-        assertEquals(medium.getMana(), service.recuperar(mediumID).get().getMana());
-        assertEquals(medium.getManaMax(), service.recuperar(mediumID).get().getManaMax());
+        Medium mediumRecuperado = service.recuperar(mediumID).get();
+        assertEquals(medium.getNombre(), mediumRecuperado.getNombre());
+        assertEquals(medium.getMana(), mediumRecuperado.getMana());
+        assertEquals(medium.getManaMax(), mediumRecuperado.getManaMax());
     }
 
     @Test
@@ -112,17 +95,16 @@ public class MediumServiceTest {
     void eliminarMediumNoPersistidoNoLanzaExcepcionTest() {
         service.crear(medium);
         Medium medium2 = new Medium("Doble Tonka", 60, 30, ubi);
-        assertDoesNotThrow(() -> service.eliminar(medium2));
+        assertDoesNotThrow(() -> service.eliminar(medium2.getId()));
     }
 
     @Test
     void eliminarMediumTest() {
         service.crear(medium);
         assertFalse(service.recuperarTodos().isEmpty());
-        service.eliminar(medium);
+        service.eliminar(medium.getId());
         assertTrue(service.recuperarTodos().isEmpty());
     }
-
 
     @Test
     void unMediumNoTieneNingunEspirituTest() {
@@ -133,18 +115,13 @@ public class MediumServiceTest {
     @Test
     void unMediumTieneEspiritusTest() {
         Medium m1 = service.crear(medium);
-
         Espiritu e2 = new EspirituDemoniaco(100, "demonio", ubi2);
         espirituService.crear(e2);
-
         service.invocar(m1.getId(), e1.getId());
         service.invocar(m1.getId(), e2.getId());
-
         espirituService.conectar(e1.getId(), m1.getId());
         espirituService.conectar(e2.getId(), m1.getId());
-
         List<Espiritu> espiritus = service.espiritus(medium.getId());
-
         assertEquals(2, espiritus.size());
     }
 
@@ -160,29 +137,20 @@ public class MediumServiceTest {
     void exorcizarTest() {
         Medium tai = new Medium("Tai", 100, 80, ubi);
         Medium elNoba = new Medium("El Noba", 100, 100, ubi);
-
         Long taiId = service.crear(tai).getId();
         Long elNobaId = service.crear(elNoba).getId();
-
         EspirituAngelical angel = new EspirituAngelical(100, "angel", ubi);
         EspirituDemoniaco demonio = new EspirituDemoniaco(0, "demonio", ubi);
-
         RandomizerFalso randomizer = new RandomizerFalso();
-
         angel.setCustomRandomizer(randomizer);
         demonio.setCustomRandomizer(randomizer);
-
         Long angelId = espirituService.crear(angel).getId();
         Long demonioId = espirituService.crear(demonio).getId();
-
         randomizer.setSecuenciaDeAtaques(10);
         randomizer.setSecuenciaDeDefensas(0);
-
         espirituService.conectar(angelId, taiId);
         espirituService.conectar(demonioId, elNobaId);
-
         service.exorcizar(taiId, elNobaId);
-
         assertTrue(service.espiritus(elNobaId).isEmpty());
     }
 
@@ -201,11 +169,8 @@ public class MediumServiceTest {
         m1.aumentarMana(30);
         Long mediumID = m1.getId();
         Long espirituId = e1.getId();
-
         assertEquals(e1.getUbicacion(), ubi2);
-
         e1 = service.invocar(mediumID, espirituId);
-
         assertEquals(e1.getUbicacion().getId(), ubi.getId());
     }
 
@@ -215,5 +180,4 @@ public class MediumServiceTest {
         service.eliminarTodo();
         ubicacionService.eliminarTodo();
     }
-
 }

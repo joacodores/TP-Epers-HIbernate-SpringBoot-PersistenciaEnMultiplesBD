@@ -15,5 +15,4 @@ public record ActualizarUbicacionDTO(String nombre, Integer energia) {
         */
         return new Ubicacion(nombre);
     }
-
 }

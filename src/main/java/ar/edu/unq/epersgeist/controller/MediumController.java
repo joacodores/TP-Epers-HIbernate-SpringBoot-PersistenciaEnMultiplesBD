@@ -1,10 +1,12 @@
 package ar.edu.unq.epersgeist.controller;
 
+import ar.edu.unq.epersgeist.controller.dto.espiritu.RecuperarEspirituDTO;
 import ar.edu.unq.epersgeist.controller.dto.medium.ActualizarMediumDTO;
 import ar.edu.unq.epersgeist.controller.dto.medium.CrearMediumDTO;
 import ar.edu.unq.epersgeist.controller.dto.medium.RecuperarMediumDTO;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.servicios.EspirituService;
 import ar.edu.unq.epersgeist.servicios.MediumService;
 import ar.edu.unq.epersgeist.servicios.UbicacionService;
 import org.springframework.http.ResponseEntity;
@@ -18,20 +20,20 @@ import java.util.Optional;
 @CrossOrigin
 @RequestMapping("/medium")
 public class MediumController {
-
     private final MediumService mediumService;
     private final UbicacionService ubicacionService;
+    private final EspirituService espirituService;
 
-    public MediumController(MediumService mediumService, UbicacionService ubicacionService) {
+    public MediumController(MediumService mediumService, UbicacionService ubicacionService, EspirituService espirituService) {
         this.ubicacionService = ubicacionService;
         this.mediumService = mediumService;
+        this.espirituService = espirituService;
     }
-
 
     @PostMapping
     public ResponseEntity<RecuperarMediumDTO> crearMedium(@RequestBody CrearMediumDTO mediumDTO) {
         var ubicacion = ubicacionService.recuperar(mediumDTO.ubicacionId());
-        if(ubicacion.isEmpty()){
+        if (ubicacion.isEmpty()) {
             return ResponseEntity.badRequest().build(); //implementar mensaje "La ubicacion no es válida"
         }
         var mediumCreado = mediumService.crear(mediumDTO.aModelo(ubicacion.get()));
@@ -49,7 +51,7 @@ public class MediumController {
 
     @GetMapping("/{id}")
     public ResponseEntity<RecuperarMediumDTO> recuperarMedium(@PathVariable Long id) {
-        var mediumRecuperado =  mediumService.recuperar(id);
+        var mediumRecuperado = mediumService.recuperar(id);
         if (mediumRecuperado.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -57,31 +59,37 @@ public class MediumController {
         return ResponseEntity.ok(dto);
     }
 
-    @GetMapping("/sinEspiritusEn/{ubicacionId}")
-    public ResponseEntity<List<RecuperarMediumDTO>> mediumsSinEspiritusEn(@PathVariable Long ubicacionId) {
-        Optional<Ubicacion> ubicacion = ubicacionService.recuperar(ubicacionId);
-        if (ubicacion.isEmpty()){return ResponseEntity.notFound().build();} //checkeo que la ubi exista porque el ubiService no maneja ese error
-        List<Medium> mediumsSinEspiritusEn = ubicacionService.mediumsSinEspiritusEn(ubicacionId);
-        var dtos = mediumsSinEspiritusEn.stream().map(RecuperarMediumDTO::desdeModelo).toList();
-        return ResponseEntity.ok(dtos);
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<RecuperarMediumDTO> actualizarMedium(@PathVariable Long id,
                                                                @RequestBody ActualizarMediumDTO mediumDTO) {
         //checkeamos que exista
         var mediumAActualizar = mediumService.recuperar(id);
-        if(mediumAActualizar.isEmpty()){
+        if (mediumAActualizar.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-
         mediumService.actualizar(mediumDTO.aModelo(id));
         var mediumActualizado = mediumService.recuperar(id);
-        if(mediumActualizado.isEmpty()){
-           return ResponseEntity.internalServerError().build();
+        if (mediumActualizado.isEmpty()) {
+            return ResponseEntity.internalServerError().build();
         }
         var dto = RecuperarMediumDTO.desdeModelo(mediumActualizado.get());
         return ResponseEntity.ok(dto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarMedium(@PathVariable Long id) {
+        var mediumRecuperado = mediumService.recuperar(id);
+        if (mediumRecuperado.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        mediumService.eliminar(mediumRecuperado.get().getId());
+        return ResponseEntity.noContent().build(); // 204
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> eliminarTodosLosMediums() {
+        mediumService.eliminarTodo();
+        return ResponseEntity.noContent().build(); // 204 incluso si ya estaba vacío
     }
 
     @PatchMapping("/{mediumExorcistaId}/exorcizar/{mediumPoseidoId}")
@@ -89,7 +97,7 @@ public class MediumController {
                                                         @PathVariable Long mediumPoseidoId) {
         var mediumExorcista = mediumService.recuperar(mediumExorcistaId);
         var mediumPoseido = mediumService.recuperar(mediumPoseidoId);
-        if(mediumExorcista.isEmpty() || mediumPoseido.isEmpty()){
+        if (mediumExorcista.isEmpty() || mediumPoseido.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         mediumService.exorcizar(mediumExorcistaId, mediumPoseidoId);
@@ -99,13 +107,33 @@ public class MediumController {
     @PatchMapping("/descansar/{id}")
     public ResponseEntity<RecuperarMediumDTO> descansar(@PathVariable Long id) {
         var medium = mediumService.recuperar(id);
-        if(medium.isEmpty()){
+        if (medium.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         mediumService.descansar(medium.get().getId());
         return ResponseEntity.ok().build();
     }
 
+    @PatchMapping("/{mediumId}/invocar/{espirituId}")
+    public ResponseEntity<RecuperarEspirituDTO> invocar(@PathVariable Long mediumId,
+                                                        @PathVariable Long espirituId) {
+        var mediumRecuperado = mediumService.recuperar(mediumId);
+        var espirituRecuperado = espirituService.recuperar(espirituId);
+        if (espirituRecuperado.isEmpty() || mediumRecuperado.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        mediumService.invocar(mediumId, espirituId);
+        return ResponseEntity.ok().build();
+    }
 
-
+    @GetMapping("/sinEspiritusEn/{ubicacionId}")
+    public ResponseEntity<List<RecuperarMediumDTO>> mediumsSinEspiritusEn(@PathVariable Long ubicacionId) {
+        Optional<Ubicacion> ubicacion = ubicacionService.recuperar(ubicacionId);
+        if (ubicacion.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } //checkeo que la ubi exista porque el ubiService no maneja ese error
+        List<Medium> mediumsSinEspiritusEn = ubicacionService.mediumsSinEspiritusEn(ubicacionId);
+        var dtos = mediumsSinEspiritusEn.stream().map(RecuperarMediumDTO::desdeModelo).toList();
+        return ResponseEntity.ok(dtos);
+    }
 }

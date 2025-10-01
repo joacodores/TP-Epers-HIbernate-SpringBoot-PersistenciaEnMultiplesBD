@@ -4,7 +4,6 @@ import jakarta.persistence.Entity;
 
 @Entity
 public class EspirituDemoniaco extends Espiritu {
-
     @SuppressWarnings("unused")
     public EspirituDemoniaco() {
         super();
@@ -33,5 +32,4 @@ public class EspirituDemoniaco extends Espiritu {
             atacante.sufrirDerrota(5);
         }
     }
-
 }

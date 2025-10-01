@@ -9,15 +9,14 @@ public record RecuperarEspirituDTO(Long id,
                                    Integer nivelDeConexion,
                                    Long mediumId,
                                    RecuperarUbicacionDTO ubicacion) {
-
     public static RecuperarEspirituDTO desdeModelo(Espiritu espiritu) {
         return new RecuperarEspirituDTO(
                 espiritu.getId(),
                 null,
                 espiritu.getNombre(),
                 espiritu.getNivelDeConexion(),
-                espiritu.getOwner()!= null ? espiritu.getOwner().getId(): null,
+                espiritu.getOwner() != null ? espiritu.getOwner().getId() : null,
                 RecuperarUbicacionDTO.desdeModelo(espiritu.getUbicacion())
-                );
+        );
     }
 }

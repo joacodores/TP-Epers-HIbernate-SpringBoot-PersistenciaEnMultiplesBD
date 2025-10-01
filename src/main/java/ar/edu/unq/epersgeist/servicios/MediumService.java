@@ -15,7 +15,7 @@ public interface MediumService {
 
     void actualizar(Medium medium);
 
-    void eliminar(Medium medium);
+    void eliminar(Long mediumId);
 
     void eliminarTodo();
 

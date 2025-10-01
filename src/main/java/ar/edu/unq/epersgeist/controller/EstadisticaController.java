@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin
 @RequestMapping("/estadistica")
 public class EstadisticaController {
-
     @GetMapping("/santuarioCorrupto")
     public ResponseEntity<ReporteSantuarioMasCorruptoDTO> estadisticaSantuarios() {
         // TODO: Implementar

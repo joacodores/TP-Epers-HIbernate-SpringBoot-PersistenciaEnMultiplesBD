@@ -1,27 +1,24 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
+import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
-import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
-
 import ar.edu.unq.epersgeist.servicios.MediumService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
-import java.util.Optional;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
 @Transactional
 public class MediumServiceImpl implements MediumService {
-
     private final MediumDAO mediumDAO;
     private final EspirituDAO espirituDAO;
     private final UbicacionDAO ubicacionDAO;
@@ -34,7 +31,6 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public Medium crear(Medium medium) {
-
         return mediumDAO.save(medium);
     }
 
@@ -51,28 +47,23 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public void actualizar(Medium medium) {
-        Optional<Medium> mediumAActualizar = mediumDAO.findById(medium.getId());
-
-        if (medium.getNombre() != null) { mediumAActualizar.get().setNombre(medium.getNombre());}
-        if (medium.getManaMax() != null) { mediumAActualizar.get().setManaMax(medium.getManaMax());}
-        if (medium.getMana() != null) { mediumAActualizar.get().setMana(medium.getMana());}
-
-        mediumDAO.save(mediumAActualizar.get());
+        Medium mediumExistente = mediumDAO.findById(medium.getId())
+                .orElseThrow(() -> new NoSuchElementException("Medium no encontrado"));
+        Optional.ofNullable(medium.getNombre()).ifPresent(mediumExistente::setNombre);
+        Optional.ofNullable(medium.getManaMax()).ifPresent(mediumExistente::setManaMax);
+        Optional.ofNullable(medium.getMana()).ifPresent(mediumExistente::setMana);
+        mediumDAO.save(mediumExistente);
     }
 
     @Override
-    public void eliminar(Medium medium) {
-
-        //List<Espiritu> espiritusDeMedium = this.espiritus(medium.getId());
-        //checkear que los espiritus se desvinculan con medium
-        mediumDAO.delete(medium);
+    public void eliminar(Long mediumId) {
+        mediumDAO.deleteById(mediumId);
     }
 
     @Override
     public void eliminarTodo() {
         //checkear que los espiritus se desvinculan con medium
         mediumDAO.deleteAll();
-
     }
 
     @Override
@@ -103,9 +94,9 @@ public class MediumServiceImpl implements MediumService {
         return espirituAInvocar;
     }
 
+    @Override
     public List<Espiritu> espiritus(Long mediumId) {
         Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new NoSuchElementException("Medium not found with id: " + mediumId));
         return medium.getEspiritus();
     }
-
 }

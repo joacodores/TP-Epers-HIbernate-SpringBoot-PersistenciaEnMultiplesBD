@@ -9,9 +9,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 @NoArgsConstructor
-
 public class RandomizerFalso implements Randomizer {
-
     private final Queue<Integer> secAtaques = new LinkedList<>();
     private final Queue<Integer> secDefensas = new LinkedList<>();
 
@@ -22,22 +20,22 @@ public class RandomizerFalso implements Randomizer {
         }
     }
 
-    public void setSecuenciaDeAtaques(Integer... ataques){
+    public void setSecuenciaDeAtaques(Integer... ataques) {
         setSecuencia(this.secAtaques, 0, 10, ataques);
     }
 
-    public void setSecuenciaDeDefensas(Integer... defensas){
+    public void setSecuenciaDeDefensas(Integer... defensas) {
         setSecuencia(this.secDefensas, 0, 100, defensas);
     }
 
     private int validarResultado(int resultado, int min, int max) {
-        if (resultado < min || resultado > max){
+        if (resultado < min || resultado > max) {
             throw new ResultadoInvalidoException(String.format("El resultado pasado por parámetro: %s, está fuera de rango [%s, %s]", resultado, min, max));
         }
         return resultado;
     }
 
-    private int obtenerResultado(Queue<Integer> secuencia, String errMsg){
+    private int obtenerResultado(Queue<Integer> secuencia, String errMsg) {
         Integer valor = secuencia.poll();
         if (valor == null) {
             throw new NoQuedanValoresEnLaSecuenciaException(errMsg);

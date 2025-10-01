@@ -1,18 +1,17 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.helpers.RandomizerFalso;
 import ar.edu.unq.epersgeist.modelo.exceptions.EspirituNoEsLibreException;
 import ar.edu.unq.epersgeist.modelo.exceptions.EspirituNoPuedeConectarException;
-import org.junit.jupiter.api.BeforeEach;
-import ar.edu.unq.epersgeist.helpers.RandomizerFalso;
 import ar.edu.unq.epersgeist.modelo.exceptions.ExorcistaSinAngelesException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
-public class MediumTest {
+import static org.junit.jupiter.api.Assertions.*;
 
+public class MediumTest {
     private Ubicacion fuerteApache;
     private Ubicacion bocaPredio;
     private Medium juan;
@@ -95,11 +94,9 @@ public class MediumTest {
              - demonio con nivelDeConexion = 0
              - se desvincula de elNoba
          */
-
         randomizer.setSecuenciaDeAtaques(5);
         randomizer.setSecuenciaDeDefensas(6);
         tai.exorcizar(elNoba);
-
         assertEquals(0, demonio.getNivelDeConexion());
         assertTrue(elNoba.getEspiritus().isEmpty());
     }
@@ -122,11 +119,9 @@ public class MediumTest {
              - angel con nivelDeConexion = 0
              - se desvincula de tai
          */
-
         randomizer.setSecuenciaDeAtaques(5);
         randomizer.setSecuenciaDeDefensas(10);
         tai.exorcizar(elNoba);
-
         assertEquals(0, angelito.getNivelDeConexion());
         assertTrue(tai.getEspiritus().isEmpty());
     }
@@ -151,7 +146,6 @@ public class MediumTest {
         randomizer.setSecuenciaDeAtaques(5);
         randomizer.setSecuenciaDeDefensas(30);
         tai.exorcizar(elNoba);
-
         assertEquals(15, angelito.getNivelDeConexion());
         assertFalse(tai.getEspiritus().isEmpty());
     }
@@ -176,7 +170,6 @@ public class MediumTest {
         randomizer.setSecuenciaDeAtaques(5);
         randomizer.setSecuenciaDeDefensas(30);
         tai.exorcizar(elNoba);
-
         assertEquals(12, demonio.getNivelDeConexion());
         assertFalse(elNoba.getEspiritus().isEmpty());
     }
@@ -190,25 +183,18 @@ public class MediumTest {
         tai.conectarseAEspiritu(ivaar);
         tai.conectarseAEspiritu(hana);
         hana.disminuirConexion(11);
-
-
         rika.setCustomRandomizer(randomizer);
         ivaar.setCustomRandomizer(randomizer);
         hana.setCustomRandomizer(randomizer);
-
         EspirituDemoniaco jaeger = new EspirituDemoniaco(30, "Jaeger", fuerteApache);
         EspirituDemoniaco noroi = new EspirituDemoniaco(46, "Noroi", fuerteApache);
-
         jaeger.setCustomRandomizer(randomizer);
         noroi.setCustomRandomizer(randomizer);
-
         elNoba.conectarseAEspiritu(jaeger);
         elNoba.conectarseAEspiritu(noroi);
-
         randomizer.setSecuenciaDeAtaques(10, 10, 0);
         randomizer.setSecuenciaDeDefensas(1, 1, 100);
         tai.exorcizar(elNoba);
-
         assertEquals(0, jaeger.getNivelDeConexion());
         assertEquals(0, hana.getNivelDeConexion());
         assertEquals(List.of(rika, ivaar), tai.getEspiritus());
@@ -217,7 +203,6 @@ public class MediumTest {
 
     @Test
     void exorcizarUnicamenteExorcizaDemoniosYNoAngelesTest() {
-
         EspirituAngelical rika = new EspirituAngelical(44, "Rika", fuerteApache);
         EspirituAngelical ivaar = new EspirituAngelical(64, "Ivaar", fuerteApache);
         EspirituAngelical hana = new EspirituAngelical(0, "Hana", fuerteApache);
@@ -225,27 +210,21 @@ public class MediumTest {
         tai.conectarseAEspiritu(ivaar);
         tai.conectarseAEspiritu(hana);
         hana.disminuirConexion(11);
-
         rika.setCustomRandomizer(randomizer);
         ivaar.setCustomRandomizer(randomizer);
         hana.setCustomRandomizer(randomizer);
-
         EspirituDemoniaco jaeger = new EspirituDemoniaco(30, "Jaeger", fuerteApache);
         EspirituDemoniaco noroi = new EspirituDemoniaco(46, "Noroi", fuerteApache);
         EspirituAngelical hanyuu = new EspirituAngelical(90, "Hanyuu", fuerteApache);
-
         hanyuu.setCustomRandomizer(randomizer);
         jaeger.setCustomRandomizer(randomizer);
         noroi.setCustomRandomizer(randomizer);
-
         elNoba.conectarseAEspiritu(hanyuu);
         elNoba.conectarseAEspiritu(jaeger);
         elNoba.conectarseAEspiritu(noroi);
-
         randomizer.setSecuenciaDeAtaques(10, 10, 0);
         randomizer.setSecuenciaDeDefensas(1, 1, 100);
         tai.exorcizar(elNoba);
-
         assertEquals(0, jaeger.getNivelDeConexion());
         assertEquals(0, hana.getNivelDeConexion());
         assertEquals(List.of(rika, ivaar), tai.getEspiritus());
@@ -256,12 +235,10 @@ public class MediumTest {
     void mediumDescansaTieneMasManaYSusEspiritusMasEnergia() {
         Medium tai = new Medium("Tai", 100, 10, fuerteApache);
         Espiritu espirituDem = new EspirituDemoniaco(0, "zorro", fuerteApache);
-
         // Paso a paso, que hace la implementacion de descansar()
         tai.conectarseAEspiritu(espirituDem);
         tai.aumentarMana(15);
         tai.aumentarNivelDeConexionATodosLosEspiritus();
-
         assertEquals(25, tai.getMana());
         assertEquals(7, espirituDem.getNivelDeConexion());
     }
@@ -341,9 +318,7 @@ public class MediumTest {
         // nos aseguramos misma ubicación primero
         juan.invocar(carlitos); // descuenta 10 acá
         double nivel0 = carlitos.getNivelDeConexion();
-
         juan.conectarseAEspiritu(carlitos);
-
         double esperado = (juan.getMana() * 0.20);
         assertEquals(nivel0 + esperado, carlitos.getNivelDeConexion());
         assertTrue(juan.getEspiritus().contains(carlitos));
@@ -355,5 +330,4 @@ public class MediumTest {
         juan.conectarseAEspiritu(carlitos);
         assertThrows(EspirituNoPuedeConectarException.class, () -> juan.conectarseAEspiritu(carlitos));
     }
-
 }

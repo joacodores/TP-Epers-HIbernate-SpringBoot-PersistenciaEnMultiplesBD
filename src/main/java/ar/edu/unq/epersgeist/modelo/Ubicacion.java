@@ -11,7 +11,6 @@ import static jakarta.persistence.GenerationType.AUTO;
 @Getter
 @NoArgsConstructor
 @ToString
-
 @Entity
 public class Ubicacion {
     @Setter
@@ -28,6 +27,11 @@ public class Ubicacion {
 
     @OneToMany(mappedBy = "ubicacion", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private final List<Medium> mediums = new ArrayList<>();
+
+    /*
+    @Column(name = "energia", nullable = false, columnDefinition = "INTEGER CHECK(energia BETWEEN 1 AND 100)")
+    private Integer energia;
+    */
 
     public Ubicacion(@NonNull String nombre) {
         this.nombre = nombre;

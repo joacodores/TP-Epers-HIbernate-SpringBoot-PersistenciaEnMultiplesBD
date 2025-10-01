@@ -17,7 +17,6 @@ import java.util.Optional;
 @CrossOrigin
 @RequestMapping("/ubicacion")
 public class UbicacionController {
-
     private final UbicacionService ubicacionService;
 
     public UbicacionController(UbicacionService ubicacionService) {
@@ -48,17 +47,17 @@ public class UbicacionController {
     public ResponseEntity<List<RecuperarUbicacionDTO>> recuperarTodasLasUbicaciones() {
         var ubicacionesRecuperadas = ubicacionService.recuperarTodos();
         var dtos = ubicacionesRecuperadas.stream()
-                                        .map(RecuperarUbicacionDTO::desdeModelo)
-                                        .toList();
+                .map(RecuperarUbicacionDTO::desdeModelo)
+                .toList();
         return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/{id}/espiritus")
     public ResponseEntity<List<RecuperarEspirituDTO>> espiritusEnUbicacion(@PathVariable Long id) {
-        var espiritusEnUbicacion =  ubicacionService.espiritusEn(id);
+        var espiritusEnUbicacion = ubicacionService.espiritusEn(id);
         var dtos = espiritusEnUbicacion.stream()
-                                        .map(RecuperarEspirituDTO::desdeModelo)
-                                        .toList();
+                .map(RecuperarEspirituDTO::desdeModelo)
+                .toList();
         return ResponseEntity.ok(dtos);
     }
 
@@ -66,9 +65,8 @@ public class UbicacionController {
     public ResponseEntity<List<RecuperarMediumDTO>> mediumsSinEspiritusEnUbicacion(@PathVariable Long id) {
         var mediumsSinEspiritusEnUbicacion = ubicacionService.mediumsSinEspiritusEn(id);
         var dtos = mediumsSinEspiritusEnUbicacion.stream()
-                                                .map(RecuperarMediumDTO::desdeModelo)
-                                                .toList();
+                .map(RecuperarMediumDTO::desdeModelo)
+                .toList();
         return ResponseEntity.ok(dtos);
     }
-
 }

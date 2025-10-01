@@ -98,7 +98,9 @@ public class MediumController {
             return ResponseEntity.notFound().build();
         }
         mediumService.exorcizar(mediumExorcistaId, mediumPoseidoId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(
+                RecuperarMediumDTO.desdeModelo(mediumService.recuperar(mediumExorcistaId).get())
+        );
     }
 
     @PatchMapping("/descansar/{id}")
@@ -108,7 +110,9 @@ public class MediumController {
             return ResponseEntity.notFound().build();
         }
         mediumService.descansar(medium.get().getId());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(
+                RecuperarMediumDTO.desdeModelo(mediumService.recuperar(id).get())
+        );
     }
 
     @PatchMapping("/{mediumId}/invocar/{espirituId}")
@@ -120,7 +124,9 @@ public class MediumController {
             return ResponseEntity.notFound().build();
         }
         mediumService.invocar(mediumId, espirituId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(
+                RecuperarEspirituDTO.desdeModelo(espirituService.recuperar(espirituId).get())
+        );
     }
 
     @GetMapping("/sinEspiritusEn/{ubicacionId}")

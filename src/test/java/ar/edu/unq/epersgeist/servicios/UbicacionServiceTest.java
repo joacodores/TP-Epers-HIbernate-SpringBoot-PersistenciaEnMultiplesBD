@@ -38,15 +38,12 @@ public class UbicacionServiceTest {
         assertNotNull(ubicacion.getId());
     }
 
-
-
     @Test
     void recuperarUbicacionNoPersistidaDevuelveNullTest() {
         Long ubicacionID = service.crear(ubicacion).getId();
 
         assertTrue(service.recuperar(ubicacionID + 1).isEmpty());
     }
-
 
     @Test
     void recuperarUbicacionTest() {
@@ -79,14 +76,14 @@ public class UbicacionServiceTest {
     void eliminarUbicacionNoPersistidaNoLanzaExcepcionTest() {
         service.crear(ubicacion);
         Ubicacion ubicacion2 = new Ubicacion("Nueva Ubicación");
-        assertDoesNotThrow(() -> service.eliminar(ubicacion2));
+        assertDoesNotThrow(() -> service.eliminar(ubicacion2.getId()));
     }
 
     @Test
     void eliminarUbicacionTest() {
         service.crear(ubicacion);
         assertFalse(service.recuperarTodos().isEmpty());
-        service.eliminar(ubicacion);
+        service.eliminar(ubicacion.getId());
         assertTrue(service.recuperarTodos().isEmpty());
     }
 

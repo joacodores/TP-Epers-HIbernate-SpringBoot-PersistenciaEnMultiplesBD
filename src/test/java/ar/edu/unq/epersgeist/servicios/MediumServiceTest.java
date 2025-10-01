@@ -3,14 +3,8 @@ package ar.edu.unq.epersgeist.servicios;
 import ar.edu.unq.epersgeist.helpers.RandomizerFalso;
 import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.modelo.exceptions.ExorcistaSinAngelesException;
-import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
-import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
-import ar.edu.unq.epersgeist.servicios.impl.EspirituServiceImpl;
-import ar.edu.unq.epersgeist.servicios.impl.MediumServiceImpl;
-import ar.edu.unq.epersgeist.servicios.impl.UbicacionServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -74,9 +68,11 @@ public class MediumServiceTest {
     @Test
     void recuperarMediumTest() {
         Long mediumID = service.crear(medium).getId();
-        assertEquals(medium.getNombre(), service.recuperar(mediumID).get().getNombre());
-        assertEquals(medium.getMana(), service.recuperar(mediumID).get().getMana());
-        assertEquals(medium.getManaMax(), service.recuperar(mediumID).get().getManaMax());
+        Medium mediumRecuperado = service.recuperar(mediumID).get();
+
+        assertEquals(medium.getNombre(), mediumRecuperado.getNombre());
+        assertEquals(medium.getMana(), mediumRecuperado.getMana());
+        assertEquals(medium.getManaMax(), mediumRecuperado.getManaMax());
     }
 
     @Test
@@ -112,14 +108,14 @@ public class MediumServiceTest {
     void eliminarMediumNoPersistidoNoLanzaExcepcionTest() {
         service.crear(medium);
         Medium medium2 = new Medium("Doble Tonka", 60, 30, ubi);
-        assertDoesNotThrow(() -> service.eliminar(medium2));
+        assertDoesNotThrow(() -> service.eliminar(medium2.getId()));
     }
 
     @Test
     void eliminarMediumTest() {
         service.crear(medium);
         assertFalse(service.recuperarTodos().isEmpty());
-        service.eliminar(medium);
+        service.eliminar(medium.getId());
         assertTrue(service.recuperarTodos().isEmpty());
     }
 

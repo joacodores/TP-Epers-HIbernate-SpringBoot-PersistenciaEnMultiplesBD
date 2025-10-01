@@ -4,18 +4,13 @@ import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
-import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.enums.Direccion;
-import ar.edu.unq.epersgeist.servicios.impl.EspirituServiceImpl;
-import ar.edu.unq.epersgeist.servicios.impl.MediumServiceImpl;
-import ar.edu.unq.epersgeist.servicios.impl.UbicacionServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
 
 import java.util.List;
 
@@ -92,19 +87,18 @@ public class EspirituServiceTest {
     @Test
     void eliminarEspirituNoPersistidoNoLanzaExcepcionTest() {
         service.crear(angel);
-        assertDoesNotThrow(() -> service.eliminar(demonio));
+        assertDoesNotThrow(() -> service.eliminar(demonio.getId()));
     }
-/*
+
     @Test
     void eliminarEspirituTest() {
         service.crear(demonio);
+        System.out.println("Demonio ID: " + demonio.getId());
         assertFalse(service.recuperarTodos().isEmpty());
-        service.eliminar(demonio);
+        service.eliminar(demonio.getId());
         assertTrue(service.recuperarTodos().isEmpty());
     }
-*/
 
-/*
     private void crearEspiritusDemoniacosParaPruebas(int cantidad) {
         for (int i = 1; i <= cantidad; i++) {
             Espiritu e = new EspirituDemoniaco(30 + i, "Demonio" + i, eastblue);
@@ -154,7 +148,7 @@ public class EspirituServiceTest {
         List<Espiritu> espiritusRecuperados = service.espiritusDemoniacos(Direccion.ASCENDENTE, 1, 5);
         assertTrue(espiritusRecuperados.isEmpty());
     }
-*/
+
     @Test
     void conectarTest(){
         Long zoroId = service.crear(demonio).getId();

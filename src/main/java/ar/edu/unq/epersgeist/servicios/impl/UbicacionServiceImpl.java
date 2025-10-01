@@ -46,8 +46,8 @@ public class UbicacionServiceImpl implements UbicacionService {
     }
 
     @Override
-    public void eliminar(Ubicacion ubicacion) {
-        ubicacionDAO.delete(ubicacion);
+    public void eliminar(Long ubicacionId) {
+        ubicacionDAO.deleteById(ubicacionId);
     }
 
     @Override

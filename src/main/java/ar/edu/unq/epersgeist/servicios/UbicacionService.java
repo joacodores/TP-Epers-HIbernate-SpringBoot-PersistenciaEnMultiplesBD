@@ -4,7 +4,6 @@ import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,7 +14,7 @@ public interface UbicacionService {
 
     void actualizar(Ubicacion ubicacion);
 
-    void eliminar(Ubicacion ubicacion);
+    void eliminar(Long ubicacionId);
 
     List<Ubicacion> recuperarTodos();
 

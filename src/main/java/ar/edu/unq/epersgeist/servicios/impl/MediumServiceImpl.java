@@ -51,21 +51,19 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public void actualizar(Medium medium) {
-        Optional<Medium> mediumAActualizar = mediumDAO.findById(medium.getId());
+        Medium mediumExistente = mediumDAO.findById(medium.getId())
+                .orElseThrow(() -> new NoSuchElementException("Medium no encontrado"));
 
-        if (medium.getNombre() != null) { mediumAActualizar.get().setNombre(medium.getNombre());}
-        if (medium.getManaMax() != null) { mediumAActualizar.get().setManaMax(medium.getManaMax());}
-        if (medium.getMana() != null) { mediumAActualizar.get().setMana(medium.getMana());}
+        Optional.ofNullable(medium.getNombre()).ifPresent(mediumExistente::setNombre);
+        Optional.ofNullable(medium.getManaMax()).ifPresent(mediumExistente::setManaMax);
+        Optional.ofNullable(medium.getMana()).ifPresent(mediumExistente::setMana);
 
-        mediumDAO.save(mediumAActualizar.get());
+        mediumDAO.save(mediumExistente);
     }
 
     @Override
-    public void eliminar(Medium medium) {
-
-        //List<Espiritu> espiritusDeMedium = this.espiritus(medium.getId());
-        //checkear que los espiritus se desvinculan con medium
-        mediumDAO.delete(medium);
+    public void eliminar(Long mediumId) {
+        mediumDAO.deleteById(mediumId);
     }
 
     @Override

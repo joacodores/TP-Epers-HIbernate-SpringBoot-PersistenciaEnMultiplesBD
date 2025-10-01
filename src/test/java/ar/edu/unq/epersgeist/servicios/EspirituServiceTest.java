@@ -1,9 +1,6 @@
 package ar.edu.unq.epersgeist.servicios;
 
 import ar.edu.unq.epersgeist.modelo.*;
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
-import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.servicios.enums.Direccion;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,18 +8,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class EspirituServiceTest {
-
     @Autowired
     private EspirituService service;
-
     private EspirituAngelical angel;
     private EspirituDemoniaco demonio;
 
@@ -36,16 +29,12 @@ public class EspirituServiceTest {
 
     @BeforeEach
     void prepare() {
-
-
         eastblue = new Ubicacion("East Blue");
         ubicacionService.crear(eastblue);
-
         sanji = new Medium("Sanji", 60, 30, eastblue);
         mediumService.crear(sanji);
         this.angel = new EspirituAngelical(58, "Luffy", eastblue);
         this.demonio = new EspirituDemoniaco(36, "Zoro", eastblue);
-
     }
 
     @Test
@@ -105,24 +94,24 @@ public class EspirituServiceTest {
             service.crear(e);
         }
     }
+
     @Test
-    void recuperarEspiritusDemoniacosOrdenadosAscendiente(){
+    void recuperarEspiritusDemoniacosOrdenadosAscendiente() {
         crearEspiritusDemoniacosParaPruebas(20);
-        List<Espiritu> espiritusRecuperados = service.espiritusDemoniacos(Direccion.ASCENDENTE,1,5);
+        List<Espiritu> espiritusRecuperados = service.espiritusDemoniacos(Direccion.ASCENDENTE, 1, 5);
         assertEquals(5, espiritusRecuperados.size());
         assertEquals("Demonio1", espiritusRecuperados.get(0).getNombre());
         assertEquals("Demonio5", espiritusRecuperados.get(4).getNombre());
     }
 
-   @Test
-    void recuperarEspiritusDemoniacosOrdenadosDescendente(){
-       crearEspiritusDemoniacosParaPruebas(20);
-       List<Espiritu> espiritusRecuperados = service.espiritusDemoniacos(Direccion.DESCENDENTE,1,5);
-       assertEquals(5, espiritusRecuperados.size());
-       assertEquals("Demonio20", espiritusRecuperados.get(0).getNombre());
-       assertEquals("Demonio16", espiritusRecuperados.get(4).getNombre());
+    @Test
+    void recuperarEspiritusDemoniacosOrdenadosDescendente() {
+        crearEspiritusDemoniacosParaPruebas(20);
+        List<Espiritu> espiritusRecuperados = service.espiritusDemoniacos(Direccion.DESCENDENTE, 1, 5);
+        assertEquals(5, espiritusRecuperados.size());
+        assertEquals("Demonio20", espiritusRecuperados.get(0).getNombre());
+        assertEquals("Demonio16", espiritusRecuperados.get(4).getNombre());
     }
-
 
     @Test
     void alRecuperarUnaPaginaFueraDeRangoEsVacia() {
@@ -132,12 +121,12 @@ public class EspirituServiceTest {
     }
 
     @Test
-    void recuperarUnaPaginaConIndiceNegativoArrojaExcepcion(){
+    void recuperarUnaPaginaConIndiceNegativoArrojaExcepcion() {
         assertThrows(IllegalArgumentException.class, () -> service.espiritusDemoniacos(Direccion.ASCENDENTE, -1, 5));
     }
 
     @Test
-    void EspiritusDemoniacosConPaginaIncompletaDevuelveSoloLasRestantes(){
+    void EspiritusDemoniacosConPaginaIncompletaDevuelveSoloLasRestantes() {
         crearEspiritusDemoniacosParaPruebas(5);
         List<Espiritu> pagina2 = service.espiritusDemoniacos(Direccion.ASCENDENTE, 2, 3);
         assertEquals(2, pagina2.size());
@@ -150,7 +139,7 @@ public class EspirituServiceTest {
     }
 
     @Test
-    void conectarTest(){
+    void conectarTest() {
         Long zoroId = service.crear(demonio).getId();
         Long sanjiId = sanji.getId();
         service.conectar(zoroId, sanjiId);
@@ -158,7 +147,7 @@ public class EspirituServiceTest {
     }
 
     @AfterEach
-    void cleanup(){
+    void cleanup() {
         service.eliminarTodo();
         mediumService.eliminarTodo();
         ubicacionService.eliminarTodo();

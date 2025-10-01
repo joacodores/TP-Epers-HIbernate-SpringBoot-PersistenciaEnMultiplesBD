@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class EspirituTest {
-
     private Espiritu rika;
     private Medium yuta;
     private Ubicacion puebloPaleta;
@@ -20,12 +19,12 @@ public class EspirituTest {
     }
 
     @Test
-    void crearEspirituConNivelDeConexionMenorAlRangoLanzaExcepcionTest(){
+    void crearEspirituConNivelDeConexionMenorAlRangoLanzaExcepcionTest() {
         assertThrows(NivelDeConexionFueraDeRangoException.class, () -> new EspirituAngelical(-1, "Aura Negativa", puebloPaleta));
     }
 
     @Test
-    void crearEspirituConNivelDeConexionMayorAlRangoLanzaExcepcionTest(){
+    void crearEspirituConNivelDeConexionMayorAlRangoLanzaExcepcionTest() {
         assertThrows(NivelDeConexionFueraDeRangoException.class, () -> new EspirituDemoniaco(101, "Faker", puebloPaleta));
     }
 
@@ -57,7 +56,7 @@ public class EspirituTest {
     }
 
     @Test
-    void aumentarConexionQueSuperariaElMaximoCapeaAlMaximoTest(){
+    void aumentarConexionQueSuperariaElMaximoCapeaAlMaximoTest() {
         Espiritu mahoraga = new EspirituDemoniaco(95, "Mahoraga", puebloPaleta);
         mahoraga.aumentarConexion(yuta);
         assertEquals(100, mahoraga.getNivelDeConexion());

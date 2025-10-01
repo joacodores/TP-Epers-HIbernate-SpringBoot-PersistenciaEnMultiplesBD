@@ -20,7 +20,6 @@ import java.util.stream.StreamSupport;
 @Service
 @Transactional
 public class EspirituServiceImpl implements EspirituService {
-
     private final EspirituDAO espirituDAO;
     private final MediumDAO mediumDAO;
 
@@ -53,8 +52,9 @@ public class EspirituServiceImpl implements EspirituService {
     @Override
     public void actualizar(Espiritu espiritu) {
         Optional<Espiritu> espirituAActualizar = espirituDAO.findById(espiritu.getId());
-        if(espiritu.getNombre() != null){ espirituAActualizar.get().setNombre(espiritu.getNombre());}
-
+        if (espiritu.getNombre() != null) {
+            espirituAActualizar.get().setNombre(espiritu.getNombre());
+        }
         espirituDAO.save(espirituAActualizar.get());
     }
 
@@ -64,15 +64,13 @@ public class EspirituServiceImpl implements EspirituService {
     }
 
     @Override
-    public List<Espiritu> espiritusDemoniacos(Direccion direccion, Integer pagina, Integer cantidadPorPagina){
+    public List<Espiritu> espiritusDemoniacos(Direccion direccion, Integer pagina, Integer cantidadPorPagina) {
         Sort.Direction sortDirection = direccion == Direccion.ASCENDENTE ? Sort.Direction.ASC : Sort.Direction.DESC;
-
         Pageable pageable = PageRequest.of(
                 pagina - 1,
                 cantidadPorPagina,
                 Sort.by(sortDirection, "nivelDeConexion")
         );
-
         return espirituDAO.espiritusDemoniacos(pageable).getContent();
     }
 
@@ -84,5 +82,4 @@ public class EspirituServiceImpl implements EspirituService {
         espirituDAO.save(espiritu);
         return medium;
     }
-
 }

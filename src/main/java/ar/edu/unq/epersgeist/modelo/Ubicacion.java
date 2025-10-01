@@ -11,7 +11,6 @@ import static jakarta.persistence.GenerationType.AUTO;
 @Getter
 @NoArgsConstructor
 @ToString
-
 @Entity
 public class Ubicacion {
     @Setter

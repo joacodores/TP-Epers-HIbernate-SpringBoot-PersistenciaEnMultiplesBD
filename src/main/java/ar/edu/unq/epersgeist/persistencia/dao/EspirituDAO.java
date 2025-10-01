@@ -12,12 +12,10 @@ import java.util.List;
 
 @Repository
 public interface EspirituDAO extends CrudRepository<Espiritu, Long> {
-
     @Query(
             "from Espiritu e where e.ubicacion.id = :ubicacionId"
     )
     List<Espiritu> espiritusEn(@Param("ubicacionId") Long ubicacionId);
-
 
     @Query(
             "from Espiritu e where e.id = :idDelEspiritu"

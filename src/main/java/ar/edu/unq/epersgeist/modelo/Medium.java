@@ -10,13 +10,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static jakarta.persistence.GenerationType.AUTO;
 import static java.lang.Integer.min;
 
 @NoArgsConstructor
-
 @Entity
 public class Medium {
     @Getter
@@ -24,21 +25,26 @@ public class Medium {
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;
+
     @Getter
     @Setter
     @Column(nullable = false, length = 500)
     private String nombre;
+
     @Setter
     @Getter
     @Column(nullable = false)
     private Integer manaMax;
+
     @Getter
     @Column(nullable = false)
     private Integer mana;
+
     @Getter
     @Setter(AccessLevel.NONE)
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Espiritu> espiritus = new ArrayList<>();
+
     @Getter
     @Setter
     @ManyToOne
@@ -92,7 +98,6 @@ public class Medium {
         if (!this.tieneAlMenosUnEspirituAngelical()) {
             throw new ExorcistaSinAngelesException("El medium exorcista %s no puede realizar un exorcismo, ya que no posee ningún Espiritu Angelical");
         }
-
         this.getEspiritusAngelicales().forEach(a -> mediumAExorcizar.getEspirituAExorcizar().ifPresent(a::atacar));
     }
 
@@ -124,8 +129,10 @@ public class Medium {
         this.aumentarMana(15);
         this.aumentarNivelDeConexionATodosLosEspiritus();
     }
+
     public void setMana(Integer mana) {
-        if(mana > manaMax) throw new MediumNoPuedeTenerMasManaQueSuManaMax("El Medium no puede tener mas mana que su cantidad maxima permitida");
+        if (mana > manaMax)
+            throw new MediumNoPuedeTenerMasManaQueSuManaMax("El Medium no puede tener mas mana que su cantidad maxima permitida");
         this.mana = mana;
     }
 }

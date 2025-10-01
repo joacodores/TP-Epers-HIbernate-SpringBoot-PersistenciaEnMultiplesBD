@@ -13,10 +13,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class UbicacionServiceTest {
-
     @Autowired
     private UbicacionService service;
-
     private Ubicacion ubicacion;
 
     @Autowired
@@ -28,7 +26,6 @@ public class UbicacionServiceTest {
     @BeforeEach
     void prepare() {
         this.ubicacion = new Ubicacion("Ubicacion");
-
     }
 
     @Test
@@ -41,7 +38,6 @@ public class UbicacionServiceTest {
     @Test
     void recuperarUbicacionNoPersistidaDevuelveNullTest() {
         Long ubicacionID = service.crear(ubicacion).getId();
-
         assertTrue(service.recuperar(ubicacionID + 1).isEmpty());
     }
 
@@ -69,7 +65,7 @@ public class UbicacionServiceTest {
         service.crear(ubicacion);
         service.crear(new Ubicacion("Bernal"));
         service.crear(new Ubicacion("Mordor"));
-        assertEquals(List.of("Ubicacion","Bernal", "Mordor"), service.recuperarTodos().stream().map(Ubicacion::getNombre).toList());
+        assertEquals(List.of("Ubicacion", "Bernal", "Mordor"), service.recuperarTodos().stream().map(Ubicacion::getNombre).toList());
     }
 
     @Test
@@ -100,26 +96,21 @@ public class UbicacionServiceTest {
         ubicacion.agregarEspiritu(espiritu);
         ubicacion.agregarEspiritu(demonio);
         service.crear(ubicacion);
-
         var espiritus = service.espiritusEn(ubicacion.getId());
         assertEquals(2, espiritus.size());
         assertEquals("Luffy", espiritus.get(0).getNombre());
         assertEquals("Zoro", espiritus.get(1).getNombre());
     }
 
-
     @Test
     void existeUnMediumSinEspirituEn() {
         service.crear(ubicacion);
         Ubicacion u2 = new Ubicacion("Templo de Jade");
         service.crear(u2);
-
         Medium tai = new Medium("Tai", 100, 10, ubicacion);
         Espiritu espiritu = new EspirituAngelical(50, "Maestro Shifu", u2);
-
         mediumService.crear(tai);
         espirituService.crear(espiritu);
-
         assertEquals(1, service.mediumsSinEspiritusEn(ubicacion.getId()).size());
     }
 
@@ -129,7 +120,4 @@ public class UbicacionServiceTest {
         mediumService.eliminarTodo();
         service.eliminarTodo();
     }
-
-
-
 }

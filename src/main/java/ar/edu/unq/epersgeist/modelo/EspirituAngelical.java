@@ -1,13 +1,11 @@
 package ar.edu.unq.epersgeist.modelo;
 
-
 import jakarta.persistence.Entity;
 
 import static java.lang.Math.min;
 
 @Entity
 public class EspirituAngelical extends Espiritu {
-
     @SuppressWarnings("unused")
     public EspirituAngelical() {
         super();
@@ -22,7 +20,6 @@ public class EspirituAngelical extends Espiritu {
         return true;
     }
 
-
     private int calcularPorcentajeDeAtaqueExitoso() {
         int dado = this.randomizer.lanzarDadoDeAtaque();
         return min(dado + this.getNivelDeConexion(), 100);
@@ -36,5 +33,4 @@ public class EspirituAngelical extends Espiritu {
     @Override
     public void recibirAtaque(int ataque, Espiritu atacante) {
     }
-
 }

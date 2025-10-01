@@ -2,22 +2,25 @@ package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.modelo.exceptions.NivelDeConexionFueraDeRangoException;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
 @Getter
 @Setter
 @Entity
-@Table(name="espiritu")
+@Table(name = "espiritu")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public abstract class Espiritu {
-
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;
-    @Column(name="nivel_de_conexion", nullable = false, columnDefinition = "INTEGER CHECK(nivel_de_conexion BETWEEN 0 AND 100)")
+
+    @Column(name = "nivel_de_conexion", nullable = false, columnDefinition = "INTEGER CHECK(nivel_de_conexion BETWEEN 0 AND 100)")
     private int nivelDeConexion;
+
     @Column(nullable = false, length = 500)
     private String nombre;
     private final int maxNivelDeConexion = 100;
@@ -25,8 +28,10 @@ public abstract class Espiritu {
 
     @ManyToOne
     private Ubicacion ubicacion;
+
     @ManyToOne
     private Medium owner;
+
     @Transient
     protected Randomizer randomizer;
 
@@ -82,7 +87,6 @@ public abstract class Espiritu {
 
     public void cambiarUbicacion(Ubicacion ubicacionNueva) {
         this.ubicacion.eliminarEspiritu(this);
-
         ubicacionNueva.agregarEspiritu(this);
     }
 
@@ -97,5 +101,4 @@ public abstract class Espiritu {
     public void sufrirDerrota(int dmg) {
         this.disminuirConexion(dmg);
     }
-
 }

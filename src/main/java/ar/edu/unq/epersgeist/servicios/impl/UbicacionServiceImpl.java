@@ -1,8 +1,8 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
-import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
@@ -18,12 +18,11 @@ import java.util.stream.StreamSupport;
 @Service
 @Transactional
 public class UbicacionServiceImpl implements UbicacionService {
-
     private final UbicacionDAO ubicacionDAO;
     private final EspirituDAO espirituDAO;
     private final MediumDAO mediumDAO;
 
-    public UbicacionServiceImpl(UbicacionDAO ubicacionDAO, EspirituDAO espirituDAO,  MediumDAO mediumDAO) {
+    public UbicacionServiceImpl(UbicacionDAO ubicacionDAO, EspirituDAO espirituDAO, MediumDAO mediumDAO) {
         this.ubicacionDAO = ubicacionDAO;
         this.espirituDAO = espirituDAO;
         this.mediumDAO = mediumDAO;
@@ -67,9 +66,7 @@ public class UbicacionServiceImpl implements UbicacionService {
     }
 
     @Override
-    public List<Medium> mediumsSinEspiritusEn(Long ubicacionId){
+    public List<Medium> mediumsSinEspiritusEn(Long ubicacionId) {
         return mediumDAO.mediumsSinEspiritusEn(ubicacionId);
-
     }
-
 }

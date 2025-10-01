@@ -10,7 +10,6 @@ import java.util.List;
 
 @Repository
 public interface MediumDAO extends CrudRepository<Medium, Long> {
-
     @Query(
             "from Medium m where m.ubicacion.id = :ubicacionId and m.espiritus is empty "
     )
@@ -20,6 +19,4 @@ public interface MediumDAO extends CrudRepository<Medium, Long> {
             "from Medium m where m.id = :mediumId"
     )
     Medium recuperar(Long mediumId);
-
-
 }

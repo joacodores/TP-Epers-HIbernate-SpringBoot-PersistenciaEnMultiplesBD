@@ -18,6 +18,13 @@ public class EspirituDemoniaco extends Espiritu {
         return false;
     }
 
+    @Override
+    protected void validarUbicacionPorTipo() {
+        if (getUbicacion().esSantuario()){
+            this.disminuirConexion(10);
+        }
+    }
+
     private boolean fueAtaqueExitoso(int ataque) {
         return ataque > this.randomizer.lanzarDadoDeDefensa();
     }

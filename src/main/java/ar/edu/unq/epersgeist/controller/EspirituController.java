@@ -115,7 +115,15 @@ public class EspirituController {
     @PatchMapping("/{mediumId}/mover/{ubicacionId}")
     public ResponseEntity<RecuperarEspirituDTO> mover(@PathVariable Long mediumId,
                                                       @PathVariable Long ubicacionId) {
-        // TODO: Implementar
+        var mediumRecuperado = mediumService.recuperar(mediumId);
+        var ubicacionRecuperado = ubicacionService.recuperar(ubicacionId);
+        if (mediumRecuperado.isEmpty() || ubicacionRecuperado.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        mediumService.mover(mediumId, ubicacionId);
+
+
         return ResponseEntity.ok().build();
     }
 }

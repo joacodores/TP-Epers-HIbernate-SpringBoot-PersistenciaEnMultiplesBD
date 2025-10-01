@@ -26,4 +26,6 @@ public interface MediumService {
     void descansar(Long mediumId);
 
     List<Espiritu> espiritus(Long mediumId);
+
+    void mover(Long mediumId, Long ubicacionId);
 }

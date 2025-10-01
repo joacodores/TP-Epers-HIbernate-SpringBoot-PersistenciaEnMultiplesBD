@@ -70,9 +70,12 @@ public class MediumServiceImpl implements MediumService {
     public void exorcizar(Long idMediumExorcista, Long idMediumAExorcizar) {
         Medium exorcista = mediumDAO.findById(idMediumExorcista).orElseThrow(() -> new NoSuchElementException("Medium not found with id: " + idMediumExorcista));
         Medium mediumAExorcizar = mediumDAO.findById(idMediumAExorcizar).orElseThrow(() -> new NoSuchElementException("Medium not found with id: " + idMediumAExorcizar));
-        exorcista.exorcizar(mediumAExorcizar);
-        mediumDAO.save(exorcista);
-        mediumDAO.save(mediumAExorcizar);
+
+        if (exorcista.getUbicacion().equals(mediumAExorcizar.getUbicacion())) {
+            exorcista.exorcizar(mediumAExorcizar);
+            mediumDAO.save(exorcista);
+            mediumDAO.save(mediumAExorcizar);
+        }
     }
 
     @Override
@@ -98,5 +101,16 @@ public class MediumServiceImpl implements MediumService {
     public List<Espiritu> espiritus(Long mediumId) {
         Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new NoSuchElementException("Medium not found with id: " + mediumId));
         return medium.getEspiritus();
+    }
+
+    @Override
+    public void mover(Long mediumId, Long ubicacionId){
+        // Doble validación para que no quede como Optional
+        Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new NoSuchElementException("Medium not found with id: " + mediumId));
+        Ubicacion ubicacion = ubicacionDAO.findById(ubicacionId).orElseThrow(() -> new NoSuchElementException("Ubicacion not found with id: " + ubicacionId));
+
+        medium.mover(ubicacion);
+        mediumDAO.save(medium);
+
     }
 }

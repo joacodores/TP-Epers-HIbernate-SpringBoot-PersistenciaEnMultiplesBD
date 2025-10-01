@@ -20,6 +20,13 @@ public class EspirituAngelical extends Espiritu {
         return true;
     }
 
+    @Override
+    protected void validarUbicacionPorTipo() {
+        if (getUbicacion().esCementerio()){
+            this.disminuirConexion(5);
+        }
+    }
+
     private int calcularPorcentajeDeAtaqueExitoso() {
         int dado = this.randomizer.lanzarDadoDeAtaque();
         return min(dado + this.getNivelDeConexion(), 100);
@@ -33,4 +40,5 @@ public class EspirituAngelical extends Espiritu {
     @Override
     public void recibirAtaque(int ataque, Espiritu atacante) {
     }
+
 }

@@ -135,4 +135,9 @@ public class Medium {
             throw new MediumNoPuedeTenerMasManaQueSuManaMax("El Medium no puede tener mas mana que su cantidad maxima permitida");
         this.mana = mana;
     }
+
+    public void mover(Ubicacion ubicacion) {
+        setUbicacion(ubicacion);
+        espiritus.forEach(espiritu -> espiritu.cambiarUbicacion(ubicacion));
+    }
 }

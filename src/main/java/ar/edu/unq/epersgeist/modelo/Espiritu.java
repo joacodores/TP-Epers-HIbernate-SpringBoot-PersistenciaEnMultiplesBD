@@ -86,9 +86,10 @@ public abstract class Espiritu {
     }
 
     public void cambiarUbicacion(Ubicacion ubicacionNueva) {
-        this.ubicacion.eliminarEspiritu(this);
-        ubicacionNueva.agregarEspiritu(this);
+
     }
+
+    protected abstract void validarUbicacionPorTipo();
 
     public void setCustomRandomizer(Randomizer randomizer) {
         this.randomizer = randomizer;
@@ -101,4 +102,5 @@ public abstract class Espiritu {
     public void sufrirDerrota(int dmg) {
         this.disminuirConexion(dmg);
     }
+
 }

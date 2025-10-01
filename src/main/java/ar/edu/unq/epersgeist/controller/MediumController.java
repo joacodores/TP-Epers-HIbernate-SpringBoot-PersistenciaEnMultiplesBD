@@ -62,17 +62,14 @@ public class MediumController {
     @PutMapping("/{id}")
     public ResponseEntity<RecuperarMediumDTO> actualizarMedium(@PathVariable Long id,
                                                                @RequestBody ActualizarMediumDTO mediumDTO) {
-        //checkeamos que exista
         var mediumAActualizar = mediumService.recuperar(id);
         if (mediumAActualizar.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        mediumService.actualizar(mediumDTO.aModelo(id));
-        var mediumActualizado = mediumService.recuperar(id);
-        if (mediumActualizado.isEmpty()) {
-            return ResponseEntity.internalServerError().build();
-        }
-        var dto = RecuperarMediumDTO.desdeModelo(mediumActualizado.get());
+        var medium = mediumAActualizar.get();
+        mediumDTO.actualizarMedium(medium, id);
+        mediumService.actualizar(medium);
+        var dto = RecuperarMediumDTO.desdeModelo(mediumService.recuperar(id).get());
         return ResponseEntity.ok(dto);
     }
 

@@ -2,17 +2,13 @@ package ar.edu.unq.epersgeist.controller.dto.ubicacion;
 
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 
+import java.util.Optional;
+
 public record ActualizarUbicacionDTO(String nombre, Integer energia) {
-    public Ubicacion aModelo() {
+    public void actualizarUbicacion(Ubicacion ubicacion) {
         /* TODO: Luego de terminar la migración:
-        if (tipo == TipoUbicacionDTO.SANTUARIO){
-            return new Santuario(nombre, energia);
-        } else if (tipo == TipoUbicacionDTO.CEMENTERIO) {
-            return new Cementerio(nombre, energia);
-        } else {
-            return new Ubicacion();
-        }
+        Optional.ofNullable(energia).ifPresent(ubicacion::setEnergia);
         */
-        return new Ubicacion(nombre);
+        Optional.ofNullable(nombre).ifPresent(ubicacion::setNombre);
     }
 }

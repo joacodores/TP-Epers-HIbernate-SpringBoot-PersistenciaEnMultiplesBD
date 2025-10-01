@@ -1,12 +1,14 @@
 package ar.edu.unq.epersgeist.controller.dto.medium;
 
 import ar.edu.unq.epersgeist.modelo.Medium;
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
+
+import java.util.Optional;
 
 public record ActualizarMediumDTO(String nombre, Integer manaMax, Integer mana) {
-    public Medium aModelo(Long id) {
-        Medium m = new Medium(nombre, manaMax, mana, new Ubicacion("ignorar"));
-        m.setId(id);
-        return m;
+    public void actualizarMedium(Medium medium, Long id) {
+        medium.setId(id);
+        Optional.ofNullable(nombre).ifPresent(medium::setNombre);
+        Optional.ofNullable(manaMax).ifPresent(medium::setManaMax);
+        Optional.ofNullable(mana).ifPresent(medium::setMana);
     }
 }

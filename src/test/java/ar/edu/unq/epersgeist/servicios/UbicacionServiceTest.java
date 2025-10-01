@@ -128,8 +128,8 @@ public class UbicacionServiceTest {
 
     @AfterEach
     void cleanup() {
-        // espirituService.eliminarTodo();
-        //mediumService.eliminarTodo();
+        espirituService.eliminarTodo();
+        mediumService.eliminarTodo();
         service.eliminarTodo();
     }
 

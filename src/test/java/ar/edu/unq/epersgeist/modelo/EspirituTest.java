@@ -20,29 +20,44 @@ public class EspirituTest {
     }
 
     @Test
-    void crearEspirituConNivelDeConexionInvalidoLanzaExcepcion() {
+    void crearEspirituConNivelDeConexionMenorAlRangoLanzaExcepcionTest(){
         assertThrows(NivelDeConexionFueraDeRangoException.class, () -> new EspirituAngelical(-1, "Aura Negativa", puebloPaleta));
-        assertDoesNotThrow(() -> new EspirituAngelical(0, "Chill guy", puebloPaleta));
-        assertDoesNotThrow(() -> new EspirituDemoniaco(100, "Monster Ultra", puebloPaleta));
+    }
+
+    @Test
+    void crearEspirituConNivelDeConexionMayorAlRangoLanzaExcepcionTest(){
         assertThrows(NivelDeConexionFueraDeRangoException.class, () -> new EspirituDemoniaco(101, "Faker", puebloPaleta));
     }
 
     @Test
-    void crearEspirituConUbicacionNullLanzaExcepcion() {
+    void crearEspirituConNivelDeConexionMinimoNoLanzaExcepcionTest() {
+        assertDoesNotThrow(() -> new EspirituAngelical(0, "Chill guy", puebloPaleta));
+    }
+
+    @Test
+    void crearEspirituConNivelDeConexionMaximoNoLanzaExcepcionTest() {
+        assertDoesNotThrow(() -> new EspirituDemoniaco(100, "Monster Ultra", puebloPaleta));
+    }
+
+    @Test
+    void crearEspirituConUbicacionNullLanzaExcepcionTest() {
         assertThrows(NullPointerException.class, () -> new EspirituAngelical(10, "hola", null));
     }
 
     @Test
-    void crearEspirituConNombreNullLanzaExcepcion() {
+    void crearEspirituConNombreNullLanzaExcepcionTest() {
         assertThrows(NullPointerException.class, () -> new EspirituAngelical(10, null, puebloPaleta));
     }
 
     @Test
-    void aumentarConexionYaEstandoAlMaximoNoHaceNada() {
+    void aumentarConexionYaEstandoAlMaximoNoHaceNadaTest() {
         Espiritu sukuna = new EspirituDemoniaco(100, "Sukuna", puebloPaleta);
         sukuna.aumentarConexion(yuta);
         assertEquals(100, sukuna.getNivelDeConexion());
+    }
 
+    @Test
+    void aumentarConexionQueSuperariaElMaximoCapeaAlMaximoTest(){
         Espiritu mahoraga = new EspirituDemoniaco(95, "Mahoraga", puebloPaleta);
         mahoraga.aumentarConexion(yuta);
         assertEquals(100, mahoraga.getNivelDeConexion());
@@ -50,8 +65,6 @@ public class EspirituTest {
 
     @Test
     void conexionConMediumTest() {
-        assertEquals(50, rika.getNivelDeConexion());
-        assertTrue(yuta.getEspiritus().isEmpty());
         yuta.conectarseAEspiritu(rika);
         assertEquals(70, rika.getNivelDeConexion());
         assertTrue(yuta.getEspiritus().contains(rika));

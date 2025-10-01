@@ -14,38 +14,43 @@ import ar.edu.unq.epersgeist.servicios.impl.UbicacionServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SpringBootTest
 public class EspirituServiceTest {
-    /*private EspirituService service;
+
+    @Autowired
+    private EspirituService service;
+
     private EspirituAngelical angel;
     private EspirituDemoniaco demonio;
+
+    @Autowired
     private UbicacionService ubicacionService;
     private Ubicacion eastblue;
+
+    @Autowired
     private MediumService mediumService;
     private Medium sanji;
 
     @BeforeEach
     void prepare() {
-        UbicacionDAO daoUbi = new HibernateUbicacionDAO();
-        EspirituDAO daoEsp = new HibernateEspirituDAO();
-        MediumDAO daoMed = new HibernateMediumDAO();
 
-        this.ubicacionService = new UbicacionServiceImpl(daoUbi, daoEsp, daoMed);
+
         eastblue = new Ubicacion("East Blue");
         ubicacionService.crear(eastblue);
 
-        this.mediumService = new MediumServiceImpl(daoMed, daoEsp, daoUbi);
         sanji = new Medium("Sanji", 60, 30, eastblue);
         mediumService.crear(sanji);
         this.angel = new EspirituAngelical(58, "Luffy", eastblue);
         this.demonio = new EspirituDemoniaco(36, "Zoro", eastblue);
 
-        this.service = new EspirituServiceImpl(daoEsp, daoMed);
     }
 
     @Test
@@ -58,14 +63,14 @@ public class EspirituServiceTest {
     @Test
     void recuperarEspirituNoPersistidoDevuelveNullTest() {
         Long demonioID = service.crear(demonio).getId();
-        assertNull(service.recuperar(demonioID + 1));
+        assertTrue(service.recuperar(demonioID + 1).isEmpty());
     }
 
     @Test
     void recuperarEspirituTest() {
         Long angelID = service.crear(angel).getId();
-        assertEquals(angel.getNombre(), service.recuperar(angelID).getNombre());
-        assertEquals(angel.getNivelDeConexion(), service.recuperar(angelID).getNivelDeConexion());
+        assertEquals(angel.getNombre(), service.recuperar(angelID).get().getNombre());
+        assertEquals(angel.getNivelDeConexion(), service.recuperar(angelID).get().getNivelDeConexion());
     }
 
     @Test
@@ -73,7 +78,7 @@ public class EspirituServiceTest {
         Long angelID = service.crear(angel).getId();
         angel.setNombre("Antonio");
         service.actualizar(angel);
-        assertEquals("Antonio", service.recuperar(angelID).getNombre());
+        assertEquals("Antonio", service.recuperar(angelID).get().getNombre());
     }
 
     @Test
@@ -89,7 +94,7 @@ public class EspirituServiceTest {
         service.crear(angel);
         assertDoesNotThrow(() -> service.eliminar(demonio));
     }
-
+/*
     @Test
     void eliminarEspirituTest() {
         service.crear(demonio);
@@ -97,7 +102,9 @@ public class EspirituServiceTest {
         service.eliminar(demonio);
         assertTrue(service.recuperarTodos().isEmpty());
     }
+*/
 
+/*
     private void crearEspiritusDemoniacosParaPruebas(int cantidad) {
         for (int i = 1; i <= cantidad; i++) {
             Espiritu e = new EspirituDemoniaco(30 + i, "Demonio" + i, eastblue);
@@ -147,7 +154,7 @@ public class EspirituServiceTest {
         List<Espiritu> espiritusRecuperados = service.espiritusDemoniacos(Direccion.ASCENDENTE, 1, 5);
         assertTrue(espiritusRecuperados.isEmpty());
     }
-
+*/
     @Test
     void conectarTest(){
         Long zoroId = service.crear(demonio).getId();
@@ -161,5 +168,5 @@ public class EspirituServiceTest {
         service.eliminarTodo();
         mediumService.eliminarTodo();
         ubicacionService.eliminarTodo();
-    }*/
+    }
 }

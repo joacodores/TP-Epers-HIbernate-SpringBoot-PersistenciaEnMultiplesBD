@@ -58,9 +58,10 @@ public class EspirituController {
         if (espirituOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        espirituService.actualizar(espirituDTO.aModelo(id));
-        var espirituActualizado = espirituService.recuperar(id);
-        var dto = RecuperarEspirituDTO.desdeModelo(espirituActualizado.get());
+        var espiritu = espirituOptional.get();
+        espiritu.setNombre(espirituDTO.nombre());
+        espirituService.actualizar(espiritu);
+        var dto = RecuperarEspirituDTO.desdeModelo(espiritu);
         return ResponseEntity.ok(dto);
     }
 
@@ -92,7 +93,8 @@ public class EspirituController {
             return ResponseEntity.notFound().build();
         }
         espirituService.conectar(id, mediumId);
-        return ResponseEntity.ok().build();
+        var espirituActualizado = espirituService.recuperar(id).get();
+        return ResponseEntity.ok(RecuperarEspirituDTO.desdeModelo(espirituActualizado));
     }
 
     @GetMapping("/{mediumId}/espiritus")

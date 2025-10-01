@@ -76,6 +76,22 @@ public class MediumController {
         return ResponseEntity.ok(dto);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarMedium(@PathVariable Long id) {
+        var mediumRecuperado = mediumService.recuperar(id);
+        if (mediumRecuperado.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        mediumService.eliminar(mediumRecuperado.get().getId());
+        return ResponseEntity.noContent().build(); // 204
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> eliminarTodosLosMediums() {
+        mediumService.eliminarTodo();
+        return ResponseEntity.noContent().build(); // 204 incluso si ya estaba vacío
+    }
+
     @PatchMapping("/{mediumExorcistaId}/exorcizar/{mediumPoseidoId}")
     public ResponseEntity<RecuperarMediumDTO> exorcizar(@PathVariable Long mediumExorcistaId,
                                                         @PathVariable Long mediumPoseidoId) {

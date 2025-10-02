@@ -234,6 +234,30 @@ public class MediumServiceTest {
     }
 
     @Test
+    void espirituAngelicalDisminuyeNivelDeConexionPorLlegarAUnCementerioYSeDesvinculaCuandoLlegaACero() {
+
+
+        Medium m1 = service.crear(medium);
+
+        Espiritu espirituConNivelDeConexionDisminuido = new EspirituAngelical(1, "angel", ubi);
+
+        espirituService.crear(espirituConNivelDeConexionDisminuido);
+
+        espirituService.conectar(espirituConNivelDeConexionDisminuido.getId(), m1.getId());
+
+        Medium mediumActualizado1 = service.recuperar(m1.getId()).get();
+        assertEquals(mediumActualizado1.getEspiritus().size(), 1);
+
+        service.mover(mediumActualizado1.getId(), ubi2.getId());
+        service.mover(mediumActualizado1.getId(), ubi.getId());
+        service.mover(mediumActualizado1.getId(), ubi2.getId());
+
+
+        Medium mediumActualizado2 = service.recuperar(m1.getId()).get();
+        assertEquals(mediumActualizado2.getEspiritus().size(), 0);
+    }
+
+    @Test
     void espirituDemoniacoDisminuyeNivelDeConexionPorLlegarAUnSantuario() {
         Medium m1 = service.crear(m2);
 
@@ -246,6 +270,27 @@ public class MediumServiceTest {
 
         Espiritu angelActualizado = espirituService.recuperar(e3.getId()).get();
         assertEquals(90, angelActualizado.getNivelDeConexion());
+    }
+
+    @Test
+    void espirituDemoniacoDisminuyeNivelDeConexionPorLlegarAUnSantuarioYSeDesvinculaCuandoLlegaACero() {
+
+
+        Medium m1 = service.crear(m2);
+
+        Espiritu espirituDemoniacoConNivelDeConexionDisminuido = new EspirituDemoniaco(1, "demonio", ubi2);
+
+        espirituService.crear(espirituDemoniacoConNivelDeConexionDisminuido);
+
+        espirituService.conectar(espirituDemoniacoConNivelDeConexionDisminuido.getId(), m1.getId());
+
+        Medium mediumActualizado1 = service.recuperar(m1.getId()).get();
+        assertEquals(mediumActualizado1.getEspiritus().size(), 1);
+
+        service.mover(mediumActualizado1.getId(), ubi.getId());
+
+        Medium mediumActualizado2 = service.recuperar(m1.getId()).get();
+        assertEquals(mediumActualizado2.getEspiritus().size(), 0);
     }
 
 

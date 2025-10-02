@@ -111,6 +111,5 @@ public class MediumServiceImpl implements MediumService {
 
         medium.mover(ubicacion);
         mediumDAO.save(medium);
-
     }
 }

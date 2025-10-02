@@ -10,7 +10,6 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static jakarta.persistence.GenerationType.AUTO;
 import static java.lang.Integer.min;
@@ -108,7 +107,7 @@ public class Medium {
     }
 
     public void aumentarNivelDeConexionAEspiritusDeMediumEn(Ubicacion ubicacionDeDescanso) {
-        espiritus.forEach(espiritu -> espiritu.aumentarConexion( ubicacionDeDescanso));
+        espiritus.forEach(espiritu -> espiritu.aumentarConexion(ubicacionDeDescanso));
     }
 
     public void invocar(Espiritu espiritu) {

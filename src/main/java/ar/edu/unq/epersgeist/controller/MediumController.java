@@ -139,4 +139,19 @@ public class MediumController {
         var dtos = mediumsSinEspiritusEn.stream().map(RecuperarMediumDTO::desdeModelo).toList();
         return ResponseEntity.ok(dtos);
     }
+
+    @PatchMapping("/{mediumId}/mover/{ubicacionId}")
+    public ResponseEntity<RecuperarMediumDTO> mover(@PathVariable Long mediumId,
+                                                      @PathVariable Long ubicacionId) {
+        var mediumRecuperado = mediumService.recuperar(mediumId);
+        var ubicacionRecuperado = ubicacionService.recuperar(ubicacionId);
+        if (mediumRecuperado.isEmpty() || ubicacionRecuperado.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        mediumService.mover(mediumId, ubicacionId);
+
+        var dto = RecuperarMediumDTO.desdeModelo(mediumService.recuperar(mediumId).get());
+        return ResponseEntity.ok(dto);
+    }
 }

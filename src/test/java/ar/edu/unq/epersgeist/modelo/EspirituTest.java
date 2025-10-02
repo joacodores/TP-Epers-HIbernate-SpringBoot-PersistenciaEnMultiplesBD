@@ -13,7 +13,7 @@ public class EspirituTest {
 
     @BeforeEach
     void crearModelo() {
-        puebloPaleta = new Ubicacion("Pueblo Paleta");
+        puebloPaleta = new Cementerio("Pueblo Paleta",50);
         rika = new EspirituAngelical(50, "Rika", puebloPaleta);
         yuta = new Medium("Yuta", 100, 100, puebloPaleta);
     }
@@ -51,14 +51,14 @@ public class EspirituTest {
     @Test
     void aumentarConexionYaEstandoAlMaximoNoHaceNadaTest() {
         Espiritu sukuna = new EspirituDemoniaco(100, "Sukuna", puebloPaleta);
-        sukuna.aumentarConexion(yuta);
+        sukuna.aumentarConexion(puebloPaleta);
         assertEquals(100, sukuna.getNivelDeConexion());
     }
 
     @Test
     void aumentarConexionQueSuperariaElMaximoCapeaAlMaximoTest() {
         Espiritu mahoraga = new EspirituDemoniaco(95, "Mahoraga", puebloPaleta);
-        mahoraga.aumentarConexion(yuta);
+        mahoraga.aumentarConexion(puebloPaleta);
         assertEquals(100, mahoraga.getNivelDeConexion());
     }
 

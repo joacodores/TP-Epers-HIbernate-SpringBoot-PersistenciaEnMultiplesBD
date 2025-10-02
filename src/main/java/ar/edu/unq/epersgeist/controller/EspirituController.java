@@ -111,11 +111,4 @@ public class EspirituController {
         List<RecuperarEspirituDTO> espiritusRecuperados = espiritus.stream().map(RecuperarEspirituDTO::desdeModelo).toList();
         return ResponseEntity.ok(espiritusRecuperados);
     }
-
-    @PatchMapping("/{mediumId}/mover/{ubicacionId}")
-    public ResponseEntity<RecuperarEspirituDTO> mover(@PathVariable Long mediumId,
-                                                      @PathVariable Long ubicacionId) {
-        // TODO: Implementar
-        return ResponseEntity.ok().build();
-    }
 }

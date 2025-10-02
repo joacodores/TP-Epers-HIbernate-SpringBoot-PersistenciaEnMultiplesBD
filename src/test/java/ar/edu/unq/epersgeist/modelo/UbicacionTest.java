@@ -10,7 +10,7 @@ public class UbicacionTest {
 
     @BeforeEach
     void prepare() {
-        quilmes = new Ubicacion("Quilmes");
+        quilmes = new Santuario("Quilmes", 10);
     }
 
     @Test
@@ -20,7 +20,7 @@ public class UbicacionTest {
 
     @Test
     void crearUbicacionConNombreNullLanzaExcepcion() {
-        assertThrows(NullPointerException.class, () -> new Ubicacion(null));
+        assertThrows(NullPointerException.class, () -> new Santuario(null,0));
     }
 
     @Test
@@ -32,17 +32,18 @@ public class UbicacionTest {
 
     @Test
     void agregarEspirituTest() {
-        Espiritu pasion = new EspirituDemoniaco(100, "Cervecero, hoy hay que ganar", new Ubicacion("Lanús"));
+        Espiritu pasion = new EspirituDemoniaco(100, "Cervecero, hoy hay que ganar", new Santuario("Lanús", 1));
         quilmes.agregarEspiritu(pasion);
         assertEquals(pasion, quilmes.getEspiritus().getFirst());
     }
 
     @Test
     void eliminarEspirituTest() {
-        Espiritu pasion = new EspirituDemoniaco(100, "Cervecero, hoy hay que ganar", new Ubicacion("Lanús"));
+        Espiritu pasion = new EspirituDemoniaco(100, "Cervecero, hoy hay que ganar", new Santuario("Lanús",1));
         quilmes.agregarEspiritu(pasion);
         assertEquals(pasion, quilmes.getEspiritus().getFirst());
         quilmes.eliminarEspiritu(pasion);
         assertTrue(quilmes.getEspiritus().isEmpty());
     }
+   
 }

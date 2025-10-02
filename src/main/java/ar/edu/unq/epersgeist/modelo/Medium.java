@@ -1,9 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.modelo.exceptions.EspirituNoEsLibreException;
-import ar.edu.unq.epersgeist.modelo.exceptions.EspirituNoPuedeConectarException;
-import ar.edu.unq.epersgeist.modelo.exceptions.ExorcistaSinAngelesException;
-import ar.edu.unq.epersgeist.modelo.exceptions.MediumNoPuedeTenerMasManaQueSuManaMax;
+import ar.edu.unq.epersgeist.modelo.exceptions.*;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,6 +10,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static jakarta.persistence.GenerationType.AUTO;
 import static java.lang.Integer.min;
@@ -109,14 +107,17 @@ public class Medium {
         this.mana = Math.min(this.mana + i, this.manaMax);
     }
 
-    public void aumentarNivelDeConexionATodosLosEspiritus() {
-        espiritus.forEach(espiritu -> espiritu.aumentarConexion(this));
+    public void aumentarNivelDeConexionAEspiritusDeMediumEn(Ubicacion ubicacionDeDescanso) {
+        espiritus.forEach(espiritu -> espiritu.aumentarConexion( ubicacionDeDescanso));
     }
 
     public void invocar(Espiritu espiritu) {
         Ubicacion ubicacionDeMedium = this.getUbicacion();
         if (!espiritu.esEspirituLibre()) {
             throw new EspirituNoEsLibreException("El espíritu no puede ser invocado, ya que no es libre");
+        }
+        if (!ubicacionDeMedium.permiteInvocar(espiritu)) {
+            throw new EspirituNoPuedeInvocarseEnUbicacionException("El espíritu no puede ser invocado en esta ubicacion");
         }
         if (getMana() < 10) {
             return;
@@ -126,13 +127,19 @@ public class Medium {
     }
 
     public void descansar() {
-        this.aumentarMana(15);
-        this.aumentarNivelDeConexionATodosLosEspiritus();
+        Ubicacion ubicacionDeDescanso = this.getUbicacion();
+        this.aumentarMana(ubicacionDeDescanso.manaRecuperadaMedium());
+        this.aumentarNivelDeConexionAEspiritusDeMediumEn(ubicacionDeDescanso);
     }
 
     public void setMana(Integer mana) {
         if (mana > manaMax)
             throw new MediumNoPuedeTenerMasManaQueSuManaMax("El Medium no puede tener mas mana que su cantidad maxima permitida");
         this.mana = mana;
+    }
+
+    public void mover(Ubicacion ubicacion) {
+        setUbicacion(ubicacion);
+        espiritus.forEach(espiritu -> espiritu.cambiarUbicacion(ubicacion));
     }
 }

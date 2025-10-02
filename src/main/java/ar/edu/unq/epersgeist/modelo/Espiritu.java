@@ -57,9 +57,8 @@ public abstract class Espiritu {
         this.nivelDeConexion = nivelDeConexion;
     }
 
-    public void aumentarConexion(Medium medium) {
-        Integer manaDeMedium = medium.getMana();
-        this.nivelDeConexion += (manaDeMedium * 20) / 100;
+    public void aumentarConexion(Ubicacion ubicacionDeDescanso) {
+        this.nivelDeConexion += ubicacionDeDescanso.conexionGanadaPara(this);
         if (this.nivelDeConexion >= 100) this.nivelDeConexion = 100;
     }
 
@@ -77,7 +76,7 @@ public abstract class Espiritu {
     }
 
     public void conectar(Medium medium) {
-        aumentarConexion(medium);
+        this.nivelDeConexion += (medium.getMana() * 20) / 100;
         this.setOwner(medium);
     }
 
@@ -88,7 +87,10 @@ public abstract class Espiritu {
     public void cambiarUbicacion(Ubicacion ubicacionNueva) {
         this.ubicacion.eliminarEspiritu(this);
         ubicacionNueva.agregarEspiritu(this);
+        this.validarUbicacionPorTipo();
     }
+
+    protected abstract void validarUbicacionPorTipo();
 
     public void setCustomRandomizer(Randomizer randomizer) {
         this.randomizer = randomizer;
@@ -101,4 +103,6 @@ public abstract class Espiritu {
     public void sufrirDerrota(int dmg) {
         this.disminuirConexion(dmg);
     }
+    public abstract boolean esDemoniaco();
+    public abstract boolean esAngelical();
 }

@@ -18,6 +18,13 @@ public class EspirituDemoniaco extends Espiritu {
         return false;
     }
 
+    @Override
+    protected void validarUbicacionPorTipo() {
+        if (getUbicacion().esSantuario()){
+            this.disminuirConexion(10);
+        }
+    }
+
     private boolean fueAtaqueExitoso(int ataque) {
         return ataque > this.randomizer.lanzarDadoDeDefensa();
     }
@@ -31,5 +38,15 @@ public class EspirituDemoniaco extends Espiritu {
         } else {
             atacante.sufrirDerrota(5);
         }
+    }
+
+    @Override
+    public boolean esDemoniaco() {
+        return true;
+    }
+
+    @Override
+    public boolean esAngelical() {
+        return false;
     }
 }

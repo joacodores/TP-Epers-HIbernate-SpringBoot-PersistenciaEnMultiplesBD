@@ -57,9 +57,13 @@ public abstract class Espiritu {
         this.nivelDeConexion = nivelDeConexion;
     }
 
+    private void capearNivelDeConexion() {
+        if (this.nivelDeConexion >= 100) this.nivelDeConexion = 100;
+    }
+
     public void aumentarConexion(Ubicacion ubicacionDeDescanso) {
         this.nivelDeConexion += ubicacionDeDescanso.conexionGanadaPara(this);
-        if (this.nivelDeConexion >= 100) this.nivelDeConexion = 100;
+        this.capearNivelDeConexion();
     }
 
     public void desvincularDeMedium() {
@@ -77,6 +81,7 @@ public abstract class Espiritu {
 
     public void conectar(Medium medium) {
         this.nivelDeConexion += (medium.getMana() * 20) / 100;
+        this.capearNivelDeConexion();
         this.setOwner(medium);
     }
 
@@ -103,6 +108,8 @@ public abstract class Espiritu {
     public void sufrirDerrota(int dmg) {
         this.disminuirConexion(dmg);
     }
+
     public abstract boolean esDemoniaco();
+
     public abstract boolean esAngelical();
 }

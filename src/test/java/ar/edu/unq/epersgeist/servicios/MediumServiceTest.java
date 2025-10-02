@@ -31,7 +31,7 @@ public class MediumServiceTest {
 
     @BeforeEach
     void prepare() {
-        ubi = new Santuario("ubi",10);
+        ubi = new Santuario("ubi", 10);
         ubicacionService.crear(ubi);
         ubi2 = new Cementerio("Ubicación 2", 20);
         ubicacionService.crear(ubi2);
@@ -56,10 +56,13 @@ public class MediumServiceTest {
     @Test
     void recuperarMediumTest() {
         Long mediumID = service.crear(medium).getId();
-        Medium mediumRecuperado = service.recuperar(mediumID).get();
-        assertEquals(medium.getNombre(), mediumRecuperado.getNombre());
-        assertEquals(medium.getMana(), mediumRecuperado.getMana());
-        assertEquals(medium.getManaMax(), mediumRecuperado.getManaMax());
+        Medium mediumRecuperado = service.recuperar(mediumID)
+                .orElseThrow(() -> new AssertionError("El medium no existe"));
+        assertAll(
+                () -> assertEquals(medium.getNombre(), mediumRecuperado.getNombre()),
+                () -> assertEquals(medium.getMana(), mediumRecuperado.getMana()),
+                () -> assertEquals(medium.getManaMax(), mediumRecuperado.getManaMax())
+        );
     }
 
     @Test
@@ -67,7 +70,9 @@ public class MediumServiceTest {
         Long mediumID = service.crear(medium).getId();
         medium.setNombre("Churrito");
         service.actualizar(medium);
-        assertEquals(medium.getNombre(), service.recuperar(mediumID).get().getNombre());
+        Medium mediumRecuperado = service.recuperar(mediumID)
+                .orElseThrow(() -> new AssertionError("El medium no existe"));
+        assertEquals(medium.getNombre(), mediumRecuperado.getNombre());
     }
 
     @Test
@@ -115,13 +120,11 @@ public class MediumServiceTest {
     @Test
     void unMediumTieneEspiritusTest() {
         Medium m1 = service.crear(medium);
-        Espiritu e2 = new EspirituAngelical(100, "demonio", ubi2);
-        Espiritu e3 = new EspirituAngelical(100, "demonio", ubi2);
+        Espiritu e2 = new EspirituAngelical(40, "angel", ubi);
         espirituService.crear(e2);
-        espirituService.crear(e3);
-        service.invocar(m1.getId(), e3.getId());
+        service.invocar(m1.getId(), e1.getId());
         service.invocar(m1.getId(), e2.getId());
-        espirituService.conectar(e3.getId(), m1.getId());
+        espirituService.conectar(e1.getId(), m1.getId());
         espirituService.conectar(e2.getId(), m1.getId());
         List<Espiritu> espiritus = service.espiritus(medium.getId());
         assertEquals(2, espiritus.size());
@@ -161,7 +164,8 @@ public class MediumServiceTest {
         Medium m1 = service.crear(medium);
         Long mediumID = m1.getId();
         service.descansar(mediumID);
-        Medium m2 = service.recuperar(mediumID).get();
+        Medium m2 = service.recuperar(mediumID)
+                .orElseThrow(() -> new AssertionError("Medium no encontrado"));
         assertEquals(45, m2.getMana());
     }
 

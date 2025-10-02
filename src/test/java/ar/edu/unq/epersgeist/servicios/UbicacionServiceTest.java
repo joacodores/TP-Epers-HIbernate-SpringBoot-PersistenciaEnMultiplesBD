@@ -44,7 +44,9 @@ public class UbicacionServiceTest {
     @Test
     void recuperarUbicacionTest() {
         Long ubicacionID = service.crear(ubicacion).getId();
-        assertEquals(ubicacion.getNombre(), service.recuperar(ubicacionID).get().getNombre());
+        Ubicacion ubicacionRecuperada = service.recuperar(ubicacionID)
+                .orElseThrow(() -> new AssertionError("El ubicacion no existe"));
+        assertEquals(ubicacion.getNombre(), ubicacionRecuperada.getNombre());
     }
 
     @Test
@@ -52,7 +54,9 @@ public class UbicacionServiceTest {
         Long ubicacionID = service.crear(ubicacion).getId();
         ubicacion.setNombre("Berazategui");
         service.actualizar(ubicacion);
-        assertEquals(ubicacion.getNombre(), service.recuperar(ubicacionID).get().getNombre());
+        Ubicacion ubicacionRecuperada = service.recuperar(ubicacionID)
+                .orElseThrow(() -> new AssertionError("El ubicacion no existe"));
+        assertEquals(ubicacion.getNombre(), ubicacionRecuperada.getNombre());
     }
 
     @Test
@@ -63,18 +67,19 @@ public class UbicacionServiceTest {
     @Test
     void recuperarTodosDevuelveLasUbicacionesEnOrdenAscendentePorNombreTest() {
         service.crear(ubicacion);
-        service.crear(new Santuario("Bernal",10));
-        service.crear(new Cementerio("Mordor",10));
+        service.crear(new Santuario("Bernal", 10));
+        service.crear(new Cementerio("Mordor", 10));
         assertEquals(List.of("Ubicacion", "Bernal", "Mordor"), service.recuperarTodos().stream().map(Ubicacion::getNombre).toList());
     }
-/*
-    @Test
-    void eliminarUbicacionNoPersistidaNoLanzaExcepcionTest() {
-        service.crear(ubicacion);
-        Ubicacion ubicacion2 = new Cementerio("Nueva Ubicación", 50);
-        assertDoesNotThrow(() -> service.eliminar(ubicacion2.getId()));
-    }
-*/
+
+    /*
+        @Test
+        void eliminarUbicacionNoPersistidaNoLanzaExcepcionTest() {
+            service.crear(ubicacion);
+            Ubicacion ubicacion2 = new Cementerio("Nueva Ubicación", 50);
+            assertDoesNotThrow(() -> service.eliminar(ubicacion2.getId()));
+        }
+    */
     @Test
     void eliminarUbicacionTest() {
         service.crear(ubicacion);
@@ -105,7 +110,7 @@ public class UbicacionServiceTest {
     @Test
     void existeUnMediumSinEspirituEn() {
         service.crear(ubicacion);
-        Ubicacion u2 = new Santuario("Templo de Jade",30);
+        Ubicacion u2 = new Santuario("Templo de Jade", 30);
         service.crear(u2);
         Medium tai = new Medium("Tai", 100, 10, ubicacion);
         Espiritu espiritu = new EspirituAngelical(50, "Maestro Shifu", u2);

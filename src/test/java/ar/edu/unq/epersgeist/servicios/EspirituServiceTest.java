@@ -186,6 +186,7 @@ public class EspirituServiceTest {
         assertEquals("Zoro", mediumService.espiritus(sanjiId).getFirst().getNombre());
     }
 
+
     @AfterEach
     void afterEach() {
         service.eliminarTodo();

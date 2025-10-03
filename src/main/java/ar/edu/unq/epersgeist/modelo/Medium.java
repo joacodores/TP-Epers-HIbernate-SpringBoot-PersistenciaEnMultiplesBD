@@ -154,7 +154,8 @@ public class Medium {
 
     public void mover(Ubicacion ubicacion) {
         setUbicacion(ubicacion);
-        espiritus.forEach(espiritu -> espiritu.cambiarUbicacion(ubicacion));
+        // iteramos sobre una copia para evitar ConcurrentModificationException
+        new ArrayList<>(espiritus).forEach(espiritu -> espiritu.cambiarUbicacion(ubicacion));
     }
 
     public void setUpdatedAt() {

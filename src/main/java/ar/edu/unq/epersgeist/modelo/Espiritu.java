@@ -5,6 +5,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
+import java.util.Date;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
@@ -13,6 +17,8 @@ import static jakarta.persistence.GenerationType.AUTO;
 @Entity
 @Table(name = "espiritu")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@SQLDelete(sql = "UPDATE Espiritu SET deleted_at = true WHERE id=?")
+@Where(clause = "deleted_at=false")
 public abstract class Espiritu {
     @Id
     @GeneratedValue(strategy = AUTO)
@@ -34,6 +40,16 @@ public abstract class Espiritu {
 
     @Transient
     protected Randomizer randomizer;
+
+    @Temporal(TemporalType.DATE)
+    private final Date createdAt = new Date();
+
+    @Temporal(TemporalType.DATE)
+    private Date updatedAt;
+
+    @Setter
+    @Column(name = "deleted_at")
+    private Boolean deletedAt = false;
 
     @SuppressWarnings("unused")
     public Espiritu() {
@@ -93,6 +109,10 @@ public abstract class Espiritu {
         this.ubicacion.eliminarEspiritu(this);
         ubicacionNueva.agregarEspiritu(this);
         this.validarUbicacionPorTipo();
+    }
+
+    public void setUpdatedAt() {
+        this.updatedAt = new Date();
     }
 
     protected abstract void validarUbicacionPorTipo();

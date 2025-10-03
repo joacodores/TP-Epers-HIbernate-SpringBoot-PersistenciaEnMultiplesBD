@@ -1,9 +1,13 @@
 package ar.edu.unq.epersgeist.controller;
 
 import ar.edu.unq.epersgeist.controller.dto.espiritu.RecuperarEspirituDTO;
+import ar.edu.unq.epersgeist.controller.dto.medium.ActualizarMediumDTO;
 import ar.edu.unq.epersgeist.controller.dto.medium.RecuperarMediumDTO;
+import ar.edu.unq.epersgeist.controller.dto.ubicacion.ActualizarUbicacionDTO;
 import ar.edu.unq.epersgeist.controller.dto.ubicacion.CrearUbicacionDTO;
 import ar.edu.unq.epersgeist.controller.dto.ubicacion.RecuperarUbicacionDTO;
+import ar.edu.unq.epersgeist.controller.exceptions.ActualizarRecursoException;
+import ar.edu.unq.epersgeist.controller.exceptions.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.servicios.UbicacionService;
 import org.springframework.http.ResponseEntity;
@@ -11,12 +15,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/ubicacion")
 public class UbicacionController {
+
     private final UbicacionService ubicacionService;
 
     public UbicacionController(UbicacionService ubicacionService) {
@@ -36,9 +42,7 @@ public class UbicacionController {
     @GetMapping("/{id}")
     public ResponseEntity<RecuperarUbicacionDTO> recuperarUbicacion(@PathVariable Long id) {
         Optional<Ubicacion> ubicacionRecuperada = ubicacionService.recuperar(id);
-        if (ubicacionRecuperada.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+        if (ubicacionRecuperada.isEmpty()) throw new UbicacionNoEncontradaException("");
         var dto = RecuperarUbicacionDTO.desdeModelo(ubicacionRecuperada.get());
         return ResponseEntity.ok(dto);
     }
@@ -68,5 +72,28 @@ public class UbicacionController {
                 .map(RecuperarMediumDTO::desdeModelo)
                 .toList();
         return ResponseEntity.ok(dtos);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RecuperarUbicacionDTO> actualizarUbicacion(@PathVariable Long id,
+                                                               @RequestBody ActualizarUbicacionDTO ubicacionDTO) {
+        var ubicacionAActualizar = ubicacionService.recuperar(id);
+        if (ubicacionAActualizar.isEmpty()) throw new UbicacionNoEncontradaException("");
+        var ubicacion = ubicacionAActualizar.get();
+        ubicacionDTO.actualizarUbicacion(ubicacion, id);
+        ubicacionService.actualizar(ubicacion);
+        var ubicacionActualizado = ubicacionService.recuperar(id).orElseThrow(() -> new ActualizarRecursoException("la ubicacion"));
+        var dto = RecuperarUbicacionDTO.desdeModelo(ubicacionActualizado);
+        return ResponseEntity.ok(dto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarUbicacion(@PathVariable Long id) {
+        var ubicacionRecuperado = ubicacionService.recuperar(id);
+        if (ubicacionRecuperado.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        ubicacionService.eliminar(ubicacionRecuperado.get().getId());
+        return ResponseEntity.noContent().build(); // 204
     }
 }

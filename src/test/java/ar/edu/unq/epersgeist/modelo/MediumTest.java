@@ -3,6 +3,7 @@ package ar.edu.unq.epersgeist.modelo;
 import ar.edu.unq.epersgeist.helpers.RandomizerFalso;
 import ar.edu.unq.epersgeist.modelo.exceptions.EspirituNoEsLibreException;
 import ar.edu.unq.epersgeist.modelo.exceptions.EspirituNoPuedeConectarException;
+import ar.edu.unq.epersgeist.modelo.exceptions.EspirituNoPuedeInvocarseEnUbicacionException;
 import ar.edu.unq.epersgeist.modelo.exceptions.ExorcistaSinAngelesException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,8 +13,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MediumTest {
-    private Ubicacion fuerteApache;
-    private Ubicacion bocaPredio;
+    private Santuario fuerteApache;
+    private Santuario bocaPredio;
+    private Cementerio riber;
     private Medium juan;
     private Medium palermo;
     private Espiritu carlitos;
@@ -21,11 +23,16 @@ public class MediumTest {
     private Medium elNoba;
     private EspirituAngelical angel;
     private RandomizerFalso randomizer;
+    private Medium picolo;
+    private Espiritu majinBu;
 
     @BeforeEach
     void prepare() {
         fuerteApache = new Santuario("Fuerte Apache",50);
         bocaPredio = new Santuario("Boca Predio",10);
+        riber = new Cementerio("Descendido", 40);
+        picolo = new Medium("Picolo", 100, 40, riber);
+        majinBu = new EspirituDemoniaco(80, "Majin Buu", fuerteApache);
         palermo = new Medium("Martin Palermo", 100, 25, fuerteApache);
         juan = new Medium("Juan", 100, 20, bocaPredio);
         carlitos = new EspirituAngelical(80, "Carlitos", fuerteApache);
@@ -230,25 +237,88 @@ public class MediumTest {
         assertEquals(List.of(rika, ivaar), tai.getEspiritus());
         assertEquals(List.of(hanyuu, noroi), elNoba.getEspiritus());
     }
-/*modificar con logica de descansar e invocar nueva*/
-    @Test
-    void mediumDescansaTieneMasManaYSusEspiritusMasEnergia() {
-        Medium tai = new Medium("Tai", 100, 10, fuerteApache);
-        Espiritu espirituAngelical = new EspirituAngelical(0, "zorro", fuerteApache);
-        tai.conectarseAEspiritu(espirituAngelical);
-        tai.descansar();
-        assertEquals(85, tai.getMana());
-        assertEquals(52, espirituAngelical.getNivelDeConexion());
-    }
 
     @Test
-    void mediumInvocaEspirituASuUbicacion() {
+    void mediumDescansaEnSantuarioYObtiene150PorcientoDeEnergiaComoMana() {
+        Medium tai = new Medium("Tai", 100, 10, fuerteApache);
+        tai.descansar();
+        assertEquals(85, tai.getMana()); //150% de 50 = 75 + 10(mana de Tai)
+
+    }
+    @Test
+    void mediumDescansaEnSantuarioYSusEspiritusAngelicalesObtienenEnergiaComoConexion() {
+        Medium tai = new Medium("Tai", 100, 10, fuerteApache);
+        Espiritu espirituAngelical = new EspirituAngelical(0, "zorro", fuerteApache);
+        Espiritu espirituAngelical2 = new EspirituAngelical(0, "sanji", fuerteApache);
+        tai.conectarseAEspiritu(espirituAngelical);//cuando conectan quedan con 2 de nvlDeConexion (20% de 10)
+        tai.conectarseAEspiritu(espirituAngelical2);
+        tai.descansar();
+        assertEquals(52, espirituAngelical2.getNivelDeConexion()); //50 de energia de fuerteApache + 2
+        assertEquals(52, espirituAngelical.getNivelDeConexion());
+    }
+    @Test
+    void mediumDescansaEnSantuarioYSusEspiritusDemoniacosNoObtienenConexion() {
+        Medium chopper = new Medium("Chopper", 100, 10, riber);
+        Espiritu demonio = new EspirituDemoniaco(0, "zorro", riber);
+        Espiritu demonio2 = new EspirituDemoniaco(0, "sanji", riber);
+        chopper.conectarseAEspiritu(demonio);//cuando conectan quedan con 2 de nvlDeConexion (20% de 10)
+        chopper.conectarseAEspiritu(demonio2);
+        chopper.mover(fuerteApache);
+        assertEquals(0, demonio.getNivelDeConexion()); //quedan en 0 por el cambio de ubicacion
+        assertEquals(0, demonio2.getNivelDeConexion());
+        chopper.descansar();
+        assertEquals(0, demonio.getNivelDeConexion()); //luego de descansar sigue en 0
+        assertEquals(0, demonio2.getNivelDeConexion());
+    }
+    @Test
+    void mediumDescansaEnCementerioYObtiene50PorcientoDeEnergiaComoMna() {
+        Medium tai = new Medium("Tai", 100, 10, riber);
+        tai.descansar();
+        assertEquals(30, tai.getMana()); //50% de 40 = 20 + 10(mana de Tai)
+
+    }
+    @Test
+    void mediumDescansaEnCementerioYSusEspiritusDemoniacosObtienenEnergiaComoConexion() {
+        Medium chopper = new Medium("Chopper", 100, 10, riber);
+        Espiritu demonio = new EspirituDemoniaco(0, "zorro", riber);
+        Espiritu demonio2 = new EspirituDemoniaco(0, "sanji", riber);
+        chopper.conectarseAEspiritu(demonio);//cuando conectan quedan con 2 de nvlDeConexion (20% de 10)
+        chopper.conectarseAEspiritu(demonio2);
+        chopper.descansar();
+        assertEquals(42, demonio.getNivelDeConexion()); //40 de energia de riber + 2
+        assertEquals(42, demonio2.getNivelDeConexion());
+    }
+    @Test
+    void mediumDescansaEnCementerioYSusEspiritusAngelicalesNoObtienenConexion() {
+        Medium tai = new Medium("Tai", 100, 10, fuerteApache);
+        Espiritu espirituAngelical = new EspirituAngelical(0, "zorro", fuerteApache);
+        Espiritu espirituAngelical2 = new EspirituAngelical(0, "sanji", fuerteApache);
+        tai.conectarseAEspiritu(espirituAngelical);//cuando conectan quedan con 2 de nvlDeConexion (20% de 10)
+        tai.conectarseAEspiritu(espirituAngelical2);
+        tai.mover(riber);
+        assertEquals(0, espirituAngelical.getNivelDeConexion()); //quedan en 0 por el cambio de ubicacion
+        assertEquals(0, espirituAngelical2.getNivelDeConexion());
+        tai.descansar();
+        assertEquals(0, espirituAngelical.getNivelDeConexion()); //luego de descansar sigue en 0
+        assertEquals(0, espirituAngelical2.getNivelDeConexion());
+    }
+    @Test
+    void mediumPuedeInvocarEspirituAngelicalEnSantuario() {
         assertEquals(fuerteApache, carlitos.getUbicacion());
         assertEquals(bocaPredio, juan.getUbicacion());
         juan.invocar(carlitos);
         assertEquals(bocaPredio, carlitos.getUbicacion());
         assertTrue(bocaPredio.getEspiritus().contains(carlitos));
     }
+    @Test
+    void mediumPuedeInvocarEspirituDemoniacoEnCementerio() {
+        assertEquals(riber, picolo.getUbicacion());
+        assertEquals(fuerteApache, majinBu.getUbicacion());
+        picolo.invocar(majinBu);
+        assertEquals(riber, majinBu.getUbicacion());
+        assertTrue(riber.getEspiritus().contains(majinBu));
+    }
+
 
     @Test
     void invocarSinManaNoCambiaNada() {
@@ -327,5 +397,14 @@ public class MediumTest {
         juan.invocar(carlitos);
         juan.conectarseAEspiritu(carlitos);
         assertThrows(EspirituNoPuedeConectarException.class, () -> juan.conectarseAEspiritu(carlitos));
+    }
+
+    @Test
+    void mediumNoPuedeInvocarEspirituAngelicalEnCementerioTest(){
+        assertThrows(EspirituNoPuedeInvocarseEnUbicacionException.class, () -> picolo.invocar(carlitos));
+    }
+    @Test
+    void mediumNoPuedeInvocarEspirituDemoniacoEnSantuarioTest(){
+        assertThrows(EspirituNoPuedeInvocarseEnUbicacionException.class, () -> palermo.invocar(majinBu));
     }
 }

@@ -4,6 +4,10 @@ import ar.edu.unq.epersgeist.controller.dto.espiritu.RecuperarEspirituDTO;
 import ar.edu.unq.epersgeist.controller.dto.medium.ActualizarMediumDTO;
 import ar.edu.unq.epersgeist.controller.dto.medium.CrearMediumDTO;
 import ar.edu.unq.epersgeist.controller.dto.medium.RecuperarMediumDTO;
+import ar.edu.unq.epersgeist.controller.exceptions.ActualizarRecursoException;
+import ar.edu.unq.epersgeist.controller.exceptions.MediumNoEncontradoException;
+import ar.edu.unq.epersgeist.controller.exceptions.UbicacionNoEncontradaException;
+import ar.edu.unq.epersgeist.controller.exceptions.UbicacionNoValidaException;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.servicios.EspirituService;
@@ -14,13 +18,13 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/medium")
 public class MediumController {
+
     private final MediumService mediumService;
     private final UbicacionService ubicacionService;
     private final EspirituService espirituService;
@@ -34,9 +38,7 @@ public class MediumController {
     @PostMapping
     public ResponseEntity<RecuperarMediumDTO> crearMedium(@RequestBody CrearMediumDTO mediumDTO) {
         var ubicacion = ubicacionService.recuperar(mediumDTO.ubicacionId());
-        if (ubicacion.isEmpty()) {
-            return ResponseEntity.badRequest().build(); //implementar mensaje "La ubicacion no es válida"
-        }
+        if (ubicacion.isEmpty()) throw new UbicacionNoValidaException("");
         var mediumCreado = mediumService.crear(mediumDTO.aModelo(ubicacion.get()));
         var dto = RecuperarMediumDTO.desdeModelo(mediumCreado);
         URI location = URI.create("/medium/" + mediumCreado.getId());
@@ -53,9 +55,7 @@ public class MediumController {
     @GetMapping("/{id}")
     public ResponseEntity<RecuperarMediumDTO> recuperarMedium(@PathVariable Long id) {
         var mediumRecuperado = mediumService.recuperar(id);
-        if (mediumRecuperado.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+        if (mediumRecuperado.isEmpty()) throw new MediumNoEncontradoException("");
         var dto = RecuperarMediumDTO.desdeModelo(mediumRecuperado.get());
         return ResponseEntity.ok(dto);
     }
@@ -64,13 +64,11 @@ public class MediumController {
     public ResponseEntity<RecuperarMediumDTO> actualizarMedium(@PathVariable Long id,
                                                                @RequestBody ActualizarMediumDTO mediumDTO) {
         var mediumAActualizar = mediumService.recuperar(id);
-        if (mediumAActualizar.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+        if (mediumAActualizar.isEmpty()) throw new MediumNoEncontradoException("");
         var medium = mediumAActualizar.get();
         mediumDTO.actualizarMedium(medium, id);
         mediumService.actualizar(medium);
-        var mediumActualizado = mediumService.recuperar(id).orElseThrow(NoSuchElementException::new);
+        var mediumActualizado = mediumService.recuperar(id).orElseThrow(() -> new ActualizarRecursoException("del medium"));
         var dto = RecuperarMediumDTO.desdeModelo(mediumActualizado);
         return ResponseEntity.ok(dto);
     }
@@ -78,10 +76,8 @@ public class MediumController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarMedium(@PathVariable Long id) {
         var mediumRecuperado = mediumService.recuperar(id);
-        if (mediumRecuperado.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        mediumService.eliminar(mediumRecuperado.get().getId());
+        if (mediumRecuperado.isEmpty()) throw new MediumNoEncontradoException("");
+        mediumService.eliminar(id);
         return ResponseEntity.noContent().build(); // 204
     }
 
@@ -94,14 +90,9 @@ public class MediumController {
     @PatchMapping("/{mediumExorcistaId}/exorcizar/{mediumPoseidoId}")
     public ResponseEntity<RecuperarMediumDTO> exorcizar(@PathVariable Long mediumExorcistaId,
                                                         @PathVariable Long mediumPoseidoId) {
-        var mediumExorcista = mediumService.recuperar(mediumExorcistaId);
-        var mediumPoseido = mediumService.recuperar(mediumPoseidoId);
-        if (mediumExorcista.isEmpty() || mediumPoseido.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
         mediumService.exorcizar(mediumExorcistaId, mediumPoseidoId);
         var exorcistaActualizado = mediumService.recuperar(mediumExorcistaId)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new ActualizarRecursoException("del exorcista"));
         return ResponseEntity.ok(
                 RecuperarMediumDTO.desdeModelo(exorcistaActualizado)
         );
@@ -109,13 +100,9 @@ public class MediumController {
 
     @PatchMapping("/descansar/{id}")
     public ResponseEntity<RecuperarMediumDTO> descansar(@PathVariable Long id) {
-        var medium = mediumService.recuperar(id);
-        if (medium.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        mediumService.descansar(medium.get().getId());
+        mediumService.descansar(id);
         var mediumActualizado = mediumService.recuperar(id)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new ActualizarRecursoException("del medium"));
         return ResponseEntity.ok(
                 RecuperarMediumDTO.desdeModelo(mediumActualizado)
         );
@@ -124,14 +111,9 @@ public class MediumController {
     @PatchMapping("/{mediumId}/invocar/{espirituId}")
     public ResponseEntity<RecuperarEspirituDTO> invocar(@PathVariable Long mediumId,
                                                         @PathVariable Long espirituId) {
-        var mediumRecuperado = mediumService.recuperar(mediumId);
-        var espirituRecuperado = espirituService.recuperar(espirituId);
-        if (espirituRecuperado.isEmpty() || mediumRecuperado.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
         mediumService.invocar(mediumId, espirituId);
         var espirituActualizado = espirituService.recuperar(espirituId)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new ActualizarRecursoException("del espiritu"));
         return ResponseEntity.ok(
                 RecuperarEspirituDTO.desdeModelo(espirituActualizado)
         );
@@ -140,9 +122,7 @@ public class MediumController {
     @GetMapping("/sinEspiritusEn/{ubicacionId}")
     public ResponseEntity<List<RecuperarMediumDTO>> mediumsSinEspiritusEn(@PathVariable Long ubicacionId) {
         Optional<Ubicacion> ubicacion = ubicacionService.recuperar(ubicacionId);
-        if (ubicacion.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } //checkeo que la ubi exista porque el ubiService no maneja ese error
+        if (ubicacion.isEmpty()) throw new UbicacionNoEncontradaException("");
         List<Medium> mediumsSinEspiritusEn = ubicacionService.mediumsSinEspiritusEn(ubicacionId);
         var dtos = mediumsSinEspiritusEn.stream().map(RecuperarMediumDTO::desdeModelo).toList();
         return ResponseEntity.ok(dtos);
@@ -151,15 +131,11 @@ public class MediumController {
     @PatchMapping("/{mediumId}/mover/{ubicacionId}")
     public ResponseEntity<RecuperarMediumDTO> mover(@PathVariable Long mediumId,
                                                     @PathVariable Long ubicacionId) {
-        var mediumRecuperado = mediumService.recuperar(mediumId);
-        var ubicacionRecuperado = ubicacionService.recuperar(ubicacionId);
-        if (mediumRecuperado.isEmpty() || ubicacionRecuperado.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
         mediumService.mover(mediumId, ubicacionId);
         var mediumActualizado = mediumService.recuperar(mediumId)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new ActualizarRecursoException("del medium"));
         var dto = RecuperarMediumDTO.desdeModelo(mediumActualizado);
         return ResponseEntity.ok(dto);
     }
+
 }

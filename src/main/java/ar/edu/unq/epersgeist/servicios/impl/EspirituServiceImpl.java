@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.controller.exceptions.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -20,6 +20,7 @@ import java.util.stream.StreamSupport;
 @Service
 @Transactional
 public class EspirituServiceImpl implements EspirituService {
+
     private final EspirituDAO espirituDAO;
     private final MediumDAO mediumDAO;
 
@@ -35,6 +36,8 @@ public class EspirituServiceImpl implements EspirituService {
 
     @Override
     public void eliminar(Long espirituId) {
+        Espiritu espiritu = espirituDAO.findById(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(""));
+        espiritu.getUbicacion().eliminarEspiritu(espiritu);
         espirituDAO.deleteById(espirituId);
     }
 
@@ -52,10 +55,11 @@ public class EspirituServiceImpl implements EspirituService {
     @Override
     public void actualizar(Espiritu espiritu) {
         Espiritu espirituAActualizar = espirituDAO.findById(espiritu.getId())
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new EspirituNoEncontradoException(""));
         if (espiritu.getNombre() != null) {
             espirituAActualizar.setNombre(espiritu.getNombre());
         }
+        espirituAActualizar.setUpdatedAt();
         espirituDAO.save(espirituAActualizar);
     }
 
@@ -82,4 +86,5 @@ public class EspirituServiceImpl implements EspirituService {
         espirituDAO.save(espiritu);
         return medium;
     }
+
 }

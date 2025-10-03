@@ -2,8 +2,11 @@ package ar.edu.unq.epersgeist.modelo;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static jakarta.persistence.GenerationType.AUTO;
@@ -14,6 +17,8 @@ import static jakarta.persistence.GenerationType.AUTO;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo_ubicacion", discriminatorType = DiscriminatorType.STRING, length = 20)
+@SQLDelete(sql = "UPDATE Ubicacion SET deleted_at = true WHERE id=?")
+@Where(clause = "deleted_at=false")
 public abstract class Ubicacion {
     @Setter
     @Id
@@ -34,6 +39,16 @@ public abstract class Ubicacion {
     @Column(name = "energia", nullable = false, columnDefinition = "INTEGER CHECK(energia BETWEEN 1 AND 100)")
     private Integer energia;
 
+    @Temporal(TemporalType.DATE)
+    private final Date createdAt = new Date();
+
+    @Temporal(TemporalType.DATE)
+    private Date updatedAt;
+
+    @Setter
+    @Column(name = "deleted_at")
+    private Boolean deletedAt = false;
+
     public Ubicacion(@NonNull String nombre, @NonNull Integer energia) {
         this.nombre = nombre; this.energia = energia;
     }
@@ -50,7 +65,16 @@ public abstract class Ubicacion {
 
     public void eliminarEspiritu(Espiritu espiritu) {
         this.espiritus.remove(espiritu);
-        //espiritu.setUbicacion(null);
+        espiritu.setUbicacion(null);
+    }
+
+    public void setUpdatedAt() {
+        this.updatedAt = new Date();
+    }
+
+    public void eliminarMedium(Medium medium) {
+        this.mediums.remove(medium);
+        medium.setUbicacion(null);
     }
 
     public abstract boolean permiteInvocar(Espiritu e);

@@ -41,6 +41,7 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public void actualizar(Ubicacion ubicacion) {
+        ubicacion.setUpdatedAt();
         ubicacionDAO.save(ubicacion);
     }
 

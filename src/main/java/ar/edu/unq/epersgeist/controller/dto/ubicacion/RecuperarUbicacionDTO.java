@@ -7,9 +7,12 @@ public record RecuperarUbicacionDTO(Long id,
                                     String nombre,
                                     Integer energia) {
     public static RecuperarUbicacionDTO desdeModelo(Ubicacion ubicacion) {
-        /* TODO: Luego de terminar la migración
-         return new RecuperarUbicacionDTO(ubicacion.getId(), TipoUbicacionDTO.getTipo(ubicacion.getClass()) o algo asi, ubicacion.getNombre(), ubicacion.getEnergia());
-        */
-        return new RecuperarUbicacionDTO(ubicacion.getId(), null, ubicacion.getNombre(), null);
+
+        return new RecuperarUbicacionDTO(
+                ubicacion.getId(),
+                TipoUbicacionDTO.desdeModelo(ubicacion),
+                ubicacion.getNombre(),
+                ubicacion.getEnergia()
+        );
     }
 }

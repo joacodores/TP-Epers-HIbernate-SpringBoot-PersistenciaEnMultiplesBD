@@ -55,11 +55,14 @@ public class MediumServiceImpl implements MediumService {
         Optional.ofNullable(medium.getNombre()).ifPresent(mediumExistente::setNombre);
         Optional.ofNullable(medium.getManaMax()).ifPresent(mediumExistente::setManaMax);
         Optional.ofNullable(medium.getMana()).ifPresent(mediumExistente::setMana);
+        mediumExistente.setUpdatedAt();
         mediumDAO.save(mediumExistente);
     }
 
     @Override
     public void eliminar(Long mediumId) {
+        Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new NoSuchElementException("Medium no encontrado"));
+        medium.getUbicacion().eliminarMedium(medium);
         mediumDAO.deleteById(mediumId);
     }
 

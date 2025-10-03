@@ -3,10 +3,14 @@ package ar.edu.unq.epersgeist.modelo;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @NoArgsConstructor
 @Entity
 @DiscriminatorValue("CEMENTERIO")
+@SQLDelete(sql = "UPDATE Ubicacion SET deleted_at = true WHERE id=?")
+@Where(clause = "deleted_at=false")
 public class Cementerio extends Ubicacion{
 
     public Cementerio(String nombre, Integer energia){

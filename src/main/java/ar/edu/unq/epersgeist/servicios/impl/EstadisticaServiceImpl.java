@@ -8,8 +8,11 @@ import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
 import ar.edu.unq.epersgeist.persistencia.dao.ReporteSantuarioMasCorruptoProjection;
 import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
 import ar.edu.unq.epersgeist.servicios.EstadisticaService;
+import ar.edu.unq.epersgeist.servicios.exceptions.NoHaySantuarioCorruptoException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -27,14 +30,17 @@ public class EstadisticaServiceImpl implements EstadisticaService {
 
     @Override
     public ReporteSantuarioMasCorrupto santuarioCorrupto() {
-        ReporteSantuarioMasCorruptoProjection data = espirituDAO.obtenerReporteSantuarioMasCorrupto();
-        Medium medium = mediumDAO.recuperar(data.getOwnerId());
-        Ubicacion ubicacion = ubicacionDAO.findById(data.getUbicacionId()).orElseThrow(RuntimeException::new);
+        List<ReporteSantuarioMasCorruptoProjection> data = espirituDAO.obtenerReporteSantuarioMasCorrupto();
+        if (data.isEmpty())
+            throw new NoHaySantuarioCorruptoException("No existe ningún santuario que tenga más espíritus demoníacos que angelicales");
+        ReporteSantuarioMasCorruptoProjection reporte = data.getFirst();
+        Medium medium = mediumDAO.recuperar(reporte.getOwnerId());
+        Ubicacion ubicacion = ubicacionDAO.findById(reporte.getUbicacionId()).orElseThrow(RuntimeException::new);
         return new ReporteSantuarioMasCorrupto(
                 ubicacion.getNombre(),
                 medium,
-                data.getTotalDemonios(),
-                data.getDemoniosLibres()
+                reporte.getTotalDemonios(),
+                reporte.getDemoniosLibres()
         );
     }
 

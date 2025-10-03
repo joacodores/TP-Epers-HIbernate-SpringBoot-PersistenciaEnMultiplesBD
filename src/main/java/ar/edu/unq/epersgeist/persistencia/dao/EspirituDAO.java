@@ -69,6 +69,6 @@ public interface EspirituDAO extends CrudRepository<Espiritu, Long> {
               LIMIT 1
             ) g
             """, nativeQuery = true)
-    ReporteSantuarioMasCorruptoProjection obtenerReporteSantuarioMasCorrupto();
+    List<ReporteSantuarioMasCorruptoProjection> obtenerReporteSantuarioMasCorrupto();
 
 }

@@ -3,6 +3,7 @@ package ar.edu.unq.epersgeist;
 import ar.edu.unq.epersgeist.controller.dto.errores.APIError;
 import ar.edu.unq.epersgeist.controller.exceptions.*;
 import ar.edu.unq.epersgeist.modelo.exceptions.*;
+import ar.edu.unq.epersgeist.servicios.exceptions.NoHaySantuarioCorruptoException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,6 +46,11 @@ public class GlobalExceptionHandler {
             MediumNoPuedeTenerMasManaQueSuManaMax.class,
     })
     public ResponseEntity<APIError> handleNotSensibleModelExceptions(RuntimeException e) {
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    }
+
+    @ExceptionHandler(NoHaySantuarioCorruptoException.class)
+    public ResponseEntity<APIError> handleNoHaySantuarioCorrupto(NoHaySantuarioCorruptoException e) {
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
     }
 

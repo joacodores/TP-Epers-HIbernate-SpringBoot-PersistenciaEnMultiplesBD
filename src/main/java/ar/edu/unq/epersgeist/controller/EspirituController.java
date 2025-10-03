@@ -113,4 +113,15 @@ public class EspirituController {
         List<RecuperarEspirituDTO> espiritusRecuperados = espiritus.stream().map(RecuperarEspirituDTO::desdeModelo).toList();
         return ResponseEntity.ok(espiritusRecuperados);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminarEspiritu(@PathVariable Long id) {
+        var espirituRecuperado = espirituService.recuperar(id);
+        if (espirituRecuperado.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        espirituService.eliminar(espirituRecuperado.get().getId());
+        return ResponseEntity.noContent().build(); // 204
+    }
 }

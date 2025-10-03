@@ -1,8 +1,12 @@
 package ar.edu.unq.epersgeist.modelo;
 
 import jakarta.persistence.Entity;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
+@SQLDelete(sql = "UPDATE Espiritu SET deleted_at = true WHERE id=?")
+@Where(clause = "deleted_at=false")
 public class EspirituDemoniaco extends Espiritu {
     @SuppressWarnings("unused")
     public EspirituDemoniaco() {

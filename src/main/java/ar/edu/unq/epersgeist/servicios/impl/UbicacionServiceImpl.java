@@ -18,6 +18,7 @@ import java.util.stream.StreamSupport;
 @Service
 @Transactional
 public class UbicacionServiceImpl implements UbicacionService {
+
     private final UbicacionDAO ubicacionDAO;
     private final EspirituDAO espirituDAO;
     private final MediumDAO mediumDAO;
@@ -30,7 +31,6 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public Ubicacion crear(Ubicacion ubicacion) {
-        System.out.println("Creando una ubicacion");
         return ubicacionDAO.save(ubicacion);
     }
 
@@ -69,4 +69,5 @@ public class UbicacionServiceImpl implements UbicacionService {
     public List<Medium> mediumsSinEspiritusEn(Long ubicacionId) {
         return mediumDAO.mediumsSinEspiritusEn(ubicacionId);
     }
+
 }

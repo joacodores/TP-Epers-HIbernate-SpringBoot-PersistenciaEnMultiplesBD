@@ -18,41 +18,26 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 public class MediumServiceTest {
 
-    private Ubicacion ubi;
-    private Ubicacion ubi2;
-
     @Autowired
     private MediumService service;
-    private Medium medium;
 
     @Autowired
     private UbicacionService ubicacionService;
 
     @Autowired
     private EspirituService espirituService;
-    private Espiritu e1;
-    private EspirituAngelical e2;
-    private EspirituDemoniaco e3;
-    private Medium m2;
+    private Ubicacion santuario;
+    private Ubicacion cementerio;
 
     @BeforeEach
     void prepare() {
-        ubi = new Santuario("ubi", 10);
-        ubicacionService.crear(ubi);
-        ubi2 = new Cementerio("Ubicación 2", 20);
-        ubicacionService.crear(ubi2);
-        e1 = new EspirituAngelical(100, "angel", ubi2);
-        espirituService.crear(e1);
-        e2 = new EspirituAngelical(100, "angel", ubi);
-        espirituService.crear(e2);
-        e3 = new EspirituDemoniaco(100, "demonio", ubi2);
-        espirituService.crear(e3);
-        this.medium = new Medium("Thiago", 50, 30, ubi);
-        m2 = new Medium("Juan", 30, 20, ubi2);
+        santuario = ubicacionService.crear(new Santuario("Santuario base", 10));
+        cementerio = ubicacionService.crear(new Cementerio("Cementerio base", 20));
     }
 
     @Test
     void crearMediumTest() {
+        Medium medium = new Medium("Thiago", 50, 30, santuario);
         assertNull(medium.getId());
         service.crear(medium);
         assertNotNull(medium.getId());
@@ -60,51 +45,56 @@ public class MediumServiceTest {
 
     @Test
     void recuperarMediumNoPersistidoDevuelveNullTest() {
-        Long mediumID = service.crear(medium).getId();
-        assertTrue(service.recuperar(mediumID + 1).isEmpty());
+        Medium medium = service.crear(new Medium("Thiago", 50, 30, santuario));
+        assertTrue(service.recuperar(medium.getId() + 1).isEmpty());
     }
 
     @Test
     void recuperarMediumTest() {
-        Long mediumID = service.crear(medium).getId();
-        Medium mediumRecuperado = service.recuperar(mediumID)
-                .orElseThrow(() -> new AssertionError("El medium no existe"));
+        Medium medium = new Medium("Thiago", 50, 30, santuario);
+        Long id = service.crear(medium).getId();
+        Medium recuperado = service.recuperar(id).orElseThrow();
         assertAll(
-                () -> assertEquals(medium.getNombre(), mediumRecuperado.getNombre()),
-                () -> assertEquals(medium.getMana(), mediumRecuperado.getMana()),
-                () -> assertEquals(medium.getManaMax(), mediumRecuperado.getManaMax())
+                () -> assertEquals(medium.getNombre(), recuperado.getNombre()),
+                () -> assertEquals(medium.getMana(), recuperado.getMana()),
+                () -> assertEquals(medium.getManaMax(), recuperado.getManaMax())
         );
     }
 
     @Test
     void actualizarMediumTest() {
-        Long mediumID = service.crear(medium).getId();
+        Medium medium = service.crear(new Medium("Thiago", 50, 30, santuario));
         medium.setNombre("Churrito");
         service.actualizar(medium);
-        Medium mediumRecuperado = service.recuperar(mediumID)
-                .orElseThrow(() -> new AssertionError("El medium no existe"));
-        assertEquals(medium.getNombre(), mediumRecuperado.getNombre());
+        Medium recuperado = service.recuperar(medium.getId()).orElseThrow();
+        assertEquals("Churrito", recuperado.getNombre());
     }
 
     @Test
     void recuperarTodosTest() {
-        service.crear(medium);
-        service.crear(new Medium("Juan", 80, 20, ubi));
-        service.crear(new Medium("Jorge", 20, 10, ubi));
-        assertEquals(List.of("Thiago", "Juan", "Jorge"), service.recuperarTodos().stream().map(Medium::getNombre).toList());
+        service.crear(new Medium("Thiago", 50, 30, santuario));
+        service.crear(new Medium("Juan", 80, 20, santuario));
+        service.crear(new Medium("Jorge", 20, 10, santuario));
+        assertEquals(
+                List.of("Thiago", "Juan", "Jorge"),
+                service.recuperarTodos().stream().map(Medium::getNombre).toList()
+        );
     }
 
     @Test
     void sePuedenPersistirVariosMediumConMismoNombreTest() {
-        service.crear(medium);
-        service.crear(new Medium("Thiago", 80, 20, ubi));
-        service.crear(new Medium("Thiago", 20, 10, ubi));
-        assertEquals(List.of("Thiago", "Thiago", "Thiago"), service.recuperarTodos().stream().map(Medium::getNombre).toList());
+        service.crear(new Medium("Thiago", 50, 30, santuario));
+        service.crear(new Medium("Thiago", 80, 20, santuario));
+        service.crear(new Medium("Thiago", 20, 10, santuario));
+        assertEquals(
+                List.of("Thiago", "Thiago", "Thiago"),
+                service.recuperarTodos().stream().map(Medium::getNombre).toList()
+        );
     }
 
     @Test
     void eliminarMediumTest() {
-        service.crear(medium);
+        Medium medium = service.crear(new Medium("Thiago", 50, 30, santuario));
         assertFalse(service.recuperarTodos().isEmpty());
         service.eliminar(medium.getId());
         assertTrue(service.recuperarTodos().isEmpty());
@@ -112,39 +102,38 @@ public class MediumServiceTest {
 
     @Test
     void unMediumNoTieneNingunEspirituTest() {
-        service.crear(medium);
+        Medium medium = service.crear(new Medium("Thiago", 50, 30, santuario));
         assertTrue(service.espiritus(medium.getId()).isEmpty());
     }
 
     @Test
     void unMediumTieneEspiritusTest() {
-        Medium m1 = service.crear(medium);
-        Espiritu e2 = new EspirituAngelical(40, "angel", ubi);
-        espirituService.crear(e2);
-        service.invocar(m1.getId(), e1.getId());
-        service.invocar(m1.getId(), e2.getId());
-        espirituService.conectar(e1.getId(), m1.getId());
-        espirituService.conectar(e2.getId(), m1.getId());
+        Medium medium = service.crear(new Medium("Thiago", 50, 30, santuario));
+        Espiritu e1 = espirituService.crear(new EspirituAngelical(100, "angel", cementerio));
+        Espiritu e2 = espirituService.crear(new EspirituAngelical(40, "angel", santuario));
+        service.invocar(medium.getId(), e1.getId());
+        service.invocar(medium.getId(), e2.getId());
+        espirituService.conectar(e1.getId(), medium.getId());
+        espirituService.conectar(e2.getId(), medium.getId());
         List<Espiritu> espiritus = service.espiritus(medium.getId());
         assertEquals(2, espiritus.size());
     }
 
     @Test
     void exorcizarConExorcistaSinEspiritusAngelicalesLanzaExcepcionTest() {
-        Medium ozzy = new Medium("ozzy", 100, 100, ubi);
-        Long exorcistaId = service.crear(medium).getId();
-        Long ozzyId = service.crear(ozzy).getId();
-        assertThrows(ExorcistaSinAngelesException.class, () -> service.exorcizar(exorcistaId, ozzyId));
+        Medium exorcista = service.crear(new Medium("Thiago", 50, 30, santuario));
+        Medium poseido = service.crear(new Medium("Ozzy", 100, 100, santuario));
+        assertThrows(ExorcistaSinAngelesException.class, () ->
+                service.exorcizar(exorcista.getId(), poseido.getId())
+        );
     }
 
     @Test
     void exorcizarTest() {
-        Medium tai = new Medium("Tai", 100, 80, ubi);
-        Medium elNoba = new Medium("El Noba", 100, 100, ubi);
-        Long taiId = service.crear(tai).getId();
-        Long elNobaId = service.crear(elNoba).getId();
-        EspirituAngelical angel = new EspirituAngelical(100, "angel", ubi);
-        EspirituDemoniaco demonio = new EspirituDemoniaco(0, "demonio", ubi);
+        Medium tai = service.crear(new Medium("Tai", 100, 80, santuario));
+        Medium elNoba = service.crear(new Medium("El Noba", 100, 100, santuario));
+        EspirituAngelical angel = new EspirituAngelical(100, "angel", santuario);
+        EspirituDemoniaco demonio = new EspirituDemoniaco(0, "demonio", santuario);
         RandomizerFalso randomizer = new RandomizerFalso();
         angel.setCustomRandomizer(randomizer);
         demonio.setCustomRandomizer(randomizer);
@@ -152,138 +141,89 @@ public class MediumServiceTest {
         Long demonioId = espirituService.crear(demonio).getId();
         randomizer.setSecuenciaDeAtaques(10);
         randomizer.setSecuenciaDeDefensas(0);
-        espirituService.conectar(angelId, taiId);
-        espirituService.conectar(demonioId, elNobaId);
-        service.exorcizar(taiId, elNobaId);
-        assertTrue(service.espiritus(elNobaId).isEmpty());
+        espirituService.conectar(angelId, tai.getId());
+        espirituService.conectar(demonioId, elNoba.getId());
+        service.exorcizar(tai.getId(), elNoba.getId());
+        assertTrue(service.espiritus(elNoba.getId()).isEmpty());
     }
 
     @Test
     void descansarTest() {
-        Medium m1 = service.crear(medium);
-        Long mediumID = m1.getId();
-        service.descansar(mediumID);
-        Medium m2 = service.recuperar(mediumID)
-                .orElseThrow(() -> new AssertionError("Medium no encontrado"));
-        assertEquals(45, m2.getMana());
+        Medium medium = service.crear(new Medium("Thiago", 50, 30, santuario));
+        service.descansar(medium.getId());
+        Medium recuperado = service.recuperar(medium.getId()).orElseThrow();
+        assertEquals(45, recuperado.getMana());
     }
 
     @Test
     void invocarTest() {
-        Medium m1 = service.crear(medium);
-        m1.aumentarMana(30);
-        Long mediumID = m1.getId();
-        Long espirituId = e1.getId();
-        assertEquals(e1.getUbicacion(), ubi2);
-        e1 = service.invocar(mediumID, espirituId);
-        assertEquals(e1.getUbicacion().getId(), ubi.getId());
+        Medium medium = service.crear(new Medium("Thiago", 50, 30, santuario));
+        Espiritu e1 = espirituService.crear(new EspirituAngelical(100, "angel", cementerio));
+        medium.aumentarMana(30);
+        service.invocar(medium.getId(), e1.getId());
+        Espiritu actualizado = espirituService.recuperar(e1.getId()).orElseThrow();
+        assertEquals(santuario.getId(), actualizado.getUbicacion().getId());
     }
 
     @Test
     void moverTest() {
-        Medium m1 = service.crear(medium);
-        assertEquals(medium.getUbicacion().getId(), ubi.getId());
-        service.mover(m1.getId(),ubi2.getId());
-        Medium m1Actualizado = service.recuperar(m1.getId()).get();
-        assertEquals(m1Actualizado.getUbicacion().getId(), ubi2.getId());
+        Medium medium = service.crear(new Medium("Thiago", 50, 30, santuario));
+        service.mover(medium.getId(), cementerio.getId());
+        Medium actualizado = service.recuperar(medium.getId()).orElseThrow();
+        assertEquals(cementerio.getId(), actualizado.getUbicacion().getId());
     }
-
 
     @Test
     void moverMediumMueveTodosSusEspiritus() {
-        Medium m1 = service.crear(medium);
-
-        espirituService.crear(e2);
-
-        espirituService.conectar(e2.getId(), m1.getId());
-
-        service.mover(m1.getId(), ubi.getId());
-
-        Medium actualizado = service.recuperar(medium.getId()).get();
-        Espiritu eActualizado = espirituService.recuperar(e2.getId()).get();
-        assertEquals(eActualizado.getUbicacion().getId(), actualizado.getUbicacion().getId());
-
-        actualizado.getEspiritus().forEach(es ->
-                assertEquals(ubi.getId(), es.getUbicacion().getId())
-        );
+        Medium medium = service.crear(new Medium("Thiago", 50, 30, santuario));
+        Espiritu e = espirituService.crear(new EspirituAngelical(100, "angel", santuario));
+        espirituService.conectar(e.getId(), medium.getId());
+        service.mover(medium.getId(), cementerio.getId());
+        Espiritu actualizado = espirituService.recuperar(e.getId()).orElseThrow();
+        assertEquals(cementerio.getId(), actualizado.getUbicacion().getId());
     }
 
     @Test
     void espirituAngelicalDisminuyeNivelDeConexionPorLlegarAUnCementerio() {
-        Medium m1 = service.crear(m2);
-
-        espirituService.crear(e1);
-
-        espirituService.conectar(e1.getId(), m1.getId());
-
-
-        service.mover(m1.getId(), ubi2.getId());
-
-
-        Espiritu angelActualizado = espirituService.recuperar(e1.getId()).get();
-        assertEquals(95, angelActualizado.getNivelDeConexion());
+        Medium medium = service.crear(new Medium("Juan", 30, 20, santuario));
+        Espiritu e = espirituService.crear(new EspirituAngelical(100, "angel", santuario));
+        espirituService.conectar(e.getId(), medium.getId());
+        service.mover(medium.getId(), cementerio.getId());
+        Espiritu actualizado = espirituService.recuperar(e.getId()).orElseThrow();
+        assertEquals(95, actualizado.getNivelDeConexion());
     }
 
     @Test
-    void espirituAngelicalDisminuyeNivelDeConexionPorLlegarAUnCementerioYSeDesvinculaCuandoLlegaACero() {
-
-
-        Medium m1 = service.crear(medium);
-
-        Espiritu espirituConNivelDeConexionDisminuido = new EspirituAngelical(1, "angel", ubi);
-
-        espirituService.crear(espirituConNivelDeConexionDisminuido);
-
-        espirituService.conectar(espirituConNivelDeConexionDisminuido.getId(), m1.getId());
-
-        Medium mediumActualizado1 = service.recuperar(m1.getId()).get();
-        assertEquals(mediumActualizado1.getEspiritus().size(), 1);
-
-        service.mover(mediumActualizado1.getId(), ubi2.getId());
-        service.mover(mediumActualizado1.getId(), ubi.getId());
-        service.mover(mediumActualizado1.getId(), ubi2.getId());
-
-
-        Medium mediumActualizado2 = service.recuperar(m1.getId()).get();
-        assertEquals(mediumActualizado2.getEspiritus().size(), 0);
+    void espirituAngelicalSeDesvinculaAlLlegarANivelCero() {
+        Medium medium = service.crear(new Medium("Thiago", 50, 30, santuario));
+        Espiritu angel = espirituService.crear(new EspirituAngelical(1, "angel", santuario));
+        espirituService.conectar(angel.getId(), medium.getId());
+        service.mover(medium.getId(), cementerio.getId());
+        service.mover(medium.getId(), santuario.getId());
+        service.mover(medium.getId(), cementerio.getId());
+        Medium actualizado = service.recuperar(medium.getId()).orElseThrow();
+        assertEquals(0, actualizado.getEspiritus().size());
     }
 
     @Test
     void espirituDemoniacoDisminuyeNivelDeConexionPorLlegarAUnSantuario() {
-        Medium m1 = service.crear(m2);
-
-        espirituService.crear(e3);
-
-        espirituService.conectar(e3.getId(), m1.getId());
-
-
-        service.mover(m1.getId(), ubi.getId());
-
-        Espiritu angelActualizado = espirituService.recuperar(e3.getId()).get();
-        assertEquals(90, angelActualizado.getNivelDeConexion());
+        Medium medium = service.crear(new Medium("Juan", 30, 20, cementerio));
+        Espiritu e = espirituService.crear(new EspirituDemoniaco(100, "demonio", cementerio));
+        espirituService.conectar(e.getId(), medium.getId());
+        service.mover(medium.getId(), santuario.getId());
+        Espiritu actualizado = espirituService.recuperar(e.getId()).orElseThrow();
+        assertEquals(90, actualizado.getNivelDeConexion());
     }
 
     @Test
-    void espirituDemoniacoDisminuyeNivelDeConexionPorLlegarAUnSantuarioYSeDesvinculaCuandoLlegaACero() {
-
-
-        Medium m1 = service.crear(m2);
-
-        Espiritu espirituDemoniacoConNivelDeConexionDisminuido = new EspirituDemoniaco(1, "demonio", ubi2);
-
-        espirituService.crear(espirituDemoniacoConNivelDeConexionDisminuido);
-
-        espirituService.conectar(espirituDemoniacoConNivelDeConexionDisminuido.getId(), m1.getId());
-
-        Medium mediumActualizado1 = service.recuperar(m1.getId()).get();
-        assertEquals(mediumActualizado1.getEspiritus().size(), 1);
-
-        service.mover(mediumActualizado1.getId(), ubi.getId());
-
-        Medium mediumActualizado2 = service.recuperar(m1.getId()).get();
-        assertEquals(mediumActualizado2.getEspiritus().size(), 0);
+    void espirituDemoniacoSeDesvinculaAlLlegarANivelCero() {
+        Medium medium = service.crear(new Medium("Juan", 30, 20, cementerio));
+        Espiritu demonio = espirituService.crear(new EspirituDemoniaco(1, "demonio", cementerio));
+        espirituService.conectar(demonio.getId(), medium.getId());
+        service.mover(medium.getId(), santuario.getId());
+        Medium actualizado = service.recuperar(medium.getId()).orElseThrow();
+        assertEquals(0, actualizado.getEspiritus().size());
     }
-
 
     @AfterEach
     void cleanup() {

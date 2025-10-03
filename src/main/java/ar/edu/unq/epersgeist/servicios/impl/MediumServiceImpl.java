@@ -1,5 +1,8 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.controller.exceptions.EspirituNoEncontradoException;
+import ar.edu.unq.epersgeist.controller.exceptions.MediumNoEncontradoException;
+import ar.edu.unq.epersgeist.controller.exceptions.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
@@ -11,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -19,6 +21,7 @@ import java.util.stream.StreamSupport;
 @Service
 @Transactional
 public class MediumServiceImpl implements MediumService {
+
     private final MediumDAO mediumDAO;
     private final EspirituDAO espirituDAO;
     private final UbicacionDAO ubicacionDAO;
@@ -48,7 +51,7 @@ public class MediumServiceImpl implements MediumService {
     @Override
     public void actualizar(Medium medium) {
         Medium mediumExistente = mediumDAO.findById(medium.getId())
-                .orElseThrow(() -> new NoSuchElementException("Medium no encontrado"));
+                .orElseThrow(() -> new MediumNoEncontradoException(""));
         Optional.ofNullable(medium.getNombre()).ifPresent(mediumExistente::setNombre);
         Optional.ofNullable(medium.getManaMax()).ifPresent(mediumExistente::setManaMax);
         Optional.ofNullable(medium.getMana()).ifPresent(mediumExistente::setMana);
@@ -58,7 +61,7 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public void eliminar(Long mediumId) {
-        Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new NoSuchElementException("Medium no encontrado"));
+        Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException(""));
         medium.getUbicacion().eliminarMedium(medium);
         mediumDAO.deleteById(mediumId);
     }
@@ -71,9 +74,8 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public void exorcizar(Long idMediumExorcista, Long idMediumAExorcizar) {
-        Medium exorcista = mediumDAO.findById(idMediumExorcista).orElseThrow(() -> new NoSuchElementException("Medium not found with id: " + idMediumExorcista));
-        Medium mediumAExorcizar = mediumDAO.findById(idMediumAExorcizar).orElseThrow(() -> new NoSuchElementException("Medium not found with id: " + idMediumAExorcizar));
-
+        Medium exorcista = mediumDAO.findById(idMediumExorcista).orElseThrow(() -> new MediumNoEncontradoException("exorcista"));
+        Medium mediumAExorcizar = mediumDAO.findById(idMediumAExorcizar).orElseThrow(() -> new MediumNoEncontradoException("a exorcizar"));
         if (exorcista.getUbicacion().equals(mediumAExorcizar.getUbicacion())) {
             exorcista.exorcizar(mediumAExorcizar);
             mediumDAO.save(exorcista);
@@ -83,15 +85,15 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public void descansar(Long mediumId) {
-        Medium mediumADescansar = mediumDAO.findById(mediumId).orElseThrow(() -> new NoSuchElementException("Medium not found with id: " + mediumId));
+        Medium mediumADescansar = mediumDAO.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException(""));
         mediumADescansar.descansar();
         mediumDAO.save(mediumADescansar);
     }
 
     @Override
     public Espiritu invocar(Long mediumId, Long espirituId) {
-        Medium invocador = mediumDAO.findById(mediumId).orElseThrow(() -> new NoSuchElementException("Medium not found with id: " + mediumId));
-        Espiritu espirituAInvocar = espirituDAO.findById(espirituId).orElseThrow(() -> new NoSuchElementException("Espiritu not found with id: " + espirituId));
+        Medium invocador = mediumDAO.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException("invocador"));
+        Espiritu espirituAInvocar = espirituDAO.findById(espirituId).orElseThrow(() -> new EspirituNoEncontradoException("a invocar"));
         Ubicacion ubiDeInvocacion = invocador.getUbicacion();
         invocador.invocar(espirituAInvocar);
         mediumDAO.save(invocador);
@@ -102,17 +104,16 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public List<Espiritu> espiritus(Long mediumId) {
-        Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new NoSuchElementException("Medium not found with id: " + mediumId));
+        Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException(""));
         return medium.getEspiritus();
     }
 
     @Override
-    public void mover(Long mediumId, Long ubicacionId){
-        // Doble validación para que no quede como Optional
-        Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new NoSuchElementException("Medium not found with id: " + mediumId));
-        Ubicacion ubicacion = ubicacionDAO.findById(ubicacionId).orElseThrow(() -> new NoSuchElementException("Ubicacion not found with id: " + ubicacionId));
-
+    public void mover(Long mediumId, Long ubicacionId) {
+        Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException(""));
+        Ubicacion ubicacion = ubicacionDAO.findById(ubicacionId).orElseThrow(() -> new UbicacionNoEncontradaException(""));
         medium.mover(ubicacion);
         mediumDAO.save(medium);
     }
+
 }

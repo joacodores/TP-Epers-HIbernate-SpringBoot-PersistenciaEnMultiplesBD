@@ -6,6 +6,8 @@ import ar.edu.unq.epersgeist.controller.dto.medium.RecuperarMediumDTO;
 import ar.edu.unq.epersgeist.controller.dto.ubicacion.ActualizarUbicacionDTO;
 import ar.edu.unq.epersgeist.controller.dto.ubicacion.CrearUbicacionDTO;
 import ar.edu.unq.epersgeist.controller.dto.ubicacion.RecuperarUbicacionDTO;
+import ar.edu.unq.epersgeist.controller.exceptions.ActualizarRecursoException;
+import ar.edu.unq.epersgeist.controller.exceptions.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.servicios.UbicacionService;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import java.util.Optional;
 @CrossOrigin
 @RequestMapping("/ubicacion")
 public class UbicacionController {
+
     private final UbicacionService ubicacionService;
 
     public UbicacionController(UbicacionService ubicacionService) {
@@ -39,9 +42,7 @@ public class UbicacionController {
     @GetMapping("/{id}")
     public ResponseEntity<RecuperarUbicacionDTO> recuperarUbicacion(@PathVariable Long id) {
         Optional<Ubicacion> ubicacionRecuperada = ubicacionService.recuperar(id);
-        if (ubicacionRecuperada.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+        if (ubicacionRecuperada.isEmpty()) throw new UbicacionNoEncontradaException("");
         var dto = RecuperarUbicacionDTO.desdeModelo(ubicacionRecuperada.get());
         return ResponseEntity.ok(dto);
     }
@@ -77,13 +78,11 @@ public class UbicacionController {
     public ResponseEntity<RecuperarUbicacionDTO> actualizarUbicacion(@PathVariable Long id,
                                                                @RequestBody ActualizarUbicacionDTO ubicacionDTO) {
         var ubicacionAActualizar = ubicacionService.recuperar(id);
-        if (ubicacionAActualizar.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
+        if (ubicacionAActualizar.isEmpty()) throw new UbicacionNoEncontradaException("");
         var ubicacion = ubicacionAActualizar.get();
         ubicacionDTO.actualizarUbicacion(ubicacion, id);
         ubicacionService.actualizar(ubicacion);
-        var ubicacionActualizado = ubicacionService.recuperar(id).orElseThrow(NoSuchElementException::new);
+        var ubicacionActualizado = ubicacionService.recuperar(id).orElseThrow(() -> new ActualizarRecursoException("la ubicacion"));
         var dto = RecuperarUbicacionDTO.desdeModelo(ubicacionActualizado);
         return ResponseEntity.ok(dto);
     }

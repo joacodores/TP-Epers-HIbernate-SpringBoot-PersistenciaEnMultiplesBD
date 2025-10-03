@@ -24,8 +24,8 @@ public class MediumTest {
 
     @BeforeEach
     void prepare() {
-        fuerteApache = new Ubicacion("Fuerte Apache");
-        bocaPredio = new Ubicacion("Boca Predio");
+        fuerteApache = new Santuario("Fuerte Apache",50);
+        bocaPredio = new Santuario("Boca Predio",10);
         palermo = new Medium("Martin Palermo", 100, 25, fuerteApache);
         juan = new Medium("Juan", 100, 20, bocaPredio);
         carlitos = new EspirituAngelical(80, "Carlitos", fuerteApache);
@@ -230,17 +230,15 @@ public class MediumTest {
         assertEquals(List.of(rika, ivaar), tai.getEspiritus());
         assertEquals(List.of(hanyuu, noroi), elNoba.getEspiritus());
     }
-
+/*modificar con logica de descansar e invocar nueva*/
     @Test
     void mediumDescansaTieneMasManaYSusEspiritusMasEnergia() {
         Medium tai = new Medium("Tai", 100, 10, fuerteApache);
-        Espiritu espirituDem = new EspirituDemoniaco(0, "zorro", fuerteApache);
-        // Paso a paso, que hace la implementacion de descansar()
-        tai.conectarseAEspiritu(espirituDem);
-        tai.aumentarMana(15);
-        tai.aumentarNivelDeConexionATodosLosEspiritus();
-        assertEquals(25, tai.getMana());
-        assertEquals(7, espirituDem.getNivelDeConexion());
+        Espiritu espirituAngelical = new EspirituAngelical(0, "zorro", fuerteApache);
+        tai.conectarseAEspiritu(espirituAngelical);
+        tai.descansar();
+        assertEquals(85, tai.getMana());
+        assertEquals(52, espirituAngelical.getNivelDeConexion());
     }
 
     @Test

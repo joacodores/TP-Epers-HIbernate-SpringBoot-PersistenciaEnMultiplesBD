@@ -12,7 +12,9 @@ import static jakarta.persistence.GenerationType.AUTO;
 @NoArgsConstructor
 @ToString
 @Entity
-public class Ubicacion {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "tipo_ubicacion", discriminatorType = DiscriminatorType.STRING, length = 20)
+public abstract class Ubicacion {
     @Setter
     @Id
     @GeneratedValue(strategy = AUTO)
@@ -28,13 +30,12 @@ public class Ubicacion {
     @OneToMany(mappedBy = "ubicacion", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private final List<Medium> mediums = new ArrayList<>();
 
-    /*
+    @Setter
     @Column(name = "energia", nullable = false, columnDefinition = "INTEGER CHECK(energia BETWEEN 1 AND 100)")
     private Integer energia;
-    */
 
-    public Ubicacion(@NonNull String nombre) {
-        this.nombre = nombre;
+    public Ubicacion(@NonNull String nombre, @NonNull Integer energia) {
+        this.nombre = nombre; this.energia = energia;
     }
 
     public void agregarMedium(Medium medium) {
@@ -51,4 +52,10 @@ public class Ubicacion {
         this.espiritus.remove(espiritu);
         //espiritu.setUbicacion(null);
     }
+
+    public abstract boolean permiteInvocar(Espiritu e);
+    public abstract int manaRecuperadaMedium();
+    public abstract int conexionGanadaPara(Espiritu e);
+    public abstract boolean esSantuario();
+    public abstract boolean esCementerio();
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -50,11 +51,12 @@ public class EspirituServiceImpl implements EspirituService {
 
     @Override
     public void actualizar(Espiritu espiritu) {
-        Optional<Espiritu> espirituAActualizar = espirituDAO.findById(espiritu.getId());
+        Espiritu espirituAActualizar = espirituDAO.findById(espiritu.getId())
+                .orElseThrow(NoSuchElementException::new);
         if (espiritu.getNombre() != null) {
-            espirituAActualizar.get().setNombre(espiritu.getNombre());
+            espirituAActualizar.setNombre(espiritu.getNombre());
         }
-        espirituDAO.save(espirituAActualizar.get());
+        espirituDAO.save(espirituAActualizar);
     }
 
     @Override

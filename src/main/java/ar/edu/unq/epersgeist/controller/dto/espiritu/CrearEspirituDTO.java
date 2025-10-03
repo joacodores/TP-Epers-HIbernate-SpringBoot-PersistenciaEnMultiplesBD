@@ -18,6 +18,6 @@ public record CrearEspirituDTO(String nombre,
         } else if (tipo.equals(DEMONIO)) {
             return new EspirituDemoniaco(nivelDeConexion, nombre, ubicacion);
         }
-        throw new IllegalArgumentException("No se encontro el tipo de espiritu");
+        throw new IllegalArgumentException("Tipo de espiritu invalido");
     }
 }

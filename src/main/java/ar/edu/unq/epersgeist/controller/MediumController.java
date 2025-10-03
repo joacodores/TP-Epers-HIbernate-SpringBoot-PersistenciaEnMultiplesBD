@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -69,7 +70,8 @@ public class MediumController {
         var medium = mediumAActualizar.get();
         mediumDTO.actualizarMedium(medium, id);
         mediumService.actualizar(medium);
-        var dto = RecuperarMediumDTO.desdeModelo(mediumService.recuperar(id).get());
+        var mediumActualizado = mediumService.recuperar(id).orElseThrow(NoSuchElementException::new);
+        var dto = RecuperarMediumDTO.desdeModelo(mediumActualizado);
         return ResponseEntity.ok(dto);
     }
 
@@ -98,8 +100,10 @@ public class MediumController {
             return ResponseEntity.notFound().build();
         }
         mediumService.exorcizar(mediumExorcistaId, mediumPoseidoId);
+        var exorcistaActualizado = mediumService.recuperar(mediumExorcistaId)
+                .orElseThrow(NoSuchElementException::new);
         return ResponseEntity.ok(
-                RecuperarMediumDTO.desdeModelo(mediumService.recuperar(mediumExorcistaId).get())
+                RecuperarMediumDTO.desdeModelo(exorcistaActualizado)
         );
     }
 
@@ -110,8 +114,10 @@ public class MediumController {
             return ResponseEntity.notFound().build();
         }
         mediumService.descansar(medium.get().getId());
+        var mediumActualizado = mediumService.recuperar(id)
+                .orElseThrow(NoSuchElementException::new);
         return ResponseEntity.ok(
-                RecuperarMediumDTO.desdeModelo(mediumService.recuperar(id).get())
+                RecuperarMediumDTO.desdeModelo(mediumActualizado)
         );
     }
 
@@ -124,8 +130,10 @@ public class MediumController {
             return ResponseEntity.notFound().build();
         }
         mediumService.invocar(mediumId, espirituId);
+        var espirituActualizado = espirituService.recuperar(espirituId)
+                .orElseThrow(NoSuchElementException::new);
         return ResponseEntity.ok(
-                RecuperarEspirituDTO.desdeModelo(espirituService.recuperar(espirituId).get())
+                RecuperarEspirituDTO.desdeModelo(espirituActualizado)
         );
     }
 
@@ -138,5 +146,20 @@ public class MediumController {
         List<Medium> mediumsSinEspiritusEn = ubicacionService.mediumsSinEspiritusEn(ubicacionId);
         var dtos = mediumsSinEspiritusEn.stream().map(RecuperarMediumDTO::desdeModelo).toList();
         return ResponseEntity.ok(dtos);
+    }
+
+    @PatchMapping("/{mediumId}/mover/{ubicacionId}")
+    public ResponseEntity<RecuperarMediumDTO> mover(@PathVariable Long mediumId,
+                                                    @PathVariable Long ubicacionId) {
+        var mediumRecuperado = mediumService.recuperar(mediumId);
+        var ubicacionRecuperado = ubicacionService.recuperar(ubicacionId);
+        if (mediumRecuperado.isEmpty() || ubicacionRecuperado.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        mediumService.mover(mediumId, ubicacionId);
+        var mediumActualizado = mediumService.recuperar(mediumId)
+                .orElseThrow(NoSuchElementException::new);
+        var dto = RecuperarMediumDTO.desdeModelo(mediumActualizado);
+        return ResponseEntity.ok(dto);
     }
 }

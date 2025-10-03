@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -22,8 +23,8 @@ import java.util.Optional;
 @RequestMapping("/espiritu")
 public class EspirituController {
     private final MediumService mediumService;
-    private EspirituService espirituService;
-    private UbicacionService ubicacionService;
+    private final EspirituService espirituService;
+    private final UbicacionService ubicacionService;
 
     public EspirituController(EspirituService espirituService, UbicacionService ubicacionService, MediumService mediumService) {
         this.espirituService = espirituService;
@@ -97,7 +98,8 @@ public class EspirituController {
             return ResponseEntity.notFound().build();
         }
         espirituService.conectar(id, mediumId);
-        var espirituActualizado = espirituService.recuperar(id).get();
+        var espirituActualizado = espirituService.recuperar(id)
+                .orElseThrow(NoSuchElementException::new);
         return ResponseEntity.ok(RecuperarEspirituDTO.desdeModelo(espirituActualizado));
     }
 
@@ -110,20 +112,5 @@ public class EspirituController {
         List<Espiritu> espiritus = mediumService.espiritus(mediumId);
         List<RecuperarEspirituDTO> espiritusRecuperados = espiritus.stream().map(RecuperarEspirituDTO::desdeModelo).toList();
         return ResponseEntity.ok(espiritusRecuperados);
-    }
-
-    @PatchMapping("/{mediumId}/mover/{ubicacionId}")
-    public ResponseEntity<RecuperarEspirituDTO> mover(@PathVariable Long mediumId,
-                                                      @PathVariable Long ubicacionId) {
-        var mediumRecuperado = mediumService.recuperar(mediumId);
-        var ubicacionRecuperado = ubicacionService.recuperar(ubicacionId);
-        if (mediumRecuperado.isEmpty() || ubicacionRecuperado.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        mediumService.mover(mediumId, ubicacionId);
-
-
-        return ResponseEntity.ok().build();
     }
 }

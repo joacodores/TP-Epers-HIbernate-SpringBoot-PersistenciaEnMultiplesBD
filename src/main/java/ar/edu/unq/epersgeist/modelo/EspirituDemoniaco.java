@@ -39,4 +39,14 @@ public class EspirituDemoniaco extends Espiritu {
             atacante.sufrirDerrota(5);
         }
     }
+
+    @Override
+    public boolean esDemoniaco() {
+        return true;
+    }
+
+    @Override
+    public boolean esAngelical() {
+        return false;
+    }
 }

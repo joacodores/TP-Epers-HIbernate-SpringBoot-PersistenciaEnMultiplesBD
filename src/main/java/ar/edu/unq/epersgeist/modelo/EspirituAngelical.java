@@ -41,4 +41,13 @@ public class EspirituAngelical extends Espiritu {
     public void recibirAtaque(int ataque, Espiritu atacante) {
     }
 
+    @Override
+    public boolean esDemoniaco() {
+        return false;
+    }
+
+    @Override
+    public boolean esAngelical() {
+        return true;
+    }
 }

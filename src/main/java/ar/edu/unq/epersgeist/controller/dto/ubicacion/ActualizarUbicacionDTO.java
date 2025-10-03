@@ -6,9 +6,8 @@ import java.util.Optional;
 
 public record ActualizarUbicacionDTO(String nombre, Integer energia) {
     public void actualizarUbicacion(Ubicacion ubicacion) {
-        /* TODO: Luego de terminar la migración:
+
         Optional.ofNullable(energia).ifPresent(ubicacion::setEnergia);
-        */
         Optional.ofNullable(nombre).ifPresent(ubicacion::setNombre);
     }
 }

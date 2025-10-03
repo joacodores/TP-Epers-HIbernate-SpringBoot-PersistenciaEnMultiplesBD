@@ -61,7 +61,7 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public void eliminar(Long mediumId) {
-        Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new NoSuchElementException("Medium no encontrado"));
+        Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException(""));
         medium.getUbicacion().eliminarMedium(medium);
         mediumDAO.deleteById(mediumId);
     }

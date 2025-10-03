@@ -36,7 +36,7 @@ public class EspirituServiceImpl implements EspirituService {
 
     @Override
     public void eliminar(Long espirituId) {
-        Espiritu espiritu = espirituDAO.findById(espirituId).orElseThrow(() -> new NoSuchElementException("No se encontro el espiritu"));
+        Espiritu espiritu = espirituDAO.findById(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(""));
         espiritu.getUbicacion().eliminarEspiritu(espiritu);
         espirituDAO.deleteById(espirituId);
     }

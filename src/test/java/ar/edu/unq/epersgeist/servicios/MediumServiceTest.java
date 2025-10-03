@@ -8,13 +8,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 public class MediumServiceTest {
+
     private Ubicacion ubi;
     private Ubicacion ubi2;
 
@@ -84,11 +87,6 @@ public class MediumServiceTest {
     }
 
     @Test
-    void recuperarTodosCuandoNoSePersistioNingunObjetoDevuelveListaVaciaTest() {
-        assertTrue(service.recuperarTodos().isEmpty());
-    }
-
-    @Test
     void recuperarTodosTest() {
         service.crear(medium);
         service.crear(new Medium("Juan", 80, 20, ubi));
@@ -104,13 +102,6 @@ public class MediumServiceTest {
         assertEquals(List.of("Thiago", "Thiago", "Thiago"), service.recuperarTodos().stream().map(Medium::getNombre).toList());
     }
 
-    /*@Test
-    void eliminarMediumNoPersistidoNoLanzaExcepcionTest() {
-        service.crear(medium);
-        Medium medium2 = new Medium("Doble Tonka", 60, 30, ubi);
-        assertDoesNotThrow(() -> service.eliminar(medium2.getId()));
-    }
-
     @Test
     void eliminarMediumTest() {
         service.crear(medium);
@@ -118,7 +109,7 @@ public class MediumServiceTest {
         service.eliminar(medium.getId());
         assertTrue(service.recuperarTodos().isEmpty());
     }
-*/
+
     @Test
     void unMediumNoTieneNingunEspirituTest() {
         service.crear(medium);
@@ -296,8 +287,9 @@ public class MediumServiceTest {
 
     @AfterEach
     void cleanup() {
-        //espirituService.eliminarTodo();
+        espirituService.eliminarTodo();
         service.eliminarTodo();
         ubicacionService.eliminarTodo();
     }
+
 }

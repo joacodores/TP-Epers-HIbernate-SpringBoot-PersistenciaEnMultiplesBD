@@ -6,8 +6,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +19,8 @@ import static java.lang.Integer.min;
 
 @NoArgsConstructor
 @Entity
+@SQLDelete(sql = "UPDATE Medium SET deleted_at = true WHERE id=?")
+@Where(clause = "deleted_at=false")
 public class Medium {
     @Getter
     @Setter
@@ -46,6 +51,16 @@ public class Medium {
     @Setter
     @ManyToOne
     private Ubicacion ubicacion;
+
+    @Temporal(TemporalType.DATE)
+    private final Date createdAt = new Date();
+
+    @Temporal(TemporalType.DATE)
+    private Date updatedAt;
+
+    @Setter
+    @Column(name = "deleted_at")
+    private Boolean deletedAt = false;
 
     public Medium(String nombre, Integer manaMax, Integer mana, Ubicacion ubicacion) {
         this.nombre = nombre;
@@ -137,11 +152,13 @@ public class Medium {
         this.mana = mana;
     }
 
-
     public void mover(Ubicacion ubicacion) {
         setUbicacion(ubicacion);
         // iteramos sobre una copia para evitar ConcurrentModificationException
         new ArrayList<>(espiritus).forEach(espiritu -> espiritu.cambiarUbicacion(ubicacion));
     }
 
+    public void setUpdatedAt() {
+        this.updatedAt = new Date();
+    }
 }

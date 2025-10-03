@@ -1,9 +1,9 @@
 package ar.edu.unq.epersgeist.servicios;
 
-import ar.edu.unq.epersgeist.controller.dto.estadistica.ReporteSantuarioMasCorruptoDTO;
+import ar.edu.unq.epersgeist.modelo.ReporteSantuarioMasCorrupto;
 
 public interface EstadisticaService {
 
-    ReporteSantuarioMasCorruptoDTO santuarioCorrupto();
+    ReporteSantuarioMasCorrupto santuarioCorrupto();
 
 }

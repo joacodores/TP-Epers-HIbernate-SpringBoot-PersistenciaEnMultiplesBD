@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/estadistica")
 public class EstadisticaController {
 
-    private EstadisticaService estadisticaService;
+    private final EstadisticaService estadisticaService;
 
     public EstadisticaController(EstadisticaService estadisticaService) {
         this.estadisticaService = estadisticaService;
@@ -22,7 +22,7 @@ public class EstadisticaController {
     @GetMapping("/santuarioCorrupto")
     public ResponseEntity<ReporteSantuarioMasCorruptoDTO> estadisticaSantuarios() {
         var reporte = estadisticaService.santuarioCorrupto();
-        return ResponseEntity.ok(reporte);
+        return ResponseEntity.ok(ReporteSantuarioMasCorruptoDTO.desdeModelo(reporte));
     }
 
 }

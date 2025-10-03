@@ -28,6 +28,9 @@ public class MediumServiceTest {
     @Autowired
     private EspirituService espirituService;
     private Espiritu e1;
+    private EspirituAngelical e2;
+    private EspirituDemoniaco e3;
+    private Medium m2;
 
     @BeforeEach
     void prepare() {
@@ -37,7 +40,12 @@ public class MediumServiceTest {
         ubicacionService.crear(ubi2);
         e1 = new EspirituAngelical(100, "angel", ubi2);
         espirituService.crear(e1);
+        e2 = new EspirituAngelical(100, "angel", ubi);
+        espirituService.crear(e2);
+        e3 = new EspirituDemoniaco(100, "demonio", ubi2);
+        espirituService.crear(e3);
         this.medium = new Medium("Thiago", 50, 30, ubi);
+        m2 = new Medium("Juan", 30, 20, ubi2);
     }
 
     @Test
@@ -179,6 +187,112 @@ public class MediumServiceTest {
         e1 = service.invocar(mediumID, espirituId);
         assertEquals(e1.getUbicacion().getId(), ubi.getId());
     }
+
+    @Test
+    void moverTest() {
+        Medium m1 = service.crear(medium);
+        assertEquals(medium.getUbicacion().getId(), ubi.getId());
+        service.mover(m1.getId(),ubi2.getId());
+        Medium m1Actualizado = service.recuperar(m1.getId()).get();
+        assertEquals(m1Actualizado.getUbicacion().getId(), ubi2.getId());
+    }
+
+
+    @Test
+    void moverMediumMueveTodosSusEspiritus() {
+        Medium m1 = service.crear(medium);
+
+        espirituService.crear(e2);
+
+        espirituService.conectar(e2.getId(), m1.getId());
+
+        service.mover(m1.getId(), ubi.getId());
+
+        Medium actualizado = service.recuperar(medium.getId()).get();
+        Espiritu eActualizado = espirituService.recuperar(e2.getId()).get();
+        assertEquals(eActualizado.getUbicacion().getId(), actualizado.getUbicacion().getId());
+
+        actualizado.getEspiritus().forEach(es ->
+                assertEquals(ubi.getId(), es.getUbicacion().getId())
+        );
+    }
+
+    @Test
+    void espirituAngelicalDisminuyeNivelDeConexionPorLlegarAUnCementerio() {
+        Medium m1 = service.crear(m2);
+
+        espirituService.crear(e1);
+
+        espirituService.conectar(e1.getId(), m1.getId());
+
+
+        service.mover(m1.getId(), ubi2.getId());
+
+
+        Espiritu angelActualizado = espirituService.recuperar(e1.getId()).get();
+        assertEquals(95, angelActualizado.getNivelDeConexion());
+    }
+
+    @Test
+    void espirituAngelicalDisminuyeNivelDeConexionPorLlegarAUnCementerioYSeDesvinculaCuandoLlegaACero() {
+
+
+        Medium m1 = service.crear(medium);
+
+        Espiritu espirituConNivelDeConexionDisminuido = new EspirituAngelical(1, "angel", ubi);
+
+        espirituService.crear(espirituConNivelDeConexionDisminuido);
+
+        espirituService.conectar(espirituConNivelDeConexionDisminuido.getId(), m1.getId());
+
+        Medium mediumActualizado1 = service.recuperar(m1.getId()).get();
+        assertEquals(mediumActualizado1.getEspiritus().size(), 1);
+
+        service.mover(mediumActualizado1.getId(), ubi2.getId());
+        service.mover(mediumActualizado1.getId(), ubi.getId());
+        service.mover(mediumActualizado1.getId(), ubi2.getId());
+
+
+        Medium mediumActualizado2 = service.recuperar(m1.getId()).get();
+        assertEquals(mediumActualizado2.getEspiritus().size(), 0);
+    }
+
+    @Test
+    void espirituDemoniacoDisminuyeNivelDeConexionPorLlegarAUnSantuario() {
+        Medium m1 = service.crear(m2);
+
+        espirituService.crear(e3);
+
+        espirituService.conectar(e3.getId(), m1.getId());
+
+
+        service.mover(m1.getId(), ubi.getId());
+
+        Espiritu angelActualizado = espirituService.recuperar(e3.getId()).get();
+        assertEquals(90, angelActualizado.getNivelDeConexion());
+    }
+
+    @Test
+    void espirituDemoniacoDisminuyeNivelDeConexionPorLlegarAUnSantuarioYSeDesvinculaCuandoLlegaACero() {
+
+
+        Medium m1 = service.crear(m2);
+
+        Espiritu espirituDemoniacoConNivelDeConexionDisminuido = new EspirituDemoniaco(1, "demonio", ubi2);
+
+        espirituService.crear(espirituDemoniacoConNivelDeConexionDisminuido);
+
+        espirituService.conectar(espirituDemoniacoConNivelDeConexionDisminuido.getId(), m1.getId());
+
+        Medium mediumActualizado1 = service.recuperar(m1.getId()).get();
+        assertEquals(mediumActualizado1.getEspiritus().size(), 1);
+
+        service.mover(mediumActualizado1.getId(), ubi.getId());
+
+        Medium mediumActualizado2 = service.recuperar(m1.getId()).get();
+        assertEquals(mediumActualizado2.getEspiritus().size(), 0);
+    }
+
 
     @AfterEach
     void cleanup() {

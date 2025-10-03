@@ -1,44 +1,65 @@
 package ar.edu.unq.epersgeist.servicios;
 
 import ar.edu.unq.epersgeist.modelo.*;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 public class EspirituServiceTest {
+
     @Autowired
     private EspirituService service;
-    private EspirituAngelical angel;
-    private EspirituDemoniaco demonio;
 
     @Autowired
     private UbicacionService ubicacionService;
-    private Ubicacion eastblue;
 
     @Autowired
     private MediumService mediumService;
-    private Medium sanji;
+
+    @Autowired
+    private EntityManager em;
+
+    private Ubicacion crearUbicacion(String nombre, int energia) {
+        Ubicacion ubicacion = new Cementerio(nombre, energia);
+        ubicacionService.crear(ubicacion);
+        return ubicacion;
+    }
+
+    private Medium crearMedium(Ubicacion ubicacion) {
+        Medium medium = new Medium("Sanji", 60, 30, ubicacion);
+        mediumService.crear(medium);
+        return medium;
+    }
+
+    private EspirituAngelical crearEspirituAngelical(int conexion, String nombre, Ubicacion ubicacion) {
+        return new EspirituAngelical(conexion, nombre, ubicacion);
+    }
+
+    private EspirituDemoniaco crearEspirituDemoniaco(int conexion, String nombre, Ubicacion ubicacion) {
+        return new EspirituDemoniaco(conexion, nombre, ubicacion);
+    }
 
     @BeforeEach
-    void prepare() {
-        eastblue = new Cementerio("East Blue", 10);
-        ubicacionService.crear(eastblue);
-        sanji = new Medium("Sanji", 60, 30, eastblue);
-        mediumService.crear(sanji);
-        this.angel = new EspirituAngelical(58, "Luffy", eastblue);
-        this.demonio = new EspirituDemoniaco(36, "Zoro", eastblue);
+    void beforeEach() {
+        em.flush();
+        em.clear();
     }
 
     @Test
     void crearEspirituTest() {
+        Ubicacion ubi = crearUbicacion("East Blue", 10);
+        EspirituAngelical angel = crearEspirituAngelical(58, "Luffy", ubi);
         assertNull(angel.getId());
         service.crear(angel);
         assertNotNull(angel.getId());
@@ -46,12 +67,16 @@ public class EspirituServiceTest {
 
     @Test
     void recuperarEspirituNoPersistidoDevuelveNullTest() {
+        Ubicacion ubi = crearUbicacion("North Blue", 15);
+        EspirituDemoniaco demonio = crearEspirituDemoniaco(36, "Zoro", ubi);
         Long demonioID = service.crear(demonio).getId();
         assertTrue(service.recuperar(demonioID + 1).isEmpty());
     }
 
     @Test
     void recuperarEspirituTest() {
+        Ubicacion ubi = crearUbicacion("West Blue", 12);
+        EspirituAngelical angel = crearEspirituAngelical(58, "Luffy", ubi);
         Long angelID = service.crear(angel).getId();
         Espiritu angelRecuperado = service.recuperar(angelID)
                 .orElseThrow(() -> new AssertionError("espiritu no encontrado"));
@@ -63,6 +88,8 @@ public class EspirituServiceTest {
 
     @Test
     void actualizarEspirituTest() {
+        Ubicacion ubi = crearUbicacion("South Blue", 8);
+        EspirituAngelical angel = crearEspirituAngelical(50, "Usopp", ubi);
         Long angelID = service.crear(angel).getId();
         angel.setNombre("Antonio");
         service.actualizar(angel);
@@ -73,38 +100,38 @@ public class EspirituServiceTest {
 
     @Test
     void sePuedenPersistirVariosEspiritusConMismoNombreTest() {
-        service.crear(angel);
-        service.crear(new EspirituAngelical(50, "Luffy", eastblue));
-        service.crear(new EspirituDemoniaco(30, "Luffy", eastblue));
-        assertEquals(List.of("Luffy", "Luffy", "Luffy"), service.recuperarTodos().stream().map(Espiritu::getNombre).toList());
+        Ubicacion ubi = crearUbicacion("Grand Line", 20);
+        EspirituAngelical a1 = crearEspirituAngelical(50, "Luffy", ubi);
+        EspirituAngelical a2 = crearEspirituAngelical(50, "Luffy", ubi);
+        EspirituDemoniaco d1 = crearEspirituDemoniaco(30, "Luffy", ubi);
+        service.crear(a1);
+        service.crear(a2);
+        service.crear(d1);
+        assertEquals(List.of("Luffy", "Luffy", "Luffy"),
+                service.recuperarTodos().stream().map(Espiritu::getNombre).toList());
     }
 
-    /*
-        @Test
-        void eliminarEspirituNoPersistidoNoLanzaExcepcionTest() {
-            service.crear(angel);
-            assertDoesNotThrow(() -> service.eliminar(demonio.getId()));
-        }
+    @Test
+    void eliminarEspirituTest() {
+        Ubicacion ubi = crearUbicacion("New World", 25);
+        EspirituDemoniaco demonio = crearEspirituDemoniaco(36, "Zoro", ubi);
+        service.crear(demonio);
+        assertFalse(service.recuperarTodos().isEmpty());
+        service.eliminar(demonio.getId());
+        assertTrue(service.recuperarTodos().isEmpty());
+    }
 
-        @Test
-        void eliminarEspirituTest() {
-            service.crear(demonio);
-            System.out.println("Demonio ID: " + demonio.getId());
-            assertFalse(service.recuperarTodos().isEmpty());
-            service.eliminar(demonio.getId());
-            assertTrue(service.recuperarTodos().isEmpty());
-        }
-    */
-    private void crearEspiritusDemoniacosParaPruebas(int cantidad) {
+    private void crearEspiritusDemoniacosParaPruebas(Ubicacion ubi, int cantidad) {
         for (int i = 1; i <= cantidad; i++) {
-            Espiritu e = new EspirituDemoniaco(30 + i, "Demonio" + i, eastblue);
+            Espiritu e = crearEspirituDemoniaco(30 + i, "Demonio" + i, ubi);
             service.crear(e);
         }
     }
 
     @Test
-    void recuperarEspiritusDemoniacosOrdenadosAscendiente() {
-        crearEspiritusDemoniacosParaPruebas(20);
+    void recuperarEspiritusDemoniacosOrdenadosAscendente() {
+        Ubicacion ubi = crearUbicacion("Marijoa", 18);
+        crearEspiritusDemoniacosParaPruebas(ubi, 20);
         List<Espiritu> espiritusRecuperados = service.espiritusDemoniacos(Sort.Direction.ASC, 1, 5);
         assertEquals(5, espiritusRecuperados.size());
         assertEquals("Demonio1", espiritusRecuperados.get(0).getNombre());
@@ -113,7 +140,8 @@ public class EspirituServiceTest {
 
     @Test
     void recuperarEspiritusDemoniacosOrdenadosDescendente() {
-        crearEspiritusDemoniacosParaPruebas(20);
+        Ubicacion ubi = crearUbicacion("Skypiea", 22);
+        crearEspiritusDemoniacosParaPruebas(ubi, 20);
         List<Espiritu> espiritusRecuperados = service.espiritusDemoniacos(Sort.Direction.DESC, 1, 5);
         assertEquals(5, espiritusRecuperados.size());
         assertEquals("Demonio20", espiritusRecuperados.get(0).getNombre());
@@ -122,9 +150,10 @@ public class EspirituServiceTest {
 
     @Test
     void alRecuperarUnaPaginaFueraDeRangoEsVacia() {
-        crearEspiritusDemoniacosParaPruebas(20);
+        Ubicacion ubi = crearUbicacion("Dressrosa", 17);
+        crearEspiritusDemoniacosParaPruebas(ubi, 20);
         List<Espiritu> espiritusRecuperados = service.espiritusDemoniacos(Sort.Direction.ASC, 5, 5);
-        assertTrue(espiritusRecuperados.isEmpty(), "Fuera de rango , no existe la pagina");
+        assertTrue(espiritusRecuperados.isEmpty(), "Fuera de rango, no existe la pagina");
     }
 
     @Test
@@ -134,7 +163,8 @@ public class EspirituServiceTest {
 
     @Test
     void EspiritusDemoniacosConPaginaIncompletaDevuelveSoloLasRestantes() {
-        crearEspiritusDemoniacosParaPruebas(5);
+        Ubicacion ubi = crearUbicacion("Alabasta", 14);
+        crearEspiritusDemoniacosParaPruebas(ubi, 5);
         List<Espiritu> pagina2 = service.espiritusDemoniacos(Sort.Direction.ASC, 2, 3);
         assertEquals(2, pagina2.size());
     }
@@ -147,6 +177,9 @@ public class EspirituServiceTest {
 
     @Test
     void conectarTest() {
+        Ubicacion ubi = crearUbicacion("Sabaody", 21);
+        Medium sanji = crearMedium(ubi);
+        EspirituDemoniaco demonio = crearEspirituDemoniaco(36, "Zoro", ubi);
         Long zoroId = service.crear(demonio).getId();
         Long sanjiId = sanji.getId();
         service.conectar(zoroId, sanjiId);
@@ -154,9 +187,12 @@ public class EspirituServiceTest {
     }
 
     @AfterEach
-    void cleanup() {
+    void afterEach() {
         service.eliminarTodo();
         mediumService.eliminarTodo();
         ubicacionService.eliminarTodo();
+        em.flush();
+        em.clear();
     }
+
 }

@@ -1,10 +1,12 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.controller.exceptions.EspirituNoEncontradoException;
+import ar.edu.unq.epersgeist.controller.exceptions.MediumNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
-import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
+import ar.edu.unq.epersgeist.persistencia.repository.EspirituRepository;
+import ar.edu.unq.epersgeist.persistencia.repository.MediumRepository;
+import ar.edu.unq.epersgeist.persistencia.repository.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.EspirituService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,69 +23,60 @@ import java.util.stream.StreamSupport;
 @Transactional
 public class EspirituServiceImpl implements EspirituService {
 
-    private final EspirituDAO espirituDAO;
-    private final MediumDAO mediumDAO;
+    private final EspirituRepository espirituRepository;
+    private final MediumRepository mediumRepository;
+    private final UbicacionRepository ubicacionRepository;
 
-    public EspirituServiceImpl(EspirituDAO espirituDAO, MediumDAO mediumDAO) {
-        this.espirituDAO = espirituDAO;
-        this.mediumDAO = mediumDAO;
+    public EspirituServiceImpl(EspirituRepository espirituRepository, MediumRepository mediumRepository, UbicacionRepository ubicacionRepository) {
+        this.espirituRepository = espirituRepository;
+        this.mediumRepository = mediumRepository;
+        this.ubicacionRepository = ubicacionRepository;
     }
 
     @Override
     public Espiritu crear(Espiritu espiritu) {
-        return espirituDAO.save(espiritu);
+
+        return espirituRepository.crear(espiritu);
     }
 
     @Override
     public void eliminar(Long espirituId) {
-        Espiritu espiritu = espirituDAO.findById(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(""));
-        espiritu.getUbicacion().eliminarEspiritu(espiritu);
-        espirituDAO.deleteById(espirituId);
+        espirituRepository.eliminar(espirituId);
     }
 
     @Override
-    public Optional<Espiritu> recuperar(Long ubicacionId) {
-        return espirituDAO.findById(ubicacionId);
+    public Optional<Espiritu> recuperar(Long espirituId) {
+        return espirituRepository.recuperar(espirituId);
     }
 
     @Override
     public List<Espiritu> recuperarTodos() {
-        Iterable<Espiritu> iterable = espirituDAO.findAll();
-        return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
+        return espirituRepository.recuperarTodos();
     }
 
     @Override
     public void actualizar(Espiritu espiritu) {
-        Espiritu espirituAActualizar = espirituDAO.findById(espiritu.getId())
-                .orElseThrow(() -> new EspirituNoEncontradoException(""));
-        if (espiritu.getNombre() != null) {
-            espirituAActualizar.setNombre(espiritu.getNombre());
-        }
-        espirituAActualizar.setUpdatedAt();
-        espirituDAO.save(espirituAActualizar);
+        espirituRepository.actualizar(espiritu);
     }
 
     @Override
     public void eliminarTodo() {
-        espirituDAO.deleteAll();
+        espirituRepository.eliminarTodo();
     }
 
     @Override
     public List<Espiritu> espiritusDemoniacos(Sort.Direction direccion, Integer pagina, Integer cantidadPorPagina) {
-        Pageable pageable = PageRequest.of(
-                pagina - 1,
-                cantidadPorPagina,
-                Sort.by(direccion, "nivelDeConexion")
-        );
-        return espirituDAO.espiritusDemoniacos(pageable).getContent();
+        return espirituRepository.espiritusDemoniacos(direccion, pagina, cantidadPorPagina);
     }
 
     @Override
     public Medium conectar(Long espirituId, Long mediumId) {
-        Espiritu espiritu = espirituDAO.recuperar(espirituId);
-        Medium medium = mediumDAO.recuperar(mediumId);
+        Espiritu espiritu = espirituRepository.recuperar(espirituId)
+                .orElseThrow(() -> new EspirituNoEncontradoException(""));
+        Medium medium = mediumRepository.recuperar(mediumId)
+                .orElseThrow(() -> new MediumNoEncontradoException(""));
         medium.conectarseAEspiritu(espiritu);
-        espirituDAO.save(espiritu);
+        espirituRepository.actualizar(espiritu);
         return medium;
     }
 

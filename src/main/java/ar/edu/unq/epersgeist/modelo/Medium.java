@@ -1,11 +1,11 @@
 package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.modelo.exceptions.*;
+import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituAngelicalSQL;
+import ar.edu.unq.epersgeist.persistencia.sql.entity.MediumSQL;
+import ar.edu.unq.epersgeist.persistencia.sql.entity.SantuarioSQL;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -17,49 +17,19 @@ import java.util.Optional;
 import static jakarta.persistence.GenerationType.AUTO;
 import static java.lang.Integer.min;
 
+@Data
 @NoArgsConstructor
-@Entity
-@SQLDelete(sql = "UPDATE Medium SET deleted_at = true WHERE id=?")
-@Where(clause = "deleted_at=false")
+@AllArgsConstructor
 public class Medium {
-    @Getter
-    @Setter
-    @Id
-    @GeneratedValue(strategy = AUTO)
+
     private Long id;
-
-    @Getter
-    @Setter
-    @Column(nullable = false, length = 500)
     private String nombre;
-
-    @Setter
-    @Getter
-    @Column(nullable = false)
     private Integer manaMax;
-
-    @Getter
-    @Column(nullable = false)
     private Integer mana;
-
-    @Getter
-    @Setter(AccessLevel.NONE)
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Espiritu> espiritus = new ArrayList<>();
-
-    @Getter
-    @Setter
-    @ManyToOne
     private Ubicacion ubicacion;
-
-    @Temporal(TemporalType.DATE)
     private final Date createdAt = new Date();
-
-    @Temporal(TemporalType.DATE)
     private Date updatedAt;
-
-    @Setter
-    @Column(name = "deleted_at")
     private Boolean deletedAt = false;
 
     public Medium(String nombre, Integer manaMax, Integer mana, Ubicacion ubicacion) {
@@ -68,6 +38,29 @@ public class Medium {
         this.mana = min(manaMax, mana);
         this.ubicacion = ubicacion;
         ubicacion.agregarMedium(this);
+    }
+
+    public Medium(MediumSQL mediumSQL) {
+        this.id = mediumSQL.getId();
+        this.nombre = mediumSQL.getNombre();
+        this.manaMax = mediumSQL.getManaMax();
+        this.mana = mediumSQL.getMana();
+        if(mediumSQL.getUbicacion() instanceof SantuarioSQL) {
+            this.ubicacion = new Santuario(mediumSQL.getUbicacion());
+        } else {
+            this.ubicacion = new Cementerio(mediumSQL.getUbicacion());
+        }
+        this.espiritus =  mediumSQL.getEspiritus().stream().map(espirituSQL -> {
+            if(espirituSQL instanceof EspirituAngelicalSQL) {
+                return EspirituAngelical.from(espirituSQL);
+            } else {
+                return EspirituDemoniaco.from(espirituSQL);
+            }
+        }).toList();
+    }
+
+    public static Medium from(MediumSQL mediumSQL) {
+        return new Medium(mediumSQL);
     }
 
     public void conectarseAEspiritu(Espiritu espiritu) {

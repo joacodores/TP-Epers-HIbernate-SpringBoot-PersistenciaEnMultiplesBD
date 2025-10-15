@@ -1,20 +1,24 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.persistencia.sql.entity.UbicacionSQL;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-@NoArgsConstructor
-@Entity
-@DiscriminatorValue("SANTUARIO")
-@SQLDelete(sql = "UPDATE Ubicacion SET deleted_at = true WHERE id=?")
-@Where(clause = "deleted_at=false")
 public class Santuario extends Ubicacion{
 
     public Santuario(String nombre, Integer energia){
         super(nombre, energia);
+    }
+
+    public Santuario(UbicacionSQL ubicacionSQL){
+        super(ubicacionSQL);
+    }
+
+    public static Santuario from(UbicacionSQL ubicacionSQL) {
+        return new Santuario(ubicacionSQL);
     }
 
     @Override

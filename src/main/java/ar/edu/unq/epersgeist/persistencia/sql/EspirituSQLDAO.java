@@ -1,6 +1,8 @@
-package ar.edu.unq.epersgeist.persistencia.dao;
+package ar.edu.unq.epersgeist.persistencia.sql;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
+import ar.edu.unq.epersgeist.persistencia.dao.ReporteSantuarioMasCorruptoProjection;
+import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituSQL;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -11,20 +13,20 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface EspirituDAO extends CrudRepository<Espiritu, Long> {
+public interface EspirituSQLDAO extends CrudRepository<EspirituSQL, Long> {
 
     @Query(
-            "from Espiritu e where e.ubicacion.id = :ubicacionId"
+            "from EspirituSQL e where e.ubicacion.id = :ubicacionId"
     )
-    List<Espiritu> espiritusEn(@Param("ubicacionId") Long ubicacionId);
+    List<EspirituSQL> espiritusEn(@Param("ubicacionId") Long ubicacionId);
 
     @Query(
-            "from Espiritu e where e.id = :idDelEspiritu"
+            "from EspirituSQL e where e.id = :idDelEspiritu"
     )
-    Espiritu recuperar(Long idDelEspiritu);
+    EspirituSQL recuperar(Long idDelEspiritu);
 
-    @Query("from EspirituDemoniaco e")
-    Page<Espiritu> espiritusDemoniacos(Pageable pageable);
+    @Query("from EspirituDemoniacoSQL e")
+    Page<EspirituSQL> espiritusDemoniacos(Pageable pageable);
 
     @Query(value = """
             SELECT

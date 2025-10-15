@@ -65,12 +65,20 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public void exorcizar(Long idMediumExorcista, Long idMediumAExorcizar) {
-        mediumRepository.exorcizar(idMediumExorcista, idMediumAExorcizar);
+        Medium exorcista = mediumRepository.recuperar(idMediumExorcista).orElseThrow(() -> new MediumNoEncontradoException("Medium no encontrado"));
+        Medium mediumAExorcizar = mediumRepository.recuperar(idMediumAExorcizar).orElseThrow(() -> new MediumNoEncontradoException("Medium no encontrado"));
+        if (exorcista.getUbicacion().equals(mediumAExorcizar.getUbicacion())) {
+            exorcista.exorcizar(mediumAExorcizar);
+            mediumRepository.actualizar(exorcista);
+            mediumRepository.actualizar(mediumAExorcizar);
+        }
     }
 
     @Override
     public void descansar(Long mediumId) {
-        mediumRepository.descansar(mediumId);
+         Medium medium = mediumRepository.recuperar(mediumId).orElseThrow(() -> new  MediumNoEncontradoException("Medium no encontrado"));
+         medium.descansar();
+         mediumRepository.actualizar(medium);
     }
 
     @Override

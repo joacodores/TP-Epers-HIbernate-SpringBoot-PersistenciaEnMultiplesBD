@@ -27,8 +27,6 @@ public class MediumRepositoryImpl implements MediumRepository {
 
     @Override
     public Medium crear(Medium medium) {
-        Ubicacion ubicacion = medium.getUbicacion();
-
         MediumSQL mediumSQL = new MediumSQL(medium);
         mediumSQLDAO.save(mediumSQL);
         medium.setId(mediumSQL.getId());

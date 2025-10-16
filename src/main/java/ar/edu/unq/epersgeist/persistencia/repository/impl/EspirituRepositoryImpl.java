@@ -97,6 +97,9 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         if(espiritu.getNombre() != null ) {
             espirituAActualizar.setNombre(espiritu.getNombre());
         }
+        if(espiritu.getUbicacion() != null ) {
+            espirituAActualizar.setUbicacion(espiritu.getUbicacion());
+        }
 
         espirituAActualizar.setUpdatedAt();
 

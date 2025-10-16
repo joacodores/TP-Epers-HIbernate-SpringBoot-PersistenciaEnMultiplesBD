@@ -10,6 +10,7 @@ import org.hibernate.annotations.Where;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
@@ -34,16 +35,31 @@ public abstract class Ubicacion {
         this.id = ubicacionSQL.getId();
         this.nombre = ubicacionSQL.getNombre();
         this.energia = ubicacionSQL.getEnergia();
-        this.espiritus = ubicacionSQL.getEspiritus().stream()
+        /*this.espiritus = ubicacionSQL.getEspiritus().stream()
                 .map(espirituSQL -> {
                     if(espirituSQL instanceof EspirituAngelicalSQL) {
                         return EspirituAngelical.from(espirituSQL);
                     } else {
                         return EspirituDemoniaco.from(espirituSQL);
                     }
-                }).toList();
-        this.mediums = ubicacionSQL.getMediums().stream()
-                .map(Medium::new).toList();
+                }).collect(Collectors.toList());*/
+        this.espiritus.clear();
+        ubicacionSQL.getEspiritus().forEach(espirituSQL -> {
+            if(espirituSQL instanceof EspirituAngelicalSQL) {
+                this.espiritus.add(EspirituAngelical.from(espirituSQL));
+            } else {
+                this.espiritus.add(EspirituDemoniaco.from(espirituSQL));
+            }
+        });
+        this.mediums.clear();
+        /*this.mediums = ubicacionSQL.getMediums().stream()
+                .map(Medium::new).collect(Collectors.toList());*/
+        ubicacionSQL.getMediums().forEach(mediumSQL -> new Medium(mediumSQL));
+    }
+
+    public Ubicacion(Long id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
     }
 
     public void agregarMedium(Medium medium) {

@@ -152,7 +152,6 @@ public class Medium {
         this.mana = mana;
     }
 
-
     public void mover(Ubicacion ubicacion) {
         setUbicacion(ubicacion);
         // iteramos sobre una copia para evitar ConcurrentModificationException

@@ -69,18 +69,21 @@ public class MediumSQL {
         this.nombre = medium.getNombre();
         this.manaMax = medium.getManaMax();
         this.mana = medium.getMana();
-        if(medium.getUbicacion().esSantuario()) {
-            this.ubicacion = new SantuarioSQL(medium.getUbicacion().getId(), medium.getUbicacion().getNombre());
-        } else {
-            this.ubicacion = new CementerioSQL(medium.getUbicacion().getId(), medium.getUbicacion().getNombre());
-        }
         this.espiritus = medium.getEspiritus().stream().map(espiritu -> {
+            EspirituSQL espirituSQL;
             if(espiritu.esAngelical()) {
-                return new EspirituAngelicalSQL(espiritu);
+                espirituSQL = new EspirituAngelicalSQL(espiritu);
             } else {
-                return new EspirituDemoniacoSQL(espiritu);
+                espirituSQL = new EspirituDemoniacoSQL(espiritu);
             }
+            espirituSQL.setOwner(this);
+            return espirituSQL;
         }).collect(Collectors.toList());
+        if(medium.getUbicacion().esSantuario()) {
+            this.ubicacion = new SantuarioSQL(medium.getUbicacion());
+        }else {
+            this.ubicacion = new CementerioSQL(medium.getUbicacion());
+        }
     }
 
     public MediumSQL(Long id, String nombre) {

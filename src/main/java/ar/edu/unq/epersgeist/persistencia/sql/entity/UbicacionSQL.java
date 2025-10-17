@@ -65,13 +65,20 @@ public abstract class UbicacionSQL {
         this.id = ubicacion.getId();
         this.nombre = ubicacion.getNombre();
         this.energia = ubicacion.getEnergia();
-        this.mediums = ubicacion.getMediums().stream().map(medium -> new MediumSQL(medium.getId(), medium.getNombre())).toList();
+        this.mediums = ubicacion.getMediums().stream().map(medium -> {
+            MediumSQL mediumSQL = new MediumSQL(medium.getId(), medium.getNombre());
+            mediumSQL.setUbicacion(this);
+            return mediumSQL;
+        }).toList();
         this.espiritus = ubicacion.getEspiritus().stream().map(espiritu -> {
+            EspirituSQL espirituSQL;
             if(espiritu.esAngelical()) {
-                return new EspirituAngelicalSQL(espiritu.getId(), espiritu.getNombre());
+                espirituSQL = new EspirituAngelicalSQL(espiritu.getId(), espiritu.getNombre());
             } else {
-                return new EspirituDemoniacoSQL(espiritu.getId(), espiritu.getNombre());
+                espirituSQL = new EspirituDemoniacoSQL(espiritu.getId(), espiritu.getNombre());
             }
+            espirituSQL.setUbicacion(this);
+            return espirituSQL;
         }).toList();
     }
 

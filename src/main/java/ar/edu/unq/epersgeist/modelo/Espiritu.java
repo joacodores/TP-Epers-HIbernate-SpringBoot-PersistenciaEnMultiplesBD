@@ -13,7 +13,7 @@ import java.util.Date;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
-@Data
+@Getter @Setter
 @AllArgsConstructor
 public abstract class Espiritu {
     private Long id;
@@ -46,14 +46,18 @@ public abstract class Espiritu {
         validarNivelDeConexion(espirituSQL.getNivelDeConexion());
         this.id = espirituSQL.getId();
         this.nombre = espirituSQL.getNombre();
-        if(espirituSQL.getUbicacion() instanceof SantuarioSQL) {
-            this.ubicacion = new Santuario(espirituSQL.getUbicacion().getNombre(), espirituSQL.getUbicacion().getEnergia());
-        } else {
-            this.ubicacion = new Cementerio(espirituSQL.getUbicacion().getNombre(), espirituSQL.getUbicacion().getEnergia());
-        }
-
         this.randomizer = new RandomizerImpl();
+        if (espirituSQL.getUbicacion() instanceof SantuarioSQL){
+            this.ubicacion = new Santuario(espirituSQL.getUbicacion().getNombre(), espirituSQL.getUbicacion().getEnergia());
+            this.ubicacion.setId(espirituSQL.getUbicacion().getId());
+        }else{
+            this.ubicacion = new Cementerio(espirituSQL.getUbicacion().getNombre(), espirituSQL.getUbicacion().getEnergia());
+            this.ubicacion.setId(espirituSQL.getUbicacion().getId());
+        }
     }
+
+    void internalSetOwner(Medium m) { this.owner = m; }
+    void internalSetUbicacion(Ubicacion u) { this.ubicacion = u; }
 
     public abstract boolean puedeExorcizar();
 

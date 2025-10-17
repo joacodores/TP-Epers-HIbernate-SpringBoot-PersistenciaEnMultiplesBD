@@ -34,7 +34,7 @@ public abstract class EspirituSQL {
     private final int maxNivelDeConexion = 100;
     private final int minNivelDeConexion = 0;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     private UbicacionSQL ubicacion;
 
     @ManyToOne
@@ -58,14 +58,10 @@ public abstract class EspirituSQL {
         this.nombre = espiritu.getNombre();
         this.nivelDeConexion = espiritu.getNivelDeConexion();
         if(espiritu.getUbicacion().esSantuario()) {
-            this.ubicacion = new SantuarioSQL(espiritu.getUbicacion().getId(), espiritu.getUbicacion().getNombre());
-        } else {
-            this.ubicacion = new CementerioSQL(espiritu.getUbicacion().getId(), espiritu.getUbicacion().getNombre());
+            this.ubicacion = new SantuarioSQL(espiritu.getUbicacion());
+        }else {
+            this.ubicacion = new CementerioSQL(espiritu.getUbicacion());
         }
-        if(espiritu.getOwner() != null) {
-            this.owner = new MediumSQL(espiritu.getOwner());
-        }
-
     }
 
     public EspirituSQL() {}

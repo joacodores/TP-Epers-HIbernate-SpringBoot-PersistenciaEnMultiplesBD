@@ -1,9 +1,7 @@
 package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.modelo.exceptions.*;
-import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituAngelicalSQL;
-import ar.edu.unq.epersgeist.persistencia.sql.entity.MediumSQL;
-import ar.edu.unq.epersgeist.persistencia.sql.entity.SantuarioSQL;
+import ar.edu.unq.epersgeist.persistencia.sql.entity.*;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -17,7 +15,7 @@ import java.util.Optional;
 import static jakarta.persistence.GenerationType.AUTO;
 import static java.lang.Integer.min;
 
-@Data
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Medium {
@@ -45,18 +43,23 @@ public class Medium {
         this.nombre = mediumSQL.getNombre();
         this.manaMax = mediumSQL.getManaMax();
         this.mana = mediumSQL.getMana();
-        if(mediumSQL.getUbicacion() instanceof SantuarioSQL) {
-            this.ubicacion = new Santuario(mediumSQL.getUbicacion());
-        } else {
-            this.ubicacion = new Cementerio(mediumSQL.getUbicacion());
-        }
-        this.espiritus =  mediumSQL.getEspiritus().stream().map(espirituSQL -> {
+        for (var espirituSQL : mediumSQL.getEspiritus()){
+            Espiritu espiritu;
             if(espirituSQL instanceof EspirituAngelicalSQL) {
-                return EspirituAngelical.from(espirituSQL);
+                espiritu = new EspirituAngelical(espirituSQL);
             } else {
-                return EspirituDemoniaco.from(espirituSQL);
+                espiritu = new EspirituDemoniaco(espirituSQL);
             }
-        }).toList();
+            this.espiritus.add(espiritu);
+            espiritu.setOwner(this);
+        }
+        if (mediumSQL.getUbicacion() instanceof SantuarioSQL){
+            this.ubicacion = new Santuario(mediumSQL.getUbicacion().getNombre(), mediumSQL.getUbicacion().getEnergia());
+            this.ubicacion.setId(mediumSQL.getUbicacion().getId());
+        }else{
+            this.ubicacion = new Cementerio(mediumSQL.getUbicacion().getNombre(), mediumSQL.getUbicacion().getEnergia());
+            this.ubicacion.setId(mediumSQL.getUbicacion().getId());
+        }
     }
 
     public static Medium from(MediumSQL mediumSQL) {
@@ -153,5 +156,10 @@ public class Medium {
 
     public void setUpdatedAt() {
         this.updatedAt = new Date();
+    }
+
+    void internalSetUbicacion(Ubicacion u) { this.ubicacion = u; }
+    void internalAddEspiritu(Espiritu e) {
+        if (e != null && !espiritus.contains(e)) espiritus.add(e);
     }
 }

@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
-@Data
+@Getter @Setter
 @AllArgsConstructor
 public abstract class Ubicacion {
 
@@ -35,26 +35,23 @@ public abstract class Ubicacion {
         this.id = ubicacionSQL.getId();
         this.nombre = ubicacionSQL.getNombre();
         this.energia = ubicacionSQL.getEnergia();
-        /*this.espiritus = ubicacionSQL.getEspiritus().stream()
-                .map(espirituSQL -> {
-                    if(espirituSQL instanceof EspirituAngelicalSQL) {
-                        return EspirituAngelical.from(espirituSQL);
-                    } else {
-                        return EspirituDemoniaco.from(espirituSQL);
-                    }
-                }).collect(Collectors.toList());*/
-        this.espiritus.clear();
-        ubicacionSQL.getEspiritus().forEach(espirituSQL -> {
+
+        for(var espirituSQL : ubicacionSQL.getEspiritus()){
+            Espiritu espiritu;
             if(espirituSQL instanceof EspirituAngelicalSQL) {
-                this.espiritus.add(EspirituAngelical.from(espirituSQL));
+                espiritu = EspirituAngelical.from(espirituSQL);
             } else {
-                this.espiritus.add(EspirituDemoniaco.from(espirituSQL));
+                espiritu = EspirituDemoniaco.from(espirituSQL);
             }
-        });
-        this.mediums.clear();
-        /*this.mediums = ubicacionSQL.getMediums().stream()
-                .map(Medium::new).collect(Collectors.toList());*/
-        ubicacionSQL.getMediums().forEach(mediumSQL -> new Medium(mediumSQL));
+            espiritus.add(espiritu);
+            espiritu.setUbicacion(this);
+        }
+
+        for( var mediumSQL : ubicacionSQL.getMediums()){
+            Medium medium = new Medium(mediumSQL);
+            this.mediums.add(medium);
+            medium.setUbicacion(this);
+        }
     }
 
     public Ubicacion(Long id, String nombre) {
@@ -62,6 +59,12 @@ public abstract class Ubicacion {
         this.nombre = nombre;
     }
 
+    void internalAddMedium(Medium m) {
+        if (m != null && !mediums.contains(m)) mediums.add(m);
+    }
+    void internalAddEspiritu(Espiritu e) {
+        if (e != null && !espiritus.contains(e)) espiritus.add(e);
+    }
     public void agregarMedium(Medium medium) {
         mediums.add(medium);
         medium.setUbicacion(this);

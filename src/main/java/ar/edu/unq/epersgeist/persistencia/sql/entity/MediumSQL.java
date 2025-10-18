@@ -45,7 +45,7 @@ public class MediumSQL {
     private Integer mana;
 
     @Getter
-    @Setter(AccessLevel.NONE)
+    @Setter
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<EspirituSQL> espiritus = new ArrayList<>();
 

@@ -94,7 +94,8 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public List<Espiritu> espiritus(Long mediumId) {
-        return mediumRepository.espiritus(mediumId);
+        Medium medium = mediumRepository.recuperar(mediumId).orElseThrow(() -> new MediumNoEncontradoException(""));
+        return medium.getEspiritus();
     }
 
     @Override

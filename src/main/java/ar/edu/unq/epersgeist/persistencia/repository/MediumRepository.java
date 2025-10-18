@@ -19,7 +19,5 @@ public interface MediumRepository {
 
     void eliminarTodo();
 
-    List<Espiritu> espiritus(Long mediumId);
-
     List<Medium> mediumsSinEspiritusEn(Long ubicacionId);
 }

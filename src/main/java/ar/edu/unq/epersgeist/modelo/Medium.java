@@ -75,7 +75,7 @@ public class Medium {
     }
 
     public boolean comparteUbicacion(Espiritu espiritu) {
-        return (this.ubicacion == espiritu.getUbicacion());
+        return (this.ubicacion.getId() == espiritu.getUbicacion().getId());
     }
 
     public void desvincularEspiritu(Espiritu espiritu) {

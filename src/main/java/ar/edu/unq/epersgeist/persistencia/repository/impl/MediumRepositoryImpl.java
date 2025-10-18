@@ -8,9 +8,10 @@ import ar.edu.unq.epersgeist.persistencia.sql.EspirituSQLDAO;
 import ar.edu.unq.epersgeist.persistencia.sql.UbicacionSQLDAO;
 import ar.edu.unq.epersgeist.persistencia.repository.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.sql.MediumSQLDAO;
-import ar.edu.unq.epersgeist.persistencia.sql.entity.MediumSQL;
+import ar.edu.unq.epersgeist.persistencia.sql.entity.*;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,12 +52,26 @@ public class MediumRepositoryImpl implements MediumRepository {
     public void actualizar(Medium medium) {
         MediumSQL mediumSQL = mediumSQLDAO.findById(medium.getId())
                 .orElseThrow(() -> new MediumNoEncontradoException(""));
-        Medium mediumExistente = Medium.from(mediumSQL);
-        Optional.ofNullable(medium.getNombre()).ifPresent(mediumExistente::setNombre);
-        Optional.ofNullable(medium.getManaMax()).ifPresent(mediumExistente::setManaMax);
-        Optional.ofNullable(medium.getMana()).ifPresent(mediumExistente::setMana);
-        mediumExistente.setUpdatedAt();
-        mediumSQLDAO.save(new MediumSQL(mediumExistente));
+//        Medium mediumExistente = Medium.from(mediumSQL);
+//        Optional.ofNullable(medium.getNombre()).ifPresent(mediumExistente::setNombre);
+//        Optional.ofNullable(medium.getManaMax()).ifPresent(mediumExistente::setManaMax);
+//        Optional.ofNullable(medium.getMana()).ifPresent(mediumExistente::setMana);
+//        mediumExistente.setUpdatedAt();
+        mediumSQL.setNombre(medium.getNombre());
+        mediumSQL.setManaMax(medium.getManaMax());
+        if(medium.getUbicacion().esSantuario()) {
+            mediumSQL.setUbicacion(new SantuarioSQL(medium.getUbicacion()));
+        } else {
+            mediumSQL.setUbicacion(new CementerioSQL(medium.getUbicacion()));
+        }
+        mediumSQL.setEspiritus(medium.getEspiritus().stream().map(espiritu -> {
+            if(espiritu.esAngelical()) {
+                return new EspirituAngelicalSQL(espiritu);
+            } else {
+                return new EspirituDemoniacoSQL(espiritu);
+            }
+        }).collect(Collectors.toCollection(ArrayList::new)));
+        mediumSQLDAO.save(mediumSQL);
 
     }
 
@@ -73,13 +88,6 @@ public class MediumRepositoryImpl implements MediumRepository {
         mediumSQLDAO.deleteAll();
     }
 
-
-    @Override
-    public List<Espiritu> espiritus(Long mediumId) {
-        MediumSQL mediumSQL = mediumSQLDAO.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException(""));
-        Medium medium = Medium.from(mediumSQL);
-        return medium.getEspiritus();
-    }
 
     @Override
     public List<Medium> mediumsSinEspiritusEn(Long ubicacionId) {

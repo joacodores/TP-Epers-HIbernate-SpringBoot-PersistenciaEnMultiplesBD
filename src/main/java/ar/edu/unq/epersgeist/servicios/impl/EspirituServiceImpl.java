@@ -77,6 +77,7 @@ public class EspirituServiceImpl implements EspirituService {
                 .orElseThrow(() -> new MediumNoEncontradoException(""));
         medium.conectarseAEspiritu(espiritu);
         espirituRepository.actualizar(espiritu);
+        mediumRepository.actualizar(medium);
         return medium;
     }
 

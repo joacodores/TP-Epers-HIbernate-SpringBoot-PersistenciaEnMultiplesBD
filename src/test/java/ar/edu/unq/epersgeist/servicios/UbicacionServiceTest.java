@@ -105,8 +105,6 @@ public class UbicacionServiceTest {
     void existenEspiritusEnUnaUbicacionDadaTest() {
         Espiritu espiritu = new EspirituAngelical(50, "Luffy", ubicacion);
         Espiritu demonio = new EspirituDemoniaco(45, "Zoro", ubicacion);
-        ubicacion.agregarEspiritu(espiritu);
-        ubicacion.agregarEspiritu(demonio);
         service.crear(ubicacion);
         var espiritus = service.espiritusEn(ubicacion.getId());
         assertEquals(2, espiritus.size());

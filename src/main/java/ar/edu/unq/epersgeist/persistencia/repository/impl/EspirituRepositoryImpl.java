@@ -9,9 +9,7 @@ import ar.edu.unq.epersgeist.persistencia.repository.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repository.UbicacionRepository;
 import ar.edu.unq.epersgeist.persistencia.sql.EspirituSQLDAO;
 import ar.edu.unq.epersgeist.persistencia.sql.UbicacionSQLDAO;
-import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituAngelicalSQL;
-import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituDemoniacoSQL;
-import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituSQL;
+import ar.edu.unq.epersgeist.persistencia.sql.entity.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -87,27 +85,19 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     public void actualizar(Espiritu espiritu) {
         EspirituSQL espirituSQL = espirituSQLDAO.findById(espiritu.getId())
                 .orElseThrow(() -> new EspirituNoEncontradoException(""));
-        Espiritu espirituAActualizar;
-        if(espirituSQL instanceof EspirituAngelicalSQL) {
-            espirituAActualizar = new EspirituAngelical(espirituSQL);
+        espirituSQL.setNombre(espiritu.getNombre());
+        espirituSQL.setNivelDeConexion(espiritu.getNivelDeConexion());
+        if(espiritu.getOwner() != null) {
+            espirituSQL.setOwner(new MediumSQL(espiritu.getOwner()));
+        }
+
+        if(espiritu.getUbicacion().esSantuario()) {
+            espirituSQL.setUbicacion(new SantuarioSQL(espiritu.getUbicacion()));
         } else {
-            espirituAActualizar = new EspirituDemoniaco(espirituSQL);
+            espirituSQL.setUbicacion(new CementerioSQL(espiritu.getUbicacion()));
         }
 
-        if(espiritu.getNombre() != null ) {
-            espirituAActualizar.setNombre(espiritu.getNombre());
-        }
-        if(espiritu.getUbicacion() != null ) {
-            espirituAActualizar.setUbicacion(espiritu.getUbicacion());
-        }
-
-        espirituAActualizar.setUpdatedAt();
-
-        if(espirituAActualizar.esAngelical()) {
-            espirituSQLDAO.save(new EspirituAngelicalSQL(espirituAActualizar));
-        } else {
-            espirituSQLDAO.save(new EspirituDemoniacoSQL(espirituAActualizar));
-        }
+        espirituSQLDAO.save(espirituSQL);
     }
 
     @Override

@@ -67,7 +67,7 @@ public class MediumServiceImpl implements MediumService {
     public void exorcizar(Long idMediumExorcista, Long idMediumAExorcizar) {
         Medium exorcista = mediumRepository.recuperar(idMediumExorcista).orElseThrow(() -> new MediumNoEncontradoException("Medium no encontrado"));
         Medium mediumAExorcizar = mediumRepository.recuperar(idMediumAExorcizar).orElseThrow(() -> new MediumNoEncontradoException("Medium no encontrado"));
-        if (exorcista.getUbicacion().equals(mediumAExorcizar.getUbicacion())) {
+        if (exorcista.getUbicacion().getId() == mediumAExorcizar.getUbicacion().getId()) {
             exorcista.exorcizar(mediumAExorcizar);
             mediumRepository.actualizar(exorcista);
             mediumRepository.actualizar(mediumAExorcizar);

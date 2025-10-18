@@ -116,7 +116,7 @@ public class MediumServiceTest {
         espirituService.conectar(e1.getId(), medium.getId());
         espirituService.conectar(e2.getId(), medium.getId());
         List<Espiritu> espiritus = service.espiritus(medium.getId());
-        assertEquals(1, espiritus.size());
+        assertEquals(2, espiritus.size());
     }
 
     @Test

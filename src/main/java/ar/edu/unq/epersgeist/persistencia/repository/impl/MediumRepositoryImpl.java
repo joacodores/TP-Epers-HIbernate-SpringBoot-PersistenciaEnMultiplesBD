@@ -52,13 +52,9 @@ public class MediumRepositoryImpl implements MediumRepository {
     public void actualizar(Medium medium) {
         MediumSQL mediumSQL = mediumSQLDAO.findById(medium.getId())
                 .orElseThrow(() -> new MediumNoEncontradoException(""));
-//        Medium mediumExistente = Medium.from(mediumSQL);
-//        Optional.ofNullable(medium.getNombre()).ifPresent(mediumExistente::setNombre);
-//        Optional.ofNullable(medium.getManaMax()).ifPresent(mediumExistente::setManaMax);
-//        Optional.ofNullable(medium.getMana()).ifPresent(mediumExistente::setMana);
-//        mediumExistente.setUpdatedAt();
         mediumSQL.setNombre(medium.getNombre());
         mediumSQL.setManaMax(medium.getManaMax());
+        mediumSQL.setMana(medium.getMana());
         if(medium.getUbicacion().esSantuario()) {
             mediumSQL.setUbicacion(new SantuarioSQL(medium.getUbicacion()));
         } else {

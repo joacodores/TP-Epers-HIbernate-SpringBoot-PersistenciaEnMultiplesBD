@@ -40,6 +40,7 @@ public class MediumSQL {
     @Column(nullable = false)
     private Integer manaMax;
 
+    @Setter
     @Getter
     @Column(nullable = false)
     private Integer mana;

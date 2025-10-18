@@ -6,114 +6,104 @@ import ar.edu.unq.epersgeist.controller.exceptions.UbicacionNoEncontradaExceptio
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
-import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
+import ar.edu.unq.epersgeist.persistencia.repository.EspirituRepository;
+import ar.edu.unq.epersgeist.persistencia.repository.MediumRepository;
+import ar.edu.unq.epersgeist.persistencia.repository.UbicacionRepository;
+import ar.edu.unq.epersgeist.persistencia.sql.UbicacionSQLDAO;
 import ar.edu.unq.epersgeist.servicios.MediumService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @Transactional
 public class MediumServiceImpl implements MediumService {
 
-    private final MediumDAO mediumDAO;
-    private final EspirituDAO espirituDAO;
-    private final UbicacionDAO ubicacionDAO;
+    //private final MediumDAO mediumDAO;
+    private final MediumRepository mediumRepository;
+    private final EspirituRepository espirituRepository;
+    private final UbicacionRepository ubicacionRepository;
 
-    public MediumServiceImpl(MediumDAO medium, EspirituDAO espirituDAO, UbicacionDAO ubicacionDAO) {
-        this.mediumDAO = medium;
-        this.espirituDAO = espirituDAO;
-        this.ubicacionDAO = ubicacionDAO;
+    public MediumServiceImpl(MediumRepository mediumRepository, EspirituRepository espirituRepository, UbicacionRepository ubicacionRepository) {
+        this.mediumRepository = mediumRepository;
+        this.espirituRepository = espirituRepository;
+        this.ubicacionRepository = ubicacionRepository;
     }
 
     @Override
     public Medium crear(Medium medium) {
-        return mediumDAO.save(medium);
+        return mediumRepository.crear(medium);
     }
 
     @Override
     public Optional<Medium> recuperar(Long mediumId) {
-        return mediumDAO.findById(mediumId);
+        return mediumRepository.recuperar(mediumId);
     }
 
     @Override
     public List<Medium> recuperarTodos() {
-        Iterable<Medium> iterable = mediumDAO.findAll();
-        return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
+
+        return mediumRepository.recuperarTodos();
     }
 
     @Override
     public void actualizar(Medium medium) {
-        Medium mediumExistente = mediumDAO.findById(medium.getId())
-                .orElseThrow(() -> new MediumNoEncontradoException(""));
-        Optional.ofNullable(medium.getNombre()).ifPresent(mediumExistente::setNombre);
-        Optional.ofNullable(medium.getManaMax()).ifPresent(mediumExistente::setManaMax);
-        Optional.ofNullable(medium.getMana()).ifPresent(mediumExistente::setMana);
-        mediumExistente.setUpdatedAt();
-        mediumDAO.save(mediumExistente);
+        mediumRepository.actualizar(medium);
     }
 
     @Override
     public void eliminar(Long mediumId) {
-        Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException(""));
-        medium.getUbicacion().eliminarMedium(medium);
-        mediumDAO.deleteById(mediumId);
+        mediumRepository.eliminar(mediumId);
     }
 
     @Override
     public void eliminarTodo() {
-        //checkear que los espiritus se desvinculan con medium
-        mediumDAO.deleteAll();
+        mediumRepository.eliminarTodo();
     }
 
     @Override
     public void exorcizar(Long idMediumExorcista, Long idMediumAExorcizar) {
-        Medium exorcista = mediumDAO.findById(idMediumExorcista).orElseThrow(() -> new MediumNoEncontradoException("exorcista"));
-        Medium mediumAExorcizar = mediumDAO.findById(idMediumAExorcizar).orElseThrow(() -> new MediumNoEncontradoException("a exorcizar"));
-        if (exorcista.getUbicacion().equals(mediumAExorcizar.getUbicacion())) {
+        Medium exorcista = mediumRepository.recuperar(idMediumExorcista).orElseThrow(() -> new MediumNoEncontradoException("Medium no encontrado"));
+        Medium mediumAExorcizar = mediumRepository.recuperar(idMediumAExorcizar).orElseThrow(() -> new MediumNoEncontradoException("Medium no encontrado"));
+        if (exorcista.getUbicacion().getId() == mediumAExorcizar.getUbicacion().getId()) {
             exorcista.exorcizar(mediumAExorcizar);
-            mediumDAO.save(exorcista);
-            mediumDAO.save(mediumAExorcizar);
+            mediumRepository.actualizar(exorcista);
+            mediumRepository.actualizar(mediumAExorcizar);
         }
     }
 
     @Override
     public void descansar(Long mediumId) {
-        Medium mediumADescansar = mediumDAO.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException(""));
-        mediumADescansar.descansar();
-        mediumDAO.save(mediumADescansar);
+         Medium medium = mediumRepository.recuperar(mediumId).orElseThrow(() -> new  MediumNoEncontradoException("Medium no encontrado"));
+         medium.descansar();
+         mediumRepository.actualizar(medium);
     }
 
     @Override
     public Espiritu invocar(Long mediumId, Long espirituId) {
-        Medium invocador = mediumDAO.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException("invocador"));
-        Espiritu espirituAInvocar = espirituDAO.findById(espirituId).orElseThrow(() -> new EspirituNoEncontradoException("a invocar"));
-        Ubicacion ubiDeInvocacion = invocador.getUbicacion();
+        Medium invocador = mediumRepository.recuperar(mediumId).orElseThrow(() -> new MediumNoEncontradoException(""));
+        Espiritu espirituAInvocar = espirituRepository.recuperar(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(""));
+        Ubicacion ubicacionDeInvocacion = invocador.getUbicacion();
         invocador.invocar(espirituAInvocar);
-        mediumDAO.save(invocador);
-        espirituDAO.save(espirituAInvocar);
-        ubicacionDAO.save(ubiDeInvocacion);
+        espirituRepository.actualizar(espirituAInvocar);
+        ubicacionRepository.actualizar(ubicacionDeInvocacion);
         return espirituAInvocar;
     }
 
     @Override
     public List<Espiritu> espiritus(Long mediumId) {
-        Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException(""));
+        Medium medium = mediumRepository.recuperar(mediumId).orElseThrow(() -> new MediumNoEncontradoException(""));
         return medium.getEspiritus();
     }
 
     @Override
     public void mover(Long mediumId, Long ubicacionId) {
-        Medium medium = mediumDAO.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException(""));
-        Ubicacion ubicacion = ubicacionDAO.findById(ubicacionId).orElseThrow(() -> new UbicacionNoEncontradaException(""));
+        Medium medium = mediumRepository.recuperar(mediumId).orElseThrow(() -> new MediumNoEncontradoException(""));
+        Ubicacion ubicacion = ubicacionRepository.recuperar(ubicacionId).orElseThrow(() -> new UbicacionNoEncontradaException(""));
         medium.mover(ubicacion);
-        mediumDAO.save(medium);
+        mediumRepository.actualizar(medium);
     }
 
 }

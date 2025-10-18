@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios;
 
+import ar.edu.unq.epersgeist.controller.exceptions.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.*;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
@@ -66,11 +67,11 @@ public class EspirituServiceTest {
     }
 
     @Test
-    void recuperarEspirituNoPersistidoDevuelveNullTest() {
+    void recuperarEspirituNoPersistidoDevuelveExceptionTest() {
         Ubicacion ubi = crearUbicacion("North Blue", 15);
         EspirituDemoniaco demonio = crearEspirituDemoniaco(36, "Zoro", ubi);
         Long demonioID = service.crear(demonio).getId();
-        assertTrue(service.recuperar(demonioID + 1).isEmpty());
+        assertThrows( EspirituNoEncontradoException.class, () -> service.recuperar(demonioID + 1));
     }
 
     @Test

@@ -1,14 +1,15 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituSQL;
 import jakarta.persistence.Entity;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import static java.lang.Math.min;
 
-@Entity
-@SQLDelete(sql = "UPDATE Espiritu SET deleted_at = true WHERE id=?")
-@Where(clause = "deleted_at=false")
+
 public class EspirituAngelical extends Espiritu {
     @SuppressWarnings("unused")
     public EspirituAngelical() {
@@ -17,6 +18,14 @@ public class EspirituAngelical extends Espiritu {
 
     public EspirituAngelical(Integer nivelDeConexion, String nombre, Ubicacion ubicacion) {
         super(nivelDeConexion, nombre, ubicacion);
+    }
+
+    public EspirituAngelical(EspirituSQL espirituSQL) {
+        super(espirituSQL);
+    }
+
+    public static EspirituAngelical from(EspirituSQL espirituSQL) {
+        return new EspirituAngelical(espirituSQL);
     }
 
     @Override

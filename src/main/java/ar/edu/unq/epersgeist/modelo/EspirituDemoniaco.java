@@ -1,12 +1,11 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituSQL;
 import jakarta.persistence.Entity;
+import lombok.Data;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-@Entity
-@SQLDelete(sql = "UPDATE Espiritu SET deleted_at = true WHERE id=?")
-@Where(clause = "deleted_at=false")
 public class EspirituDemoniaco extends Espiritu {
     @SuppressWarnings("unused")
     public EspirituDemoniaco() {
@@ -15,6 +14,14 @@ public class EspirituDemoniaco extends Espiritu {
 
     public EspirituDemoniaco(Integer nivelDeConexion, String nombre, Ubicacion ubicacion) {
         super(nivelDeConexion, nombre, ubicacion);
+    }
+
+    public EspirituDemoniaco(EspirituSQL espirituSQL) {
+        super(espirituSQL);
+    }
+
+    public static EspirituDemoniaco from(EspirituSQL espirituSQL) {
+        return new EspirituDemoniaco(espirituSQL);
     }
 
     @Override

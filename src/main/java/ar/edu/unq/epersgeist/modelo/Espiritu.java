@@ -1,10 +1,11 @@
 package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.modelo.exceptions.NivelDeConexionFueraDeRangoException;
+import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituSQL;
+import ar.edu.unq.epersgeist.persistencia.sql.entity.MediumSQL;
+import ar.edu.unq.epersgeist.persistencia.sql.entity.SantuarioSQL;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -12,43 +13,19 @@ import java.util.Date;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
-@Getter
-@Setter
-@Entity
-@Table(name = "espiritu")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@SQLDelete(sql = "UPDATE Espiritu SET deleted_at = true WHERE id=?")
-@Where(clause = "deleted_at=false")
+@Getter @Setter
+@AllArgsConstructor
 public abstract class Espiritu {
-    @Id
-    @GeneratedValue(strategy = AUTO)
     private Long id;
-
-    @Column(name = "nivel_de_conexion", nullable = false, columnDefinition = "INTEGER CHECK(nivel_de_conexion BETWEEN 0 AND 100)")
     private int nivelDeConexion;
-
-    @Column(nullable = false, length = 500)
     private String nombre;
     private final int maxNivelDeConexion = 100;
     private final int minNivelDeConexion = 0;
-
-    @ManyToOne
     private Ubicacion ubicacion;
-
-    @ManyToOne
     private Medium owner;
-
-    @Transient
     protected Randomizer randomizer;
-
-    @Temporal(TemporalType.DATE)
     private final Date createdAt = new Date();
-
-    @Temporal(TemporalType.DATE)
     private Date updatedAt;
-
-    @Setter
-    @Column(name = "deleted_at")
     private Boolean deletedAt = false;
 
     @SuppressWarnings("unused")
@@ -56,13 +33,31 @@ public abstract class Espiritu {
         this.randomizer = new RandomizerImpl();
     }
 
-    public Espiritu(int nivelDeConexion, @NonNull String nombre, @NonNull Ubicacion ubicacion) {
+    public Espiritu(int nivelDeConexion, String nombre, Ubicacion ubicacion) {
         validarNivelDeConexion(nivelDeConexion);
         this.nombre = nombre;
         this.ubicacion = ubicacion;
         this.randomizer = new RandomizerImpl();
         ubicacion.agregarEspiritu(this);
     }
+
+
+    public Espiritu(EspirituSQL espirituSQL) {
+        validarNivelDeConexion(espirituSQL.getNivelDeConexion());
+        this.id = espirituSQL.getId();
+        this.nombre = espirituSQL.getNombre();
+        this.randomizer = new RandomizerImpl();
+        if (espirituSQL.getUbicacion() instanceof SantuarioSQL){
+            this.ubicacion = new Santuario(espirituSQL.getUbicacion().getNombre(), espirituSQL.getUbicacion().getEnergia());
+            this.ubicacion.setId(espirituSQL.getUbicacion().getId());
+        }else{
+            this.ubicacion = new Cementerio(espirituSQL.getUbicacion().getNombre(), espirituSQL.getUbicacion().getEnergia());
+            this.ubicacion.setId(espirituSQL.getUbicacion().getId());
+        }
+    }
+
+    void internalSetOwner(Medium m) { this.owner = m; }
+    void internalSetUbicacion(Ubicacion u) { this.ubicacion = u; }
 
     public abstract boolean puedeExorcizar();
 
@@ -83,7 +78,8 @@ public abstract class Espiritu {
     }
 
     public void desvincularDeMedium() {
-        owner.desvincularEspiritu(this);
+        //owner.desvincularEspiritu(this);
+        this.getOwner().desvincularEspiritu(this);
         this.setOwner(null);
     }
 

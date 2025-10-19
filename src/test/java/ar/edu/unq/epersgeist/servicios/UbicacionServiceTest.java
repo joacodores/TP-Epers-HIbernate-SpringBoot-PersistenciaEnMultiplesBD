@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios;
 
+import ar.edu.unq.epersgeist.controller.exceptions.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,10 +40,13 @@ public class UbicacionServiceTest {
     }
 
     @Test
-    void recuperarUbicacionNoPersistidaDevuelveNullTest() {
+    void recuperarUbicacionNoExistenteLanzaExcepcion() {
         Long ubicacionID = service.crear(ubicacion).getId();
-        assertTrue(service.recuperar(ubicacionID + 1).isEmpty());
+        assertThrows(UbicacionNoEncontradaException.class, () -> {
+            service.recuperar(ubicacionID + 1);
+        });
     }
+
 
     @Test
     void recuperarUbicacionTest() {
@@ -101,8 +105,6 @@ public class UbicacionServiceTest {
     void existenEspiritusEnUnaUbicacionDadaTest() {
         Espiritu espiritu = new EspirituAngelical(50, "Luffy", ubicacion);
         Espiritu demonio = new EspirituDemoniaco(45, "Zoro", ubicacion);
-        ubicacion.agregarEspiritu(espiritu);
-        ubicacion.agregarEspiritu(demonio);
         service.crear(ubicacion);
         var espiritus = service.espiritusEn(ubicacion.getId());
         assertEquals(2, espiritus.size());

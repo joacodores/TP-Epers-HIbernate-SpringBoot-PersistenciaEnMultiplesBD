@@ -1,5 +1,7 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituAngelicalSQL;
+import ar.edu.unq.epersgeist.persistencia.sql.entity.UbicacionSQL;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -8,51 +10,61 @@ import org.hibernate.annotations.Where;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
-@Getter
-@NoArgsConstructor
-@ToString
-@Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "tipo_ubicacion", discriminatorType = DiscriminatorType.STRING, length = 20)
-@SQLDelete(sql = "UPDATE Ubicacion SET deleted_at = true WHERE id=?")
-@Where(clause = "deleted_at=false")
+@Getter @Setter
+@AllArgsConstructor
 public abstract class Ubicacion {
-    @Setter
-    @Id
-    @GeneratedValue(strategy = AUTO)
+
     private Long id;
-
-    @Setter
-    @Column(unique = true, nullable = false, length = 500)
     private String nombre;
-
-    @OneToMany(mappedBy = "ubicacion", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private final List<Espiritu> espiritus = new ArrayList<>();
-
-    @OneToMany(mappedBy = "ubicacion", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private final List<Medium> mediums = new ArrayList<>();
-
-    @Setter
-    @Column(name = "energia", nullable = false, columnDefinition = "INTEGER CHECK(energia BETWEEN 1 AND 100)")
+    private List<Espiritu> espiritus = new ArrayList<>();
+    private List<Medium> mediums = new ArrayList<>();
     private Integer energia;
-
-    @Temporal(TemporalType.DATE)
     private final Date createdAt = new Date();
-
-    @Temporal(TemporalType.DATE)
     private Date updatedAt;
-
-    @Setter
-    @Column(name = "deleted_at")
     private Boolean deletedAt = false;
 
-    public Ubicacion(@NonNull String nombre, @NonNull Integer energia) {
+    public Ubicacion(String nombre, Integer energia) {
         this.nombre = nombre; this.energia = energia;
     }
 
+    public Ubicacion(UbicacionSQL ubicacionSQL) {
+        this.id = ubicacionSQL.getId();
+        this.nombre = ubicacionSQL.getNombre();
+        this.energia = ubicacionSQL.getEnergia();
+
+        for(var espirituSQL : ubicacionSQL.getEspiritus()){
+            Espiritu espiritu;
+            if(espirituSQL instanceof EspirituAngelicalSQL) {
+                espiritu = EspirituAngelical.from(espirituSQL);
+            } else {
+                espiritu = EspirituDemoniaco.from(espirituSQL);
+            }
+            espiritus.add(espiritu);
+            espiritu.setUbicacion(this);
+        }
+
+        for( var mediumSQL : ubicacionSQL.getMediums()){
+            Medium medium = new Medium(mediumSQL);
+            this.mediums.add(medium);
+            medium.setUbicacion(this);
+        }
+    }
+
+    public Ubicacion(Long id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+
+    void internalAddMedium(Medium m) {
+        if (m != null && !mediums.contains(m)) mediums.add(m);
+    }
+    void internalAddEspiritu(Espiritu e) {
+        if (e != null && !espiritus.contains(e)) espiritus.add(e);
+    }
     public void agregarMedium(Medium medium) {
         mediums.add(medium);
         medium.setUbicacion(this);

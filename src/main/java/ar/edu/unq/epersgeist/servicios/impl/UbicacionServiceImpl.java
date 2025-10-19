@@ -3,9 +3,9 @@ package ar.edu.unq.epersgeist.servicios.impl;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
-import ar.edu.unq.epersgeist.persistencia.dao.EspirituDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.MediumDAO;
-import ar.edu.unq.epersgeist.persistencia.dao.UbicacionDAO;
+import ar.edu.unq.epersgeist.persistencia.repository.EspirituRepository;
+import ar.edu.unq.epersgeist.persistencia.repository.MediumRepository;
+import ar.edu.unq.epersgeist.persistencia.repository.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.UbicacionService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,56 +19,54 @@ import java.util.stream.StreamSupport;
 @Transactional
 public class UbicacionServiceImpl implements UbicacionService {
 
-    private final UbicacionDAO ubicacionDAO;
-    private final EspirituDAO espirituDAO;
-    private final MediumDAO mediumDAO;
+    private final UbicacionRepository ubicacionRepository;
+    private final EspirituRepository espirituRepository;
+    private final MediumRepository mediumRepository;
 
-    public UbicacionServiceImpl(UbicacionDAO ubicacionDAO, EspirituDAO espirituDAO, MediumDAO mediumDAO) {
-        this.ubicacionDAO = ubicacionDAO;
-        this.espirituDAO = espirituDAO;
-        this.mediumDAO = mediumDAO;
+    public UbicacionServiceImpl(UbicacionRepository ubicacionRepository, EspirituRepository espirituRepository, MediumRepository mediumRepository) {
+        this.ubicacionRepository = ubicacionRepository;
+        this.espirituRepository = espirituRepository;
+        this.mediumRepository = mediumRepository;
     }
 
     @Override
     public Ubicacion crear(Ubicacion ubicacion) {
-        return ubicacionDAO.save(ubicacion);
+        return ubicacionRepository.crear(ubicacion);
     }
 
     @Override
     public Optional<Ubicacion> recuperar(Long ubicacionId) {
-        return ubicacionDAO.findById(ubicacionId);
+        return ubicacionRepository.recuperar(ubicacionId);
     }
 
     @Override
     public void actualizar(Ubicacion ubicacion) {
-        ubicacion.setUpdatedAt();
-        ubicacionDAO.save(ubicacion);
+        ubicacionRepository.actualizar(ubicacion);
     }
 
     @Override
     public void eliminar(Long ubicacionId) {
-        ubicacionDAO.deleteById(ubicacionId);
+        ubicacionRepository.eliminar(ubicacionId);
     }
 
     @Override
     public List<Ubicacion> recuperarTodos() {
-        Iterable<Ubicacion> iterable = ubicacionDAO.findAll();
-        return StreamSupport.stream(iterable.spliterator(), false).collect(Collectors.toList());
+        return ubicacionRepository.recuperarTodos();
     }
 
     @Override
     public void eliminarTodo() {
-        ubicacionDAO.deleteAll();
+        ubicacionRepository.eliminarTodo();
     }
 
     @Override
     public List<Espiritu> espiritusEn(Long ubicacionId) {
-        return espirituDAO.espiritusEn(ubicacionId);
+        return espirituRepository.espiritusEn(ubicacionId);
     }
 
     @Override
     public List<Medium> mediumsSinEspiritusEn(Long ubicacionId) {
-        return mediumDAO.mediumsSinEspiritusEn(ubicacionId);
+        return mediumRepository.mediumsSinEspiritusEn(ubicacionId);
     }
 
 }

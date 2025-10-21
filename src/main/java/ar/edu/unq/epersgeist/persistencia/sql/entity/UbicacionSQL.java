@@ -36,6 +36,11 @@ public abstract class UbicacionSQL {
     @Column(unique = true, nullable = false, length = 500)
     private String nombre;
 
+    @Getter
+    @Setter
+    @Column(name = "costo", nullable = false, columnDefinition = "INTEGER CHECK(costo BETWEEN 0 AND 100)")
+    private Long costo;
+
     @Setter
     @Getter
     @OneToMany(mappedBy = "ubicacion", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -65,6 +70,7 @@ public abstract class UbicacionSQL {
         this.id = ubicacion.getId();
         this.nombre = ubicacion.getNombre();
         this.energia = ubicacion.getEnergia();
+        this.costo = ubicacion.getCosto();
         this.mediums = ubicacion.getMediums().stream().map(medium -> {
             MediumSQL mediumSQL = new MediumSQL(medium.getId(), medium.getNombre());
             mediumSQL.setUbicacion(this);

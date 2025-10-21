@@ -1,18 +1,16 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.persistencia.neo.entity.TipoUbicacion;
+import ar.edu.unq.epersgeist.persistencia.neo.entity.UbicacionNeo4J;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituAngelicalSQL;
+import ar.edu.unq.epersgeist.persistencia.sql.entity.SantuarioSQL;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.UbicacionSQL;
-import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static jakarta.persistence.GenerationType.AUTO;
+import static java.lang.Long.min;
 
 @Getter @Setter
 @AllArgsConstructor
@@ -22,19 +20,22 @@ public abstract class Ubicacion {
     private String nombre;
     private List<Espiritu> espiritus = new ArrayList<>();
     private List<Medium> mediums = new ArrayList<>();
+    private Set<Ubicacion> ubicacionesConectadas = new HashSet<>();
     private Integer energia;
     private final Date createdAt = new Date();
+    private Long costo;
     private Date updatedAt;
     private Boolean deletedAt = false;
 
-    public Ubicacion(String nombre, Integer energia) {
-        this.nombre = nombre; this.energia = energia;
+    public Ubicacion(String nombre, Integer energia,  Long costo) {
+        this.nombre = nombre; this.energia = energia;  this.costo = Math.max(0, Math.min(100, costo));
     }
 
     public Ubicacion(UbicacionSQL ubicacionSQL) {
         this.id = ubicacionSQL.getId();
         this.nombre = ubicacionSQL.getNombre();
         this.energia = ubicacionSQL.getEnergia();
+        this.costo = ubicacionSQL.getCosto();
 
         for(var espirituSQL : ubicacionSQL.getEspiritus()){
             Espiritu espiritu;
@@ -59,12 +60,29 @@ public abstract class Ubicacion {
         this.nombre = nombre;
     }
 
-    void internalAddMedium(Medium m) {
-        if (m != null && !mediums.contains(m)) mediums.add(m);
+    public static Ubicacion from(UbicacionSQL ubicacionSQL, UbicacionNeo4J ubicacionNeo4J) {
+        Ubicacion ubi;
+        if (ubicacionSQL instanceof SantuarioSQL) {
+             ubi = Santuario.from(ubicacionSQL);
+        } else {
+             ubi = Cementerio.from(ubicacionSQL);
+        }
+        ubi.ubicacionesConectadas = ubicacionNeo4J.getUbicacionesConectadas().
+                stream().filter(conexion -> !conexion.getId().equals(ubicacionSQL.getId()))
+                .map(conexion -> {
+                    Ubicacion ubiConectada;
+                    if (conexion.getTipo().equals(TipoUbicacion.SANTUARIO)) {
+                        ubiConectada = new Santuario(conexion.getNombre(),  conexion.getEnergia(), conexion.getCosto());
+                        ubiConectada.setId(conexion.getId());
+                    } else {
+                        ubiConectada = new Cementerio(conexion.getNombre(),  conexion.getEnergia(), conexion.getCosto());
+                        ubiConectada.setId(conexion.getId());
+                    }
+                    return ubiConectada;
+                }).collect(Collectors.toSet());
+        return ubi;
     }
-    void internalAddEspiritu(Espiritu e) {
-        if (e != null && !espiritus.contains(e)) espiritus.add(e);
-    }
+
     public void agregarMedium(Medium medium) {
         mediums.add(medium);
         medium.setUbicacion(this);
@@ -94,4 +112,5 @@ public abstract class Ubicacion {
     public abstract int conexionGanadaPara(Espiritu e);
     public abstract boolean esSantuario();
     public abstract boolean esCementerio();
+
 }

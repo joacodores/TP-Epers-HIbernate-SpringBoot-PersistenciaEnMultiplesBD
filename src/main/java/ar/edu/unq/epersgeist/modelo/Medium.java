@@ -54,10 +54,10 @@ public class Medium {
             espiritu.setOwner(this);
         }
         if (mediumSQL.getUbicacion() instanceof SantuarioSQL){
-            this.ubicacion = new Santuario(mediumSQL.getUbicacion().getNombre(), mediumSQL.getUbicacion().getEnergia());
+            this.ubicacion = new Santuario(mediumSQL.getUbicacion().getNombre(), mediumSQL.getUbicacion().getEnergia(), mediumSQL.getUbicacion().getCosto());
             this.ubicacion.setId(mediumSQL.getUbicacion().getId());
         }else{
-            this.ubicacion = new Cementerio(mediumSQL.getUbicacion().getNombre(), mediumSQL.getUbicacion().getEnergia());
+            this.ubicacion = new Cementerio(mediumSQL.getUbicacion().getNombre(), mediumSQL.getUbicacion().getEnergia(), mediumSQL.getUbicacion().getCosto());
             this.ubicacion.setId(mediumSQL.getUbicacion().getId());
         }
     }
@@ -75,7 +75,7 @@ public class Medium {
     }
 
     public boolean comparteUbicacion(Espiritu espiritu) {
-        return (this.ubicacion.getId() == espiritu.getUbicacion().getId());
+        return (this.ubicacion.getId() != null ? this.ubicacion.getId() == espiritu.getUbicacion().getId() : this.ubicacion == espiritu.getUbicacion());
     }
 
     public void desvincularEspiritu(Espiritu espiritu) {

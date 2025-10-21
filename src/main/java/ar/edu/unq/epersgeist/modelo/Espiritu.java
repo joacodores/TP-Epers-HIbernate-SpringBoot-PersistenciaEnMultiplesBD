@@ -48,10 +48,10 @@ public abstract class Espiritu {
         this.nombre = espirituSQL.getNombre();
         this.randomizer = new RandomizerImpl();
         if (espirituSQL.getUbicacion() instanceof SantuarioSQL){
-            this.ubicacion = new Santuario(espirituSQL.getUbicacion().getNombre(), espirituSQL.getUbicacion().getEnergia());
+            this.ubicacion = new Santuario(espirituSQL.getUbicacion().getNombre(), espirituSQL.getUbicacion().getEnergia(), espirituSQL.getUbicacion().getCosto());
             this.ubicacion.setId(espirituSQL.getUbicacion().getId());
         }else{
-            this.ubicacion = new Cementerio(espirituSQL.getUbicacion().getNombre(), espirituSQL.getUbicacion().getEnergia());
+            this.ubicacion = new Cementerio(espirituSQL.getUbicacion().getNombre(), espirituSQL.getUbicacion().getEnergia(), espirituSQL.getUbicacion().getCosto());
             this.ubicacion.setId(espirituSQL.getUbicacion().getId());
         }
     }

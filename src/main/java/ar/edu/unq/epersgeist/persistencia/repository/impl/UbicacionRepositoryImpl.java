@@ -2,15 +2,14 @@ package ar.edu.unq.epersgeist.persistencia.repository.impl;
 
 import ar.edu.unq.epersgeist.controller.exceptions.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.*;
+import ar.edu.unq.epersgeist.persistencia.neo.UbicacionNeo4JDAO;
+import ar.edu.unq.epersgeist.persistencia.neo.entity.UbicacionNeo4J;
 import ar.edu.unq.epersgeist.persistencia.repository.UbicacionRepository;
 import ar.edu.unq.epersgeist.persistencia.sql.UbicacionSQLDAO;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.*;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -18,9 +17,11 @@ import java.util.stream.StreamSupport;
 public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     private UbicacionSQLDAO ubicacionSQLDAO;
+    private UbicacionNeo4JDAO ubicacionNeo4JDAO;
 
-    public UbicacionRepositoryImpl(UbicacionSQLDAO ubicacionSQLDAO) {
+    public UbicacionRepositoryImpl(UbicacionSQLDAO ubicacionSQLDAO, UbicacionNeo4JDAO ubicacionNeo4JDAO) {
         this.ubicacionSQLDAO = ubicacionSQLDAO;
+        this.ubicacionNeo4JDAO = ubicacionNeo4JDAO;
     }
 
     @Override
@@ -36,6 +37,10 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         ubicacion.getEspiritus().forEach(e -> e.setUbicacion(ubicacion));
         ubicacion.getMediums().forEach(m -> m.setUbicacion(ubicacion));
 
+
+        UbicacionNeo4J ubicacionNeo = new UbicacionNeo4J(ubicacion);
+        ubicacionNeo4JDAO.save(ubicacionNeo);
+
         return ubicacion;
     }
 
@@ -43,11 +48,11 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     public Optional<Ubicacion> recuperar(Long ubicacionId) {
         UbicacionSQL ubicacionSQL = ubicacionSQLDAO.findById(ubicacionId)
                 .orElseThrow(() -> new UbicacionNoEncontradaException(""));
-        if(ubicacionSQL instanceof SantuarioSQL) {
-            return Optional.of(Santuario.from(ubicacionSQL));
-        } else {
-            return Optional.of(Cementerio.from(ubicacionSQL));
-        }
+
+        UbicacionNeo4J ubicacionNeo4j = ubicacionNeo4JDAO.findById(ubicacionId)
+                .orElseThrow(() -> new UbicacionNoEncontradaException(""));
+        return Optional.of(Ubicacion.from(ubicacionSQL, ubicacionNeo4j));
+
     }
 
     @Override
@@ -56,6 +61,7 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         UbicacionSQL ubicacionSQL = ubicacionSQLDAO.findById(ubicacion.getId()).orElseThrow(() -> new UbicacionNoEncontradaException(""));
         ubicacionSQL.setNombre(ubicacion.getNombre());
         ubicacionSQL.setEnergia(ubicacion.getEnergia());
+        ubicacionSQL.setCosto(ubicacion.getCosto());
         ubicacionSQL.setUpdatedAt(new Date());
         ubicacionSQL.setMediums(ubicacion.getMediums().stream().map(MediumSQL::new).collect(Collectors.toCollection(ArrayList::new)));
         ubicacionSQL.setEspiritus(ubicacion.getEspiritus().stream().map(espiritu -> {
@@ -66,13 +72,19 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
             }
         }).collect(Collectors.toCollection(ArrayList::new)));
 
-
         ubicacionSQLDAO.save(ubicacionSQL);
+
+        UbicacionNeo4J ubicacionNeo = new UbicacionNeo4J(ubicacion);
+        ubicacionNeo4JDAO.save(ubicacionNeo);
+        // Neo reemplaza el nodo existente con el mismo id y lo actualiza
+
     }
 
     @Override
     public void eliminar(Long ubicacionId) {
+
         ubicacionSQLDAO.deleteById(ubicacionId);
+        ubicacionNeo4JDAO.deleteById(ubicacionId);
     }
 
     @Override
@@ -90,6 +102,8 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     @Override
     public void eliminarTodo() {
+
         ubicacionSQLDAO.deleteAll();
+        ubicacionNeo4JDAO.deleteAll();
     }
 }

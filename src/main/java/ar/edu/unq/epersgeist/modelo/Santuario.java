@@ -9,8 +9,8 @@ import org.hibernate.annotations.Where;
 
 public class Santuario extends Ubicacion{
 
-    public Santuario(String nombre, Integer energia){
-        super(nombre, energia);
+    public Santuario(String nombre, Integer energia, Long costo){
+        super(nombre, energia, costo);
     }
 
     public Santuario(UbicacionSQL ubicacionSQL){
@@ -20,6 +20,7 @@ public class Santuario extends Ubicacion{
     public static Santuario from(UbicacionSQL ubicacionSQL) {
         return new Santuario(ubicacionSQL);
     }
+
 
     @Override
     public boolean permiteInvocar(Espiritu e) {

@@ -31,8 +31,8 @@ public class EspirituServiceTest {
     @Autowired
     private EntityManager em;
 
-    private Ubicacion crearUbicacion(String nombre, int energia) {
-        Ubicacion ubicacion = new Cementerio(nombre, energia);
+    private Ubicacion crearUbicacion(String nombre, int energia, Long costo) {
+        Ubicacion ubicacion = new Cementerio(nombre, energia, costo);
         ubicacionService.crear(ubicacion);
         return ubicacion;
     }
@@ -59,7 +59,7 @@ public class EspirituServiceTest {
 
     @Test
     void crearEspirituTest() {
-        Ubicacion ubi = crearUbicacion("East Blue", 10);
+        Ubicacion ubi = crearUbicacion("East Blue", 10, 10L);
         EspirituAngelical angel = crearEspirituAngelical(58, "Luffy", ubi);
         assertNull(angel.getId());
         service.crear(angel);
@@ -68,7 +68,7 @@ public class EspirituServiceTest {
 
     @Test
     void recuperarEspirituNoPersistidoDevuelveExceptionTest() {
-        Ubicacion ubi = crearUbicacion("North Blue", 15);
+        Ubicacion ubi = crearUbicacion("North Blue", 15, 10L);
         EspirituDemoniaco demonio = crearEspirituDemoniaco(36, "Zoro", ubi);
         Long demonioID = service.crear(demonio).getId();
         assertThrows( EspirituNoEncontradoException.class, () -> service.recuperar(demonioID + 1));
@@ -76,7 +76,7 @@ public class EspirituServiceTest {
 
     @Test
     void recuperarEspirituTest() {
-        Ubicacion ubi = crearUbicacion("West Blue", 12);
+        Ubicacion ubi = crearUbicacion("West Blue", 12, 10L);
         EspirituAngelical angel = crearEspirituAngelical(58, "Luffy", ubi);
         Long angelID = service.crear(angel).getId();
         Espiritu angelRecuperado = service.recuperar(angelID)
@@ -89,7 +89,7 @@ public class EspirituServiceTest {
 
     @Test
     void actualizarEspirituTest() {
-        Ubicacion ubi = crearUbicacion("South Blue", 8);
+        Ubicacion ubi = crearUbicacion("South Blue", 8, 10L);
         EspirituAngelical angel = crearEspirituAngelical(50, "Usopp", ubi);
         Long angelID = service.crear(angel).getId();
         angel.setNombre("Antonio");
@@ -101,7 +101,7 @@ public class EspirituServiceTest {
 
     @Test
     void sePuedenPersistirVariosEspiritusConMismoNombreTest() {
-        Ubicacion ubi = crearUbicacion("Grand Line", 20);
+        Ubicacion ubi = crearUbicacion("Grand Line", 20, 10L);
         EspirituAngelical a1 = crearEspirituAngelical(50, "Luffy", ubi);
         EspirituAngelical a2 = crearEspirituAngelical(50, "Luffy", ubi);
         EspirituDemoniaco d1 = crearEspirituDemoniaco(30, "Luffy", ubi);
@@ -114,7 +114,7 @@ public class EspirituServiceTest {
 
     @Test
     void eliminarEspirituTest() {
-        Ubicacion ubi = crearUbicacion("New World", 25);
+        Ubicacion ubi = crearUbicacion("New World", 25, 10L);
         EspirituDemoniaco demonio = crearEspirituDemoniaco(36, "Zoro", ubi);
         service.crear(demonio);
         assertFalse(service.recuperarTodos().isEmpty());
@@ -131,7 +131,7 @@ public class EspirituServiceTest {
 
     @Test
     void recuperarEspiritusDemoniacosOrdenadosAscendente() {
-        Ubicacion ubi = crearUbicacion("Marijoa", 18);
+        Ubicacion ubi = crearUbicacion("Marijoa", 18, 10L);
         crearEspiritusDemoniacosParaPruebas(ubi, 20);
         List<Espiritu> espiritusRecuperados = service.espiritusDemoniacos(Sort.Direction.ASC, 1, 5);
         assertEquals(5, espiritusRecuperados.size());
@@ -141,7 +141,7 @@ public class EspirituServiceTest {
 
     @Test
     void recuperarEspiritusDemoniacosOrdenadosDescendente() {
-        Ubicacion ubi = crearUbicacion("Skypiea", 22);
+        Ubicacion ubi = crearUbicacion("Skypiea", 22, 10L);
         crearEspiritusDemoniacosParaPruebas(ubi, 20);
         List<Espiritu> espiritusRecuperados = service.espiritusDemoniacos(Sort.Direction.DESC, 1, 5);
         assertEquals(5, espiritusRecuperados.size());
@@ -151,7 +151,7 @@ public class EspirituServiceTest {
 
     @Test
     void alRecuperarUnaPaginaFueraDeRangoEsVacia() {
-        Ubicacion ubi = crearUbicacion("Dressrosa", 17);
+        Ubicacion ubi = crearUbicacion("Dressrosa", 17, 10L);
         crearEspiritusDemoniacosParaPruebas(ubi, 20);
         List<Espiritu> espiritusRecuperados = service.espiritusDemoniacos(Sort.Direction.ASC, 5, 5);
         assertTrue(espiritusRecuperados.isEmpty(), "Fuera de rango, no existe la pagina");
@@ -164,7 +164,7 @@ public class EspirituServiceTest {
 
     @Test
     void EspiritusDemoniacosConPaginaIncompletaDevuelveSoloLasRestantes() {
-        Ubicacion ubi = crearUbicacion("Alabasta", 14);
+        Ubicacion ubi = crearUbicacion("Alabasta", 14, 10L);
         crearEspiritusDemoniacosParaPruebas(ubi, 5);
         List<Espiritu> pagina2 = service.espiritusDemoniacos(Sort.Direction.ASC, 2, 3);
         assertEquals(2, pagina2.size());
@@ -178,7 +178,7 @@ public class EspirituServiceTest {
 
     @Test
     void conectarTest() {
-        Ubicacion ubi = crearUbicacion("Sabaody", 21);
+        Ubicacion ubi = crearUbicacion("Sabaody", 21, 10L);
         Medium sanji = crearMedium(ubi);
         EspirituDemoniaco demonio = crearEspirituDemoniaco(36, "Zoro", ubi);
         Long zoroId = service.crear(demonio).getId();

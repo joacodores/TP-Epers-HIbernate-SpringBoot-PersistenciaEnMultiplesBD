@@ -29,8 +29,8 @@ public class EstadisticaServiceTest {
 
     @Test
     void santuarioCorruptoTest() {
-        Ubicacion avellaneda = ubicacionService.crear(new Santuario("Avellaneda", 10));
-        Ubicacion tokyo = ubicacionService.crear(new Santuario("Tokyo", 100));
+        Ubicacion avellaneda = ubicacionService.crear(new Santuario("Avellaneda", 10, 10L));
+        Ubicacion tokyo = ubicacionService.crear(new Santuario("Tokyo", 100, 10L));
         // Avellaneda: 5 demonios, 4 ángeles. Diferencia = 1
         for (int i = 1; i <= 5; i++) {
             espirituService.crear(new EspirituDemoniaco(100, "demonio" + i, avellaneda));
@@ -55,8 +55,8 @@ public class EstadisticaServiceTest {
 
     @Test
     void santuarioMasCorruptoNoPuedeSerUnCementerioTest() {
-        Ubicacion avellaneda = ubicacionService.crear(new Santuario("Avellaneda", 10));
-        Ubicacion tokyo = ubicacionService.crear(new Cementerio("Tokyo", 100));
+        Ubicacion avellaneda = ubicacionService.crear(new Santuario("Avellaneda", 10, 10L));
+        Ubicacion tokyo = ubicacionService.crear(new Cementerio("Tokyo", 100, 10L));
         // Avellaneda: 5 demonios, 4 ángeles. Diferencia = 1
         for (int i = 1; i <= 5; i++) {
             espirituService.crear(new EspirituDemoniaco(100, "demonio" + i, avellaneda));
@@ -77,7 +77,7 @@ public class EstadisticaServiceTest {
 
     @Test
     void siNoExisteSantuarioConMasDemoniosQueAngelesSeLanzaExcepcionTest() {
-        Ubicacion avellaneda = ubicacionService.crear(new Santuario("Avellaneda", 10));
+        Ubicacion avellaneda = ubicacionService.crear(new Santuario("Avellaneda", 10, 10L));
         // Avellaneda: 4 demonios, 4 ángeles. Diferencia = 0
         for (int i = 1; i <= 4; i++) {
             espirituService.crear(new EspirituDemoniaco(100, "demonio" + i, avellaneda));

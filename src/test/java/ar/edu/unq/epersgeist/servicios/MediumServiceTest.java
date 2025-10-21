@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios;
 
+import ar.edu.unq.epersgeist.controller.exceptions.MediumNoEncontradoException;
 import ar.edu.unq.epersgeist.helpers.RandomizerFalso;
 import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.modelo.exceptions.ExorcistaSinAngelesException;
@@ -31,8 +32,8 @@ public class MediumServiceTest {
 
     @BeforeEach
     void prepare() {
-        santuario = ubicacionService.crear(new Santuario("Santuario base", 10));
-        cementerio = ubicacionService.crear(new Cementerio("Cementerio base", 20));
+        santuario = ubicacionService.crear(new Santuario("Santuario base", 10, 10L));
+        cementerio = ubicacionService.crear(new Cementerio("Cementerio base", 20, 10L));
     }
 
     @Test
@@ -44,9 +45,10 @@ public class MediumServiceTest {
     }
 
     @Test
-    void recuperarMediumNoPersistidoDevuelveNullTest() {
+    void recuperarMediumNoPersistidoLanzaExcepcionTest() {
         Medium medium = service.crear(new Medium("Thiago", 50, 30, santuario));
-        assertTrue(service.recuperar(medium.getId() + 1).isEmpty());
+        assertThrows(MediumNoEncontradoException.class, () -> {service.recuperar(medium.getId() + 1);
+        });
     }
 
     @Test

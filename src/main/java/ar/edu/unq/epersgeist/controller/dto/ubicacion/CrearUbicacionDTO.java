@@ -9,13 +9,14 @@ import static ar.edu.unq.epersgeist.controller.dto.ubicacion.TipoUbicacionDTO.SA
 
 public record CrearUbicacionDTO(String nombre,
                                 Integer energia,
-                                TipoUbicacionDTO tipo) {
+                                TipoUbicacionDTO tipo,
+                                Long costo) {
 
     public Ubicacion aModelo() {
         if (tipo.equals(SANTUARIO)){
-            return new Santuario(nombre, energia);
+            return new Santuario(nombre, energia, costo);
         } else if (tipo.equals(CEMENTERIO)) {
-            return new Cementerio(nombre, energia);
+            return new Cementerio(nombre, energia, costo);
         }
         throw new IllegalArgumentException("Tipo de ubicacion invalido");
     }

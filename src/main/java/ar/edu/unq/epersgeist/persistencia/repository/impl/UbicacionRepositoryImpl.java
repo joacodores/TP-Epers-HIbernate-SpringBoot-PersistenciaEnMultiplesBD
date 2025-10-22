@@ -98,6 +98,16 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
             }
         }).toList();
     }
+//
+//    public Optional<Ubicacion> recuperarConConexiones(Long ubicacionId) {
+//        UbicacionSQL ubicacionSQL = ubicacionSQLDAO.findById(ubicacionId)
+//                .orElseThrow(() -> new UbicacionNoEncontradaException(""));
+//
+//        UbicacionNeo4J ubicacionNeo4j = ubicacionNeo4JDAO.findByIdWithConexiones(ubicacionId)
+//                .orElseThrow(() -> new UbicacionNoEncontradaException(""));
+//        return Optional.of(Ubicacion.from(ubicacionSQL, ubicacionNeo4j));
+//
+//    }
 
     @Override
     public void conectar(Long idOrigen, Long idDestino, Long costo){

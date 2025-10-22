@@ -1,6 +1,9 @@
 package ar.edu.unq.epersgeist.persistencia.neo.entity;
 
+import ar.edu.unq.epersgeist.modelo.Cementerio;
+import ar.edu.unq.epersgeist.modelo.Santuario;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.persistencia.sql.entity.SantuarioSQL;
 import lombok.*;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
@@ -9,6 +12,8 @@ import org.springframework.data.neo4j.core.schema.Relationship;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static ar.edu.unq.epersgeist.persistencia.neo.entity.TipoUbicacion.SANTUARIO;
 
 @ToString
 @Setter
@@ -42,13 +47,15 @@ public class UbicacionNeo4J {
         }
 
         this.conexiones = ubicacion.getConexiones().stream().map(conexion -> {
-            UbicacionNeo4J ubi =  new UbicacionNeo4J();
-            ubi.setId(conexion.getId());
-            ubi.setNombre(conexion.getNombre());
-            ubi.setEnergia(conexion.getEnergia());
-            return ubi;
+            ConexionPsionicaNeo4J conexionP =  new ConexionPsionicaNeo4J();
+            conexionP.setId(conexion.getId());
+            conexionP.setCosto(conexion.getCosto());
+
+            UbicacionNeo4J destino = new UbicacionNeo4J(conexion.getDestino());
+            conexionP.setDestino(destino);
+            return conexionP;
         })
-            .filter(ubi -> !ubi.getId().equals(this.id))
+            .filter(c -> !c.getDestino().getId().equals(this.id))
             .collect(Collectors.toSet());
     }
 }

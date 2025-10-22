@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -123,6 +124,76 @@ public class UbicacionServiceTest {
         espirituService.crear(espiritu);
         assertEquals(1, service.mediumsSinEspiritusEn(ubicacion.getId()).size());
     }
+
+    @Test
+    void unaUbicacionSeConectaConOtraYApareceEnSusConexionesTest() {
+        Ubicacion ubi =service.crear(ubicacion);
+        Ubicacion ubi2 = service.crear(new Santuario("Bernal", 10));
+
+        assertEquals(ubi.getConexiones().size(), 0);
+
+        service.conectar(ubi.getId(), ubi2.getId(), 10L);
+
+        Ubicacion ubiConectada = service.recuperar(ubi.getId()).orElseThrow(() -> new AssertionError("La ubicacion no existe"));
+
+        assertEquals(ubiConectada.getConexiones().size(), 1);
+    }
+
+    @Test
+    void unaUbicacionSeConectaConOtraBidireccionalmenteYAparecenEnSusConexionesTest() {
+        Ubicacion ubi =service.crear(ubicacion);
+        Ubicacion ubi2 = service.crear(new Santuario("Bernal", 10));
+
+        assertEquals(ubi.getConexiones().size(), 0);
+        assertEquals(ubi2.getConexiones().size(), 0);
+
+        service.conectar(ubi.getId(), ubi2.getId(), 10L);
+        service.conectar(ubi2.getId(), ubi.getId(), 10L);
+
+        Ubicacion ubiConectada = service.recuperar(ubi.getId()).orElseThrow(() -> new AssertionError("La ubicacion no existe"));
+        Ubicacion ubiConectada2 = service.recuperar(ubi2.getId()).orElseThrow(() -> new AssertionError("La ubicacion no existe"));
+
+        assertEquals(ubiConectada.getConexiones().size(), 1);
+        assertEquals(ubiConectada2.getConexiones().size(), 1);
+    }
+
+
+    @Test
+    void unaUbicacionSeConectaConOtraUnidireccionalmenteYLaSegundaNoTieneConexionesTest() {
+        Ubicacion ubi =service.crear(ubicacion);
+        Ubicacion ubi2 = service.crear(new Santuario("Bernal", 10));
+
+        assertEquals(ubi.getConexiones().size(), 0);
+        assertEquals(ubi2.getConexiones().size(), 0);
+
+        service.conectar(ubi.getId(), ubi2.getId(), 10L);
+
+        Ubicacion ubiConectada = service.recuperar(ubi.getId()).orElseThrow(() -> new AssertionError("La ubicacion no existe"));
+        Ubicacion ubiConectada2 = service.recuperar(ubi2.getId()).orElseThrow(() -> new AssertionError("La ubicacion no existe"));
+
+        assertEquals(ubiConectada.getConexiones().size(), 1);
+        assertEquals(ubiConectada2.getConexiones().size(), 0);
+    }
+
+
+    @Test
+    void unaUbicacionSeConectaConOtraYEstanConectadasTest() {
+        Ubicacion ubi =service.crear(ubicacion);
+        Ubicacion ubi2 = service.crear(new Santuario("Bernal", 10));
+
+        service.conectar(ubi.getId(), ubi2.getId(), 10L);
+
+        assertTrue(service.estanConectadas(ubi.getId(), ubi2.getId()));
+    }
+
+    @Test
+    void unaUbicacionNoEstaConectadaConOtraTest() {
+        Ubicacion ubi =service.crear(ubicacion);
+        Ubicacion ubi2 = service.crear(new Santuario("Bernal", 10));
+
+        assertFalse(service.estanConectadas(ubi.getId(), ubi2.getId()));
+    }
+
 
     @AfterEach
     void cleanup() {

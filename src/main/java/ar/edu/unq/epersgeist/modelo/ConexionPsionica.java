@@ -7,11 +7,11 @@ import lombok.Setter;
 @Setter
 public class ConexionPsionica {
     private Long id;
-    private Long destinoId;
+    private Ubicacion destino;
     private int costo;
 
-    public ConexionPsionica(Long destinoId, int costo) {
-        this.destinoId = destinoId; this.costo = costo;
+    public ConexionPsionica(Ubicacion destino, int costo) {
+        this.destino = destino; this.costo = costo;
     }
 
 }

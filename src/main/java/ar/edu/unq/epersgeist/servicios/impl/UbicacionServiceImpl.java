@@ -39,6 +39,9 @@ public class UbicacionServiceImpl implements UbicacionService {
     public Optional<Ubicacion> recuperar(Long ubicacionId) {
         return ubicacionRepository.recuperar(ubicacionId);
     }
+//
+//    @Override
+//    public Optional<Ubicacion> recuperarConConexiones(Long ubicacionId){return ubicacionRepository.recuperarConConexiones(ubicacionId);}
 
     @Override
     public void actualizar(Ubicacion ubicacion) {

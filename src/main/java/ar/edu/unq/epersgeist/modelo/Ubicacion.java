@@ -10,6 +10,8 @@ import lombok.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static ar.edu.unq.epersgeist.persistencia.neo.entity.TipoUbicacion.SANTUARIO;
+
 @Getter @Setter
 @AllArgsConstructor
 public abstract class Ubicacion {
@@ -71,7 +73,13 @@ public abstract class Ubicacion {
             ubi.conexiones = ubicacionNeo4J.getConexiones().
                     stream().filter(conexion -> !conexion.getDestino().getId().equals(ubicacionSQL.getId()))
                     .map(conexion -> {
-                        ConexionPsionica conexionDestino = new ConexionPsionica(conexion.getDestino().getId(), conexion.getCosto());
+                        Ubicacion destino;
+                        if (conexion.getDestino().getTipo().equals(SANTUARIO) ) {
+                            destino = Santuario.from(ubicacionSQL);
+                        } else {
+                            destino = Cementerio.from(ubicacionSQL);
+                        }
+                        ConexionPsionica conexionDestino = new ConexionPsionica(destino, conexion.getCosto());
                         conexionDestino.setId(conexion.getId());
                         return conexionDestino;
                     }).collect(Collectors.toSet());

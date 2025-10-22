@@ -18,6 +18,8 @@ public interface UbicacionRepository {
 
     List<Ubicacion> recuperarTodos();
 
+    //Optional<Ubicacion> recuperarConConexiones(Long ubicacionId);
+
     void conectar(Long idOrigen, Long idDestino, Long costo);
 
     Boolean estanConectadas(Long idOrigen, Long idDestino);

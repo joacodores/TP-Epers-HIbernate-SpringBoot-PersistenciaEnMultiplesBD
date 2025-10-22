@@ -61,7 +61,6 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         UbicacionSQL ubicacionSQL = ubicacionSQLDAO.findById(ubicacion.getId()).orElseThrow(() -> new UbicacionNoEncontradaException(""));
         ubicacionSQL.setNombre(ubicacion.getNombre());
         ubicacionSQL.setEnergia(ubicacion.getEnergia());
-        ubicacionSQL.setCosto(ubicacion.getCosto());
         ubicacionSQL.setUpdatedAt(new Date());
         ubicacionSQL.setMediums(ubicacion.getMediums().stream().map(MediumSQL::new).collect(Collectors.toCollection(ArrayList::new)));
         ubicacionSQL.setEspiritus(ubicacion.getEspiritus().stream().map(espiritu -> {
@@ -100,6 +99,23 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         }).toList();
     }
 
+    @Override
+    public void conectar(Long idOrigen, Long idDestino, Long costo){
+        //validar que existen
+        ubicacionNeo4JDAO.findById(idOrigen)
+                .orElseThrow(() -> new UbicacionNoEncontradaException("origen"));
+        ubicacionNeo4JDAO.findById(idDestino)
+                .orElseThrow(() -> new UbicacionNoEncontradaException("destino"));
+
+        Integer costoAInt = Math.toIntExact(costo);
+
+        ubicacionNeo4JDAO.conectar(idOrigen, idDestino, costoAInt);
+
+    }
+
+    public Boolean estanConectadas(Long idOrigen, Long idDestino) {
+        return ubicacionNeo4JDAO.estanConectadasDirecto(idOrigen, idDestino);
+    }
     @Override
     public void eliminarTodo() {
 

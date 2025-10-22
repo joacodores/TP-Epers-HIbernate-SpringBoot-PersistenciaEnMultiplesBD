@@ -23,4 +23,8 @@ public interface UbicacionService {
     List<Espiritu> espiritusEn(Long ubicacionId);
 
     List<Medium> mediumsSinEspiritusEn(Long ubicacionId);
+
+    void conectar(Long idOrigen, Long idDestino, Long costo);
+
+    public Boolean estanConectadas(Long idOrigen, Long idDestino);
 }

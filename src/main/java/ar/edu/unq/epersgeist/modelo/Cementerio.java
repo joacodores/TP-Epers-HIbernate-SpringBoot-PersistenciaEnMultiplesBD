@@ -12,8 +12,8 @@ import org.hibernate.annotations.Where;
 
 public class Cementerio extends Ubicacion{
 
-    public Cementerio(String nombre, Integer energia, Long costo){
-        super(nombre, energia, costo);
+    public Cementerio(String nombre, Integer energia){
+        super(nombre, energia);
     }
 
     public Cementerio(UbicacionSQL ubicacionSQL) {

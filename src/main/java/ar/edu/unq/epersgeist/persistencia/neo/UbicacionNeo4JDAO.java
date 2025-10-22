@@ -9,10 +9,20 @@ import java.util.Optional;
 
 public interface UbicacionNeo4JDAO extends Neo4jRepository<UbicacionNeo4J, Long> {
 
-    @Query("MATCH (u:Ubicacion {id: $id}) " +
-            "OPTIONAL MATCH (u)-[:AMIGO]->(a:Ubicacion) " +
-            "RETURN u, collect(a) as amigos")
-    Optional<UbicacionNeo4J> findByIdConConectadas(@Param("id") Long id);
+    @Query("""
+        MATCH (o:Ubicacion {id:$idOrigen})
+        MATCH (d:Ubicacion {id:$idDestino})
+        MERGE (o)-[r:UBICACIONES_CONECTADAS]->(d)
+        SET r.costo = $costo
+    """)
+    void conectar(Long idOrigen, Long idDestino, Integer costo);
+
+    @Query("""
+        MATCH (:Ubicacion {id:$idOrigen})-[:UBICACIONES_CONECTADAS]->(:Ubicacion {id:$idDestino})
+        RETURN count(*) > 0
+    """)
+    Boolean estanConectadasDirecto(Long idOrigen, Long idDestino);
+
 
 
 }

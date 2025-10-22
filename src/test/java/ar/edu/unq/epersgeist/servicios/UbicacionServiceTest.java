@@ -29,7 +29,7 @@ public class UbicacionServiceTest {
 
     @BeforeEach
     void prepare() {
-        this.ubicacion = new Santuario("Ubicacion", 10, 10L);
+        this.ubicacion = new Santuario("Ubicacion", 10);
     }
 
     @Test
@@ -74,8 +74,8 @@ public class UbicacionServiceTest {
     @Test
     void recuperarTodosDevuelveLasUbicacionesEnOrdenAscendentePorNombreTest() {
         service.crear(ubicacion);
-        service.crear(new Santuario("Bernal", 10, 10L));
-        service.crear(new Cementerio("Mordor", 10, 10L));
+        service.crear(new Santuario("Bernal", 10));
+        service.crear(new Cementerio("Mordor", 10));
         assertEquals(List.of("Ubicacion", "Bernal", "Mordor"), service.recuperarTodos().stream().map(Ubicacion::getNombre).toList());
     }
 
@@ -115,7 +115,7 @@ public class UbicacionServiceTest {
     @Test
     void existeUnMediumSinEspirituEn() {
         service.crear(ubicacion);
-        Ubicacion u2 = new Santuario("Templo de Jade", 30, 10L);
+        Ubicacion u2 = new Santuario("Templo de Jade", 30);
         service.crear(u2);
         Medium tai = new Medium("Tai", 100, 10, ubicacion);
         Espiritu espiritu = new EspirituAngelical(50, "Maestro Shifu", u2);

@@ -13,7 +13,7 @@ public class EspirituTest {
 
     @BeforeEach
     void crearModelo() {
-        puebloPaleta = new Cementerio("Pueblo Paleta",50, 10L);
+        puebloPaleta = new Cementerio("Pueblo Paleta",50);
         rika = new EspirituAngelical(50, "Rika", puebloPaleta);
         yuta = new Medium("Yuta", 100, 100, puebloPaleta);
     }

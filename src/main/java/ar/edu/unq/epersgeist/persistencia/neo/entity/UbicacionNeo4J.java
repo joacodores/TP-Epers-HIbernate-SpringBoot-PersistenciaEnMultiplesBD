@@ -26,9 +26,9 @@ public class UbicacionNeo4J {
     private String nombre;
     private Integer energia;
     private TipoUbicacion tipo;
-    private Long costo;
+
     @Relationship(type = "ubicacionesConectadas")
-    private Set<UbicacionNeo4J> ubicacionesConectadas = new HashSet<>();
+    private Set<ConexionPsionicaNeo4J> conexiones = new HashSet<>();
 
 
     public UbicacionNeo4J(Ubicacion ubicacion) {
@@ -40,8 +40,8 @@ public class UbicacionNeo4J {
         }else {
             this.tipo = TipoUbicacion.CEMENTERIO;
         }
-        this.costo = ubicacion.getCosto();
-        this.ubicacionesConectadas = ubicacion.getUbicacionesConectadas().stream().map(conexion -> {
+
+        this.conexiones = ubicacion.getConexiones().stream().map(conexion -> {
             UbicacionNeo4J ubi =  new UbicacionNeo4J();
             ubi.setId(conexion.getId());
             ubi.setNombre(conexion.getNombre());

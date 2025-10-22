@@ -10,8 +10,6 @@ import lombok.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.lang.Long.min;
-
 @Getter @Setter
 @AllArgsConstructor
 public abstract class Ubicacion {
@@ -20,22 +18,21 @@ public abstract class Ubicacion {
     private String nombre;
     private List<Espiritu> espiritus = new ArrayList<>();
     private List<Medium> mediums = new ArrayList<>();
-    private Set<Ubicacion> ubicacionesConectadas = new HashSet<>();
+    private Set<ConexionPsionica> conexiones = new HashSet<>();
     private Integer energia;
     private final Date createdAt = new Date();
-    private Long costo;
+
     private Date updatedAt;
     private Boolean deletedAt = false;
 
-    public Ubicacion(String nombre, Integer energia,  Long costo) {
-        this.nombre = nombre; this.energia = energia;  this.costo = Math.max(0, Math.min(100, costo));
+    public Ubicacion(String nombre, Integer energia) {
+        this.nombre = nombre; this.energia = energia;
     }
 
     public Ubicacion(UbicacionSQL ubicacionSQL) {
         this.id = ubicacionSQL.getId();
         this.nombre = ubicacionSQL.getNombre();
         this.energia = ubicacionSQL.getEnergia();
-        this.costo = ubicacionSQL.getCosto();
 
         for(var espirituSQL : ubicacionSQL.getEspiritus()){
             Espiritu espiritu;
@@ -67,19 +64,18 @@ public abstract class Ubicacion {
         } else {
              ubi = Cementerio.from(ubicacionSQL);
         }
-        ubi.ubicacionesConectadas = ubicacionNeo4J.getUbicacionesConectadas().
-                stream().filter(conexion -> !conexion.getId().equals(ubicacionSQL.getId()))
-                .map(conexion -> {
-                    Ubicacion ubiConectada;
-                    if (conexion.getTipo().equals(TipoUbicacion.SANTUARIO)) {
-                        ubiConectada = new Santuario(conexion.getNombre(),  conexion.getEnergia(), conexion.getCosto());
-                        ubiConectada.setId(conexion.getId());
-                    } else {
-                        ubiConectada = new Cementerio(conexion.getNombre(),  conexion.getEnergia(), conexion.getCosto());
-                        ubiConectada.setId(conexion.getId());
-                    }
-                    return ubiConectada;
-                }).collect(Collectors.toSet());
+
+        if (ubicacionNeo4J.getConexiones() == null) {
+            ubi.setConexiones(Collections.emptySet());
+        }else {
+            ubi.conexiones = ubicacionNeo4J.getConexiones().
+                    stream().filter(conexion -> !conexion.getDestino().getId().equals(ubicacionSQL.getId()))
+                    .map(conexion -> {
+                        ConexionPsionica conexionDestino = new ConexionPsionica(conexion.getDestino().getId(), conexion.getCosto());
+                        conexionDestino.setId(conexion.getId());
+                        return conexionDestino;
+                    }).collect(Collectors.toSet());
+        }
         return ubi;
     }
 

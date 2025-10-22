@@ -32,8 +32,8 @@ public class MediumServiceTest {
 
     @BeforeEach
     void prepare() {
-        santuario = ubicacionService.crear(new Santuario("Santuario base", 10, 10L));
-        cementerio = ubicacionService.crear(new Cementerio("Cementerio base", 20, 10L));
+        santuario = ubicacionService.crear(new Santuario("Santuario base", 10));
+        cementerio = ubicacionService.crear(new Cementerio("Cementerio base", 20));
     }
 
     @Test

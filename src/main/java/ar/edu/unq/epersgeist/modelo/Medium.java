@@ -54,10 +54,10 @@ public class Medium {
             espiritu.setOwner(this);
         }
         if (mediumSQL.getUbicacion() instanceof SantuarioSQL){
-            this.ubicacion = new Santuario(mediumSQL.getUbicacion().getNombre(), mediumSQL.getUbicacion().getEnergia(), mediumSQL.getUbicacion().getCosto());
+            this.ubicacion = new Santuario(mediumSQL.getUbicacion().getNombre(), mediumSQL.getUbicacion().getEnergia());
             this.ubicacion.setId(mediumSQL.getUbicacion().getId());
         }else{
-            this.ubicacion = new Cementerio(mediumSQL.getUbicacion().getNombre(), mediumSQL.getUbicacion().getEnergia(), mediumSQL.getUbicacion().getCosto());
+            this.ubicacion = new Cementerio(mediumSQL.getUbicacion().getNombre(), mediumSQL.getUbicacion().getEnergia());
             this.ubicacion.setId(mediumSQL.getUbicacion().getId());
         }
     }

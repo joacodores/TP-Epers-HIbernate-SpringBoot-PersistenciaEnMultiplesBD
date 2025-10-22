@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.controller.exceptions.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
@@ -62,6 +63,18 @@ public class UbicacionServiceImpl implements UbicacionService {
     @Override
     public List<Espiritu> espiritusEn(Long ubicacionId) {
         return espirituRepository.espiritusEn(ubicacionId);
+    }
+
+    @Override
+    public void conectar(Long idOrigen, Long idDestino, Long costo) {
+
+        ubicacionRepository.conectar(idOrigen, idDestino, costo);
+
+    }
+
+    @Override
+    public Boolean estanConectadas(Long idOrigen, Long idDestino) {
+        return ubicacionRepository.estanConectadas(idOrigen, idDestino);
     }
 
     @Override

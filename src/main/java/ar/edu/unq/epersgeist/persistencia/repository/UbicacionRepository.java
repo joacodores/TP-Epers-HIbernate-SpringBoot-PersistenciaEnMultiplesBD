@@ -18,5 +18,9 @@ public interface UbicacionRepository {
 
     List<Ubicacion> recuperarTodos();
 
+    void conectar(Long idOrigen, Long idDestino, Long costo);
+
+    Boolean estanConectadas(Long idOrigen, Long idDestino);
+
     void eliminarTodo();
 }

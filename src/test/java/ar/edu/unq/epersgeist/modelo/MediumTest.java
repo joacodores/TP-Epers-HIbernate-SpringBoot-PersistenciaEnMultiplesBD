@@ -28,9 +28,9 @@ public class MediumTest {
 
     @BeforeEach
     void prepare() {
-        fuerteApache = new Santuario("Fuerte Apache",50,10L);
-        bocaPredio = new Santuario("Boca Predio",10, 10L);
-        riber = new Cementerio("Descendido", 40, 10L);
+        fuerteApache = new Santuario("Fuerte Apache",50);
+        bocaPredio = new Santuario("Boca Predio",10);
+        riber = new Cementerio("Descendido", 40);
         picolo = new Medium("Picolo", 100, 40, riber);
         majinBu = new EspirituDemoniaco(80, "Majin Buu", fuerteApache);
         palermo = new Medium("Martin Palermo", 100, 25, fuerteApache);

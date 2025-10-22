@@ -2,7 +2,9 @@ package ar.edu.unq.epersgeist.servicios.impl;
 
 import ar.edu.unq.epersgeist.controller.exceptions.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.controller.exceptions.MediumNoEncontradoException;
+import ar.edu.unq.epersgeist.controller.exceptions.UbicacionLejanaException;
 import ar.edu.unq.epersgeist.controller.exceptions.UbicacionNoEncontradaException;
+import ar.edu.unq.epersgeist.modelo.ConexionPsionica;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
@@ -102,8 +104,16 @@ public class MediumServiceImpl implements MediumService {
     public void mover(Long mediumId, Long ubicacionId) {
         Medium medium = mediumRepository.recuperar(mediumId).orElseThrow(() -> new MediumNoEncontradoException(""));
         Ubicacion ubicacion = ubicacionRepository.recuperar(ubicacionId).orElseThrow(() -> new UbicacionNoEncontradaException(""));
+        if(!ubicacionRepository.estanConectadas(medium.getUbicacion().getId(), ubicacion.getId())) {
+            throw new UbicacionLejanaException("Las ubicaciones no están conectadas");
+        }
         medium.mover(ubicacion);
-        mediumRepository.actualizar(medium);
+        if(medium.getMana() == 0) {
+            mediumRepository.eliminar(mediumId);
+        } else {
+            mediumRepository.actualizar(medium);
+        }
+
     }
 
 }

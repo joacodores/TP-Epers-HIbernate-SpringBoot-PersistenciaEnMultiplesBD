@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.controller.exceptions.ConexionPsionicaException;
 import ar.edu.unq.epersgeist.modelo.exceptions.*;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.*;
 import jakarta.persistence.*;
@@ -149,7 +150,12 @@ public class Medium {
     }
 
     public void mover(Ubicacion ubicacion) {
+        Optional<ConexionPsionica> conexionOptional = ubicacion.getConexiones().stream().filter(conexion -> conexion.getDestinoId() == this.getUbicacion().getId()).findFirst();
+        if(conexionOptional.isEmpty()) {
+            throw new ConexionPsionicaException("La conexion no existe");
+        }
         setUbicacion(ubicacion);
+        this.mana = Math.max(0, this.mana - conexionOptional.get().getCosto());
         // iteramos sobre una copia para evitar ConcurrentModificationException
         new ArrayList<>(espiritus).forEach(espiritu -> espiritu.cambiarUbicacion(ubicacion));
     }

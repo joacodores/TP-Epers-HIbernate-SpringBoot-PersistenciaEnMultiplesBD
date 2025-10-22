@@ -124,6 +124,11 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     }
 
     public Boolean estanConectadas(Long idOrigen, Long idDestino) {
+        ubicacionNeo4JDAO.findById(idOrigen)
+                .orElseThrow(() -> new UbicacionNoEncontradaException("origen"));
+        ubicacionNeo4JDAO.findById(idDestino)
+                .orElseThrow(() -> new UbicacionNoEncontradaException("destino"));
+
         return ubicacionNeo4JDAO.estanConectadasDirecto(idOrigen, idDestino);
     }
     @Override

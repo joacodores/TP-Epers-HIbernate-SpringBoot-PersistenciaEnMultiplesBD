@@ -26,5 +26,5 @@ public interface UbicacionService {
 
     void conectar(Long idOrigen, Long idDestino, Long costo);
 
-    public Boolean estanConectadas(Long idOrigen, Long idDestino);
+    Boolean estanConectadas(Long idOrigen, Long idDestino);
 }

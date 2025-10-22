@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -135,7 +134,7 @@ public class UbicacionServiceTest {
         service.conectar(ubi.getId(), ubi2.getId(), 10L);
 
         Ubicacion ubiConectada = service.recuperar(ubi.getId()).orElseThrow(() -> new AssertionError("La ubicacion no existe"));
-
+        assertEquals(ubiConectada.getConexiones().stream().findFirst().get().getDestino().getId(), ubi2.getId());
         assertEquals(ubiConectada.getConexiones().size(), 1);
     }
 
@@ -153,8 +152,8 @@ public class UbicacionServiceTest {
         Ubicacion ubiConectada = service.recuperar(ubi.getId()).orElseThrow(() -> new AssertionError("La ubicacion no existe"));
         Ubicacion ubiConectada2 = service.recuperar(ubi2.getId()).orElseThrow(() -> new AssertionError("La ubicacion no existe"));
 
-        assertEquals(ubiConectada.getConexiones().size(), 1);
-        assertEquals(ubiConectada2.getConexiones().size(), 1);
+        assertEquals(ubiConectada.getConexiones().stream().findFirst().get().getDestino().getId(), ubi2.getId());
+        assertEquals(ubiConectada2.getConexiones().stream().findFirst().get().getDestino().getId(), ubi.getId());
     }
 
 
@@ -171,7 +170,7 @@ public class UbicacionServiceTest {
         Ubicacion ubiConectada = service.recuperar(ubi.getId()).orElseThrow(() -> new AssertionError("La ubicacion no existe"));
         Ubicacion ubiConectada2 = service.recuperar(ubi2.getId()).orElseThrow(() -> new AssertionError("La ubicacion no existe"));
 
-        assertEquals(ubiConectada.getConexiones().size(), 1);
+        assertEquals(ubiConectada.getConexiones().stream().findFirst().get().getDestino().getId(), ubi2.getId());
         assertEquals(ubiConectada2.getConexiones().size(), 0);
     }
 
@@ -183,7 +182,11 @@ public class UbicacionServiceTest {
 
         service.conectar(ubi.getId(), ubi2.getId(), 10L);
 
-        assertTrue(service.estanConectadas(ubi.getId(), ubi2.getId()));
+        Ubicacion ubiConectada = service.recuperar(ubi.getId()).orElseThrow(() -> new AssertionError("La ubicacion no existe"));
+
+        assertEquals(ubiConectada.getConexiones().stream().findFirst().get().getDestino().getId(), ubi2.getId());
+
+        assertTrue(service.estanConectadas(ubiConectada.getId(), ubi2.getId()));
     }
 
     @Test
@@ -191,6 +194,7 @@ public class UbicacionServiceTest {
         Ubicacion ubi =service.crear(ubicacion);
         Ubicacion ubi2 = service.crear(new Santuario("Bernal", 10));
 
+        assertEquals(ubi.getConexiones().size(), 0);
         assertFalse(service.estanConectadas(ubi.getId(), ubi2.getId()));
     }
 

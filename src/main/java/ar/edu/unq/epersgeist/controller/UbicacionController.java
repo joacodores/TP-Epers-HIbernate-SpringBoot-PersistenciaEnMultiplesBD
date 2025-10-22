@@ -96,4 +96,26 @@ public class UbicacionController {
         ubicacionService.eliminar(ubicacionRecuperado.get().getId());
         return ResponseEntity.noContent().build(); // 204
     }
+
+
+    @PostMapping("/{idOrigen}/conectar/{idDestino}/{costo}")
+    public ResponseEntity<RecuperarUbicacionDTO> conectar(@PathVariable Long idOrigen,
+                                         @PathVariable Long  idDestino,
+                                         @PathVariable Long costo) {
+        ubicacionService.conectar(idOrigen, idDestino, costo);
+        var ubicacionConConexion = ubicacionService.recuperar(idOrigen)
+                .orElseThrow(() -> new ActualizarRecursoException("la ubicacion origen"));
+        return ResponseEntity.ok(
+                RecuperarUbicacionDTO.desdeModelo(ubicacionConConexion)
+        );
+    }
+
+    @GetMapping("/{idOrigen}/conectadas/{idDestino}")
+    public ResponseEntity<Boolean> estanConectadas(@PathVariable Long idOrigen,
+                                                              @PathVariable Long idDestino) {
+        boolean conectadas = ubicacionService.estanConectadas(idOrigen, idDestino);
+        return ResponseEntity.ok(conectadas);
+    }
+
+
 }

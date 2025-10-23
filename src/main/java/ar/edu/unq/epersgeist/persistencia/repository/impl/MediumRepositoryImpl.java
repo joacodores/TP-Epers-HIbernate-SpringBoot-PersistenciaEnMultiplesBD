@@ -12,6 +12,7 @@ import ar.edu.unq.epersgeist.persistencia.sql.entity.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,32 +51,14 @@ public class MediumRepositoryImpl implements MediumRepository {
 
     @Override
     public void actualizar(Medium medium) {
-        MediumSQL mediumSQL = mediumSQLDAO.findById(medium.getId())
-                .orElseThrow(() -> new MediumNoEncontradoException(""));
-        mediumSQL.setNombre(medium.getNombre());
-        mediumSQL.setManaMax(medium.getManaMax());
-        mediumSQL.setMana(medium.getMana());
-        if(medium.getUbicacion().esSantuario()) {
-            mediumSQL.setUbicacion(new SantuarioSQL(medium.getUbicacion()));
-        } else {
-            mediumSQL.setUbicacion(new CementerioSQL(medium.getUbicacion()));
-        }
-        mediumSQL.setEspiritus(medium.getEspiritus().stream().map(espiritu -> {
-            if(espiritu.esAngelical()) {
-                return new EspirituAngelicalSQL(espiritu);
-            } else {
-                return new EspirituDemoniacoSQL(espiritu);
-            }
-        }).collect(Collectors.toCollection(ArrayList::new)));
+        MediumSQL mediumSQL = new MediumSQL(medium);
+        mediumSQL.setUpdatedAt(new Date());
         mediumSQLDAO.save(mediumSQL);
 
     }
 
     @Override
     public void eliminar(Long mediumId) {
-        MediumSQL mediumSQL = mediumSQLDAO.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException(""));
-        Medium mediumExistente = Medium.from(mediumSQL);
-        mediumExistente.getUbicacion().eliminarMedium(mediumExistente);
         mediumSQLDAO.deleteById(mediumId);
     }
 

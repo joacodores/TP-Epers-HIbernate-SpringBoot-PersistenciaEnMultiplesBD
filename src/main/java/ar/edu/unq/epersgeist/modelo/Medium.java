@@ -149,15 +149,15 @@ public class Medium {
         this.mana = mana;
     }
 
-    public void mover(Ubicacion ubicacion) {
-        Optional<ConexionPsionica> conexionOptional = ubicacion.getConexiones().stream().filter(conexion -> conexion.getDestinoId() == this.getUbicacion().getId()).findFirst();
+    public void mover(Ubicacion ubicacionDestino) {
+        Optional<ConexionPsionica> conexionOptional = this.ubicacion.getConexiones().stream().filter(conexion -> conexion.getDestino().getNombre().equals(ubicacionDestino.getNombre())).findFirst();
         if(conexionOptional.isEmpty()) {
             throw new ConexionPsionicaException("La conexion no existe");
         }
-        setUbicacion(ubicacion);
+        setUbicacion(ubicacionDestino);
         this.mana = Math.max(0, this.mana - conexionOptional.get().getCosto());
         // iteramos sobre una copia para evitar ConcurrentModificationException
-        new ArrayList<>(espiritus).forEach(espiritu -> espiritu.cambiarUbicacion(ubicacion));
+        new ArrayList<>(espiritus).forEach(espiritu -> espiritu.cambiarUbicacion(ubicacionDestino));
     }
 
     public void setUpdatedAt() {

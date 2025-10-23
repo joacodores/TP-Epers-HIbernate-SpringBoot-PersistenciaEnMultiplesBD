@@ -75,9 +75,11 @@ public abstract class Ubicacion {
                     .map(conexion -> {
                         Ubicacion destino;
                         if (conexion.getDestino().getTipo().equals(SANTUARIO) ) {
-                            destino = Santuario.from(ubicacionSQL);
+                            destino = new Santuario(conexion.getDestino().getNombre(), conexion.getDestino().getEnergia());
+                            destino.setId(conexion.getDestino().getId());
                         } else {
-                            destino = Cementerio.from(ubicacionSQL);
+                            destino = new Cementerio(conexion.getDestino().getNombre(), conexion.getDestino().getEnergia());
+                            destino.setId(conexion.getDestino().getId());
                         }
                         ConexionPsionica conexionDestino = new ConexionPsionica(destino, conexion.getCosto());
                         conexionDestino.setId(conexion.getId());

@@ -58,18 +58,13 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     @Override
     public void actualizar(Ubicacion ubicacion) {
 
-        UbicacionSQL ubicacionSQL = ubicacionSQLDAO.findById(ubicacion.getId()).orElseThrow(() -> new UbicacionNoEncontradaException(""));
-        ubicacionSQL.setNombre(ubicacion.getNombre());
-        ubicacionSQL.setEnergia(ubicacion.getEnergia());
+        UbicacionSQL ubicacionSQL;
+        if(ubicacion.esSantuario()) {
+            ubicacionSQL = new SantuarioSQL(ubicacion);
+        } else {
+            ubicacionSQL = new CementerioSQL(ubicacion);
+        }
         ubicacionSQL.setUpdatedAt(new Date());
-        ubicacionSQL.setMediums(ubicacion.getMediums().stream().map(MediumSQL::new).collect(Collectors.toCollection(ArrayList::new)));
-        ubicacionSQL.setEspiritus(ubicacion.getEspiritus().stream().map(espiritu -> {
-            if(espiritu.esAngelical()) {
-                return new EspirituAngelicalSQL(espiritu);
-            } else {
-                return new EspirituDemoniacoSQL(espiritu);
-            }
-        }).collect(Collectors.toCollection(ArrayList::new)));
 
         ubicacionSQLDAO.save(ubicacionSQL);
 

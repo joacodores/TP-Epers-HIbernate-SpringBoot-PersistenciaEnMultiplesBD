@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
@@ -83,35 +84,18 @@ public class EspirituRepositoryImpl implements EspirituRepository {
 
     @Override
     public void actualizar(Espiritu espiritu) {
-        EspirituSQL espirituSQL = espirituSQLDAO.findById(espiritu.getId())
-                .orElseThrow(() -> new EspirituNoEncontradoException(""));
-        espirituSQL.setNombre(espiritu.getNombre());
-        espirituSQL.setNivelDeConexion(espiritu.getNivelDeConexion());
-        if(espiritu.getOwner() != null) {
-            espirituSQL.setOwner(new MediumSQL(espiritu.getOwner()));
-        }
-
-        if(espiritu.getUbicacion().esSantuario()) {
-            espirituSQL.setUbicacion(new SantuarioSQL(espiritu.getUbicacion()));
+        EspirituSQL espirituSQL;
+        if(espiritu.esAngelical()) {
+            espirituSQL = new EspirituAngelicalSQL(espiritu);
         } else {
-            espirituSQL.setUbicacion(new CementerioSQL(espiritu.getUbicacion()));
+            espirituSQL = new EspirituDemoniacoSQL(espiritu);
         }
-
+        espirituSQL.setUpdatedAt(new Date());
         espirituSQLDAO.save(espirituSQL);
     }
 
     @Override
     public void eliminar(Long espirituId) {
-        EspirituSQL espirituSQL = espirituSQLDAO.findById(espirituId)
-                .orElseThrow(() -> new EspirituNoEncontradoException(""));
-        Espiritu espiritu;
-        if(espirituSQL instanceof EspirituAngelicalSQL) {
-            espiritu =  new EspirituAngelical(espirituSQL);
-        } else {
-            espiritu = new EspirituDemoniaco(espirituSQL);
-        }
-
-        espiritu.getUbicacion().eliminarEspiritu(espiritu);
         espirituSQLDAO.deleteById(espirituId);
     }
 

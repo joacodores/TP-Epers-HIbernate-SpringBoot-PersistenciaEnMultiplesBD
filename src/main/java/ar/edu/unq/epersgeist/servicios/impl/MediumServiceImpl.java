@@ -104,10 +104,14 @@ public class MediumServiceImpl implements MediumService {
     public void mover(Long mediumId, Long ubicacionId) {
         Medium medium = mediumRepository.recuperar(mediumId).orElseThrow(() -> new MediumNoEncontradoException(""));
         Ubicacion ubicacion = ubicacionRepository.recuperar(ubicacionId).orElseThrow(() -> new UbicacionNoEncontradaException(""));
+
         if(!ubicacionRepository.estanConectadas(medium.getUbicacion().getId(), ubicacion.getId())) {
             throw new UbicacionLejanaException("Las ubicaciones no están conectadas");
         }
+        Ubicacion ubicacionOrigen = ubicacionRepository.recuperar(medium.getUbicacion().getId()).orElseThrow(() -> new UbicacionNoEncontradaException(""));
+        medium.getUbicacion().setConexiones(ubicacionOrigen.getConexiones());
         medium.mover(ubicacion);
+
         if(medium.getMana() == 0) {
             mediumRepository.eliminar(mediumId);
         } else {

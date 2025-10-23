@@ -1,7 +1,5 @@
 package ar.edu.unq.epersgeist.persistencia.sql.entity;
 
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -14,6 +12,7 @@ import org.hibernate.annotations.Where;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
@@ -27,6 +26,7 @@ import static jakarta.persistence.GenerationType.AUTO;
 @SQLDelete(sql = "UPDATE Ubicacion SET deleted_at = true WHERE id=?")
 @Where(clause = "deleted_at=false")
 public abstract class UbicacionSQL {
+
     @Setter
     @Id
     @GeneratedValue(strategy = AUTO)
@@ -35,7 +35,6 @@ public abstract class UbicacionSQL {
     @Setter
     @Column(unique = true, nullable = false, length = 500)
     private String nombre;
-
 
     @Setter
     @Getter
@@ -66,26 +65,26 @@ public abstract class UbicacionSQL {
         this.id = ubicacion.getId();
         this.nombre = ubicacion.getNombre();
         this.energia = ubicacion.getEnergia();
-
         this.mediums = ubicacion.getMediums().stream().map(medium -> {
             MediumSQL mediumSQL = new MediumSQL(medium.getId(), medium.getNombre());
             mediumSQL.setUbicacion(this);
             return mediumSQL;
-        }).toList();
+        }).collect(Collectors.toCollection(ArrayList::new));
         this.espiritus = ubicacion.getEspiritus().stream().map(espiritu -> {
             EspirituSQL espirituSQL;
-            if(espiritu.esAngelical()) {
+            if (espiritu.esAngelical()) {
                 espirituSQL = new EspirituAngelicalSQL(espiritu.getId(), espiritu.getNombre());
             } else {
                 espirituSQL = new EspirituDemoniacoSQL(espiritu.getId(), espiritu.getNombre());
             }
             espirituSQL.setUbicacion(this);
             return espirituSQL;
-        }).toList();
+        }).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public UbicacionSQL(Long id, String nombre) {
         this.id = id;
         this.nombre = nombre;
     }
+
 }

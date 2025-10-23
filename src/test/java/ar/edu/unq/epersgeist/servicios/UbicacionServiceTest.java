@@ -101,6 +101,8 @@ public class UbicacionServiceTest {
 
     @Test
     void existenEspiritusEnUnaUbicacionDadaTest() {
+        Espiritu espiritu = new EspirituAngelical(50, "Luffy", ubicacion);
+        Espiritu demonio = new EspirituDemoniaco(45, "Zoro", ubicacion);
         service.crear(ubicacion);
         var espiritus = service.espiritusEn(ubicacion.getId());
         assertEquals(2, espiritus.size());
@@ -127,7 +129,10 @@ public class UbicacionServiceTest {
         assertEquals(0, ubi.getConexiones().size());
         service.conectar(ubi.getId(), ubi2.getId(), 10L);
         Ubicacion ubiConectada = service.recuperar(ubi.getId()).orElseThrow(() -> new AssertionError("La ubicacion no existe"));
-        assertEquals(ubiConectada.getConexiones().stream().findFirst().get().getDestino().getId(), ubi2.getId());
+        ConexionPsionica primeraConexion = ubiConectada.getConexiones().stream()
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("No hay conexiones"));
+        assertEquals(ubi2.getId(), primeraConexion.getDestino().getId());
         assertEquals(1, ubiConectada.getConexiones().size());
     }
 
@@ -141,8 +146,14 @@ public class UbicacionServiceTest {
         service.conectar(ubi2.getId(), ubi.getId(), 10L);
         Ubicacion ubiConectada = service.recuperar(ubi.getId()).orElseThrow(() -> new AssertionError("La ubicacion no existe"));
         Ubicacion ubiConectada2 = service.recuperar(ubi2.getId()).orElseThrow(() -> new AssertionError("La ubicacion no existe"));
-        assertEquals(ubiConectada.getConexiones().stream().findFirst().get().getDestino().getId(), ubi2.getId());
-        assertEquals(ubiConectada2.getConexiones().stream().findFirst().get().getDestino().getId(), ubi.getId());
+        ConexionPsionica conexionUbi = ubiConectada.getConexiones().stream()
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("Ubi no tiene conexiones"));
+        ConexionPsionica conexionUbi2 = ubiConectada2.getConexiones().stream()
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("Ubi2 no tiene conexiones"));
+        assertEquals(ubi2.getId(), conexionUbi.getDestino().getId());
+        assertEquals(ubi.getId(), conexionUbi2.getDestino().getId());
     }
 
     @Test
@@ -154,7 +165,10 @@ public class UbicacionServiceTest {
         service.conectar(ubi.getId(), ubi2.getId(), 10L);
         Ubicacion ubiConectada = service.recuperar(ubi.getId()).orElseThrow(() -> new AssertionError("La ubicacion no existe"));
         Ubicacion ubiConectada2 = service.recuperar(ubi2.getId()).orElseThrow(() -> new AssertionError("La ubicacion no existe"));
-        assertEquals(ubiConectada.getConexiones().stream().findFirst().get().getDestino().getId(), ubi2.getId());
+        ConexionPsionica conexionUbi = ubiConectada.getConexiones().stream()
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("Ubi no tiene conexiones"));
+        assertEquals(ubi2.getId(), conexionUbi.getDestino().getId());
         assertEquals(0, ubiConectada2.getConexiones().size());
     }
 
@@ -164,7 +178,10 @@ public class UbicacionServiceTest {
         Ubicacion ubi2 = service.crear(new Santuario("Bernal", 10));
         service.conectar(ubi.getId(), ubi2.getId(), 10L);
         Ubicacion ubiConectada = service.recuperar(ubi.getId()).orElseThrow(() -> new AssertionError("La ubicacion no existe"));
-        assertEquals(ubiConectada.getConexiones().stream().findFirst().get().getDestino().getId(), ubi2.getId());
+        ConexionPsionica conexionUbi = ubiConectada.getConexiones().stream()
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("Ubi no tiene conexiones"));
+        assertEquals(ubi2.getId(), conexionUbi.getDestino().getId());
         assertTrue(service.estanConectadas(ubiConectada.getId(), ubi2.getId()));
     }
 

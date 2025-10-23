@@ -76,8 +76,8 @@ public class EspirituServiceImpl implements EspirituService {
         Medium medium = mediumRepository.recuperar(mediumId)
                 .orElseThrow(() -> new MediumNoEncontradoException(""));
         medium.conectarseAEspiritu(espiritu);
-        espirituRepository.actualizar(espiritu);
         mediumRepository.actualizar(medium);
+        espirituRepository.actualizar(espiritu);
         return medium;
     }
 

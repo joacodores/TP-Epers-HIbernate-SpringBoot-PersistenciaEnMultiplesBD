@@ -1,6 +1,8 @@
 package ar.edu.unq.epersgeist.servicios;
 
 import ar.edu.unq.epersgeist.controller.exceptions.MediumNoEncontradoException;
+import ar.edu.unq.epersgeist.controller.exceptions.UbicacionLejanaException;
+import ar.edu.unq.epersgeist.controller.exceptions.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.helpers.RandomizerFalso;
 import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.modelo.exceptions.ExorcistaSinAngelesException;
@@ -169,7 +171,9 @@ public class MediumServiceTest {
 
     @Test
     void moverTest() {
-        Medium medium = service.crear(new Medium("Thiago", 50, 30, santuario));
+        ubicacionService.conectar(santuario.getId(), cementerio.getId(), 10L);
+        Ubicacion ubicacion = ubicacionService.recuperar(santuario.getId()).orElseThrow(() -> new UbicacionNoEncontradaException(""));
+        Medium medium = service.crear(new Medium("Thiago", 50, 30, ubicacion));
         service.mover(medium.getId(), cementerio.getId());
         Medium actualizado = service.recuperar(medium.getId()).orElseThrow();
         assertEquals(cementerio.getId(), actualizado.getUbicacion().getId());
@@ -177,8 +181,10 @@ public class MediumServiceTest {
 
     @Test
     void moverMediumMueveTodosSusEspiritus() {
-        Medium medium = service.crear(new Medium("Thiago", 50, 30, santuario));
-        Espiritu e = espirituService.crear(new EspirituAngelical(100, "angel", santuario));
+        ubicacionService.conectar(santuario.getId(), cementerio.getId(), 10L);
+        Ubicacion ubicacion = ubicacionService.recuperar(santuario.getId()).orElseThrow(() -> new UbicacionNoEncontradaException(""));
+        Medium medium = service.crear(new Medium("Thiago", 50, 30, ubicacion));
+        Espiritu e = espirituService.crear(new EspirituAngelical(100, "angel", ubicacion));
         espirituService.conectar(e.getId(), medium.getId());
         service.mover(medium.getId(), cementerio.getId());
         Espiritu actualizado = espirituService.recuperar(e.getId()).orElseThrow();
@@ -187,8 +193,10 @@ public class MediumServiceTest {
 
     @Test
     void espirituAngelicalDisminuyeNivelDeConexionPorLlegarAUnCementerio() {
-        Medium medium = service.crear(new Medium("Juan", 30, 20, santuario));
-        Espiritu e = espirituService.crear(new EspirituAngelical(100, "angel", santuario));
+        ubicacionService.conectar(santuario.getId(), cementerio.getId(), 10L);
+        Ubicacion ubicacion = ubicacionService.recuperar(santuario.getId()).orElseThrow(() -> new UbicacionNoEncontradaException(""));
+        Medium medium = service.crear(new Medium("Juan", 30, 20, ubicacion));
+        Espiritu e = espirituService.crear(new EspirituAngelical(100, "angel", ubicacion));
         espirituService.conectar(e.getId(), medium.getId());
         service.mover(medium.getId(), cementerio.getId());
         Espiritu actualizado = espirituService.recuperar(e.getId()).orElseThrow();
@@ -197,11 +205,11 @@ public class MediumServiceTest {
 
     @Test
     void espirituAngelicalSeDesvinculaAlLlegarANivelCero() {
-        Medium medium = service.crear(new Medium("Thiago", 50, 30, santuario));
-        Espiritu angel = espirituService.crear(new EspirituAngelical(1, "angel", santuario));
+        ubicacionService.conectar(santuario.getId(), cementerio.getId(), 10L);
+        Ubicacion ubicacionRecuperada = ubicacionService.recuperar(santuario.getId()).orElseThrow(() -> new UbicacionNoEncontradaException(""));
+        Medium medium = service.crear(new Medium("Thiago", 30, 20, ubicacionRecuperada));
+        Espiritu angel = espirituService.crear(new EspirituAngelical(1, "angel", ubicacionRecuperada));
         espirituService.conectar(angel.getId(), medium.getId());
-        service.mover(medium.getId(), cementerio.getId());
-        service.mover(medium.getId(), santuario.getId());
         service.mover(medium.getId(), cementerio.getId());
         Medium actualizado = service.recuperar(medium.getId()).orElseThrow();
         assertEquals(0, actualizado.getEspiritus().size());
@@ -209,8 +217,10 @@ public class MediumServiceTest {
 
     @Test
     void espirituDemoniacoDisminuyeNivelDeConexionPorLlegarAUnSantuario() {
-        Medium medium = service.crear(new Medium("Juan", 30, 20, cementerio));
-        Espiritu e = espirituService.crear(new EspirituDemoniaco(100, "demonio", cementerio));
+        ubicacionService.conectar(cementerio.getId(), santuario.getId(), 10L);
+        Ubicacion ubicacionRecuperada = ubicacionService.recuperar(cementerio.getId()).orElseThrow(() -> new UbicacionNoEncontradaException(""));
+        Medium medium = service.crear(new Medium("Juan", 30, 20, ubicacionRecuperada));
+        Espiritu e = espirituService.crear(new EspirituDemoniaco(100, "demonio", ubicacionRecuperada));
         espirituService.conectar(e.getId(), medium.getId());
         service.mover(medium.getId(), santuario.getId());
         Espiritu actualizado = espirituService.recuperar(e.getId()).orElseThrow();
@@ -219,14 +229,51 @@ public class MediumServiceTest {
 
     @Test
     void espirituDemoniacoSeDesvinculaAlLlegarANivelCero() {
-        Medium medium = service.crear(new Medium("Juan", 30, 20, cementerio));
-        Espiritu demonio = espirituService.crear(new EspirituDemoniaco(1, "demonio", cementerio));
+        ubicacionService.conectar(cementerio.getId(), santuario.getId(), 10L);
+        Ubicacion ubicacionRecuperada = ubicacionService.recuperar(cementerio.getId()).orElseThrow(() -> new UbicacionNoEncontradaException(""));
+        Medium medium = service.crear(new Medium("Juan", 30, 20, ubicacionRecuperada));
+        Espiritu demonio = espirituService.crear(new EspirituDemoniaco(1, "demonio", ubicacionRecuperada));
         espirituService.conectar(demonio.getId(), medium.getId());
         service.mover(medium.getId(), santuario.getId());
         Medium actualizado = service.recuperar(medium.getId()).orElseThrow();
         assertEquals(0, actualizado.getEspiritus().size());
     }
 
+    @Test
+    void moverAUnaUbicacionNoConectadaLanzaExcepcionTest() {
+        Medium medium = service.crear(new Medium("Juan", 30, 20, santuario));
+        assertThrows(UbicacionLejanaException.class, () -> service.mover(medium.getId(), cementerio.getId()));
+    }
+
+    @Test
+    void moverAUnaUbicacionConectadaNoLanzaExcepcionTest() {
+        ubicacionService.conectar(santuario.getId(), cementerio.getId(), 10L);
+        Ubicacion ubicacionRecuperada = ubicacionService.recuperar(santuario.getId()).orElseThrow(() -> new UbicacionNoEncontradaException(""));
+        Medium medium = service.crear(new Medium("Juan", 30, 20, ubicacionRecuperada));
+        service.mover(medium.getId(), cementerio.getId());
+        Medium mediumRecuperado = service.recuperar(medium.getId()).orElseThrow();
+        assertEquals(mediumRecuperado.getUbicacion().getId(), cementerio.getId());
+    }
+
+    @Test
+    void mediumEsEliminadoAlQuedarseSinManaAlMoverseAUnaUbicacionTest() {
+        ubicacionService.conectar(santuario.getId(), cementerio.getId(), 10L);
+        Ubicacion ubicacionRecuperada = ubicacionService.recuperar(santuario.getId()).orElseThrow(() -> new UbicacionNoEncontradaException(""));
+        Medium medium = service.crear(new Medium("Juan", 20, 5, ubicacionRecuperada));
+        service.mover(medium.getId(), cementerio.getId());
+        assertThrows(MediumNoEncontradoException.class, () -> service.recuperar(medium.getId()));
+    }
+
+    @Test
+    void mediumNoEsEliminadoAlNoQuedarseSinManaLuegoDeMoverseTest() {
+        ubicacionService.conectar(santuario.getId(), cementerio.getId(), 10L);
+        Ubicacion ubicacionRecuperada = ubicacionService.recuperar(santuario.getId()).orElseThrow(() -> new UbicacionNoEncontradaException(""));
+        Medium medium = service.crear(new Medium("Juan", 50, 20, ubicacionRecuperada));
+        Long mediumId = medium.getId();
+        service.mover(medium.getId(), cementerio.getId());
+        Medium mediumRecuperado = service.recuperar(medium.getId()).orElseThrow();
+        assertEquals(mediumRecuperado.getId(), mediumId);
+    }
     @AfterEach
     void cleanup() {
         espirituService.eliminarTodo();

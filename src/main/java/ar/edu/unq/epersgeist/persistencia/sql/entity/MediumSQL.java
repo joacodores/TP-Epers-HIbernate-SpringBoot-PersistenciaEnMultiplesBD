@@ -58,6 +58,7 @@ public class MediumSQL {
     @Temporal(TemporalType.DATE)
     private final Date createdAt = new Date();
 
+    @Setter
     @Temporal(TemporalType.DATE)
     private Date updatedAt;
 

@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.controller.exceptions.ConexionPsionicaException;
 import ar.edu.unq.epersgeist.helpers.RandomizerFalso;
 import ar.edu.unq.epersgeist.modelo.exceptions.EspirituNoEsLibreException;
 import ar.edu.unq.epersgeist.modelo.exceptions.EspirituNoPuedeConectarException;
@@ -258,6 +259,8 @@ public class MediumTest {
     }
     @Test
     void mediumDescansaEnSantuarioYSusEspiritusDemoniacosNoObtienenConexion() {
+        ConexionPsionica conexionPsionica = new ConexionPsionica(fuerteApache, 10);
+        riber.getConexiones().add(conexionPsionica);
         Medium chopper = new Medium("Chopper", 100, 10, riber);
         Espiritu demonio = new EspirituDemoniaco(0, "zorro", riber);
         Espiritu demonio2 = new EspirituDemoniaco(0, "sanji", riber);
@@ -290,6 +293,8 @@ public class MediumTest {
     }
     @Test
     void mediumDescansaEnCementerioYSusEspiritusAngelicalesNoObtienenConexion() {
+        ConexionPsionica conexionPsionica = new ConexionPsionica(riber, 10);
+        fuerteApache.getConexiones().add(conexionPsionica);
         Medium tai = new Medium("Tai", 100, 10, fuerteApache);
         Espiritu espirituAngelical = new EspirituAngelical(0, "zorro", fuerteApache);
         Espiritu espirituAngelical2 = new EspirituAngelical(0, "sanji", fuerteApache);
@@ -406,5 +411,30 @@ public class MediumTest {
     @Test
     void mediumNoPuedeInvocarEspirituDemoniacoEnSantuarioTest(){
         assertThrows(EspirituNoPuedeInvocarseEnUbicacionException.class, () -> palermo.invocar(majinBu));
+    }
+
+    @Test
+    void mediumAlNoTenerUnaConexionConLaUbicacionDestinoLanzaExceptionTest() {
+        assertThrows(ConexionPsionicaException.class, () -> picolo.mover(fuerteApache));
+    }
+
+    @Test
+    void mediumNoLanzaExceptionCuandoHayUnaConexionConUbicacionDestinoTest() {
+        ConexionPsionica conexionPsionica = new ConexionPsionica(fuerteApache, 10);
+        riber.getConexiones().add(conexionPsionica);
+        Medium chopper = new Medium("Chopper", 100, 10, riber);
+        chopper.mover(fuerteApache);
+
+        assertEquals(chopper.getUbicacion(), fuerteApache);
+    }
+
+    @Test
+    void mediumDisminuyeSuManaAlMoverseDeUbicacionTest() {
+        ConexionPsionica conexionPsionica = new ConexionPsionica(fuerteApache, 10);
+        riber.getConexiones().add(conexionPsionica);
+        Medium chopper = new Medium("Chopper", 100, 50, riber);
+        chopper.mover(fuerteApache);
+
+        assertEquals( 40, chopper.getMana());
     }
 }

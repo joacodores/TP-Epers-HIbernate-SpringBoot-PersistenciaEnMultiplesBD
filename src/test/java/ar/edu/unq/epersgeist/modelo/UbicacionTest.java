@@ -3,9 +3,11 @@ package ar.edu.unq.epersgeist.modelo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UbicacionTest {
+
     private Ubicacion quilmes;
 
     @BeforeEach
@@ -17,7 +19,6 @@ public class UbicacionTest {
     void crearUbicacionTest() {
         assertEquals("Quilmes", quilmes.getNombre());
     }
-
     //@Test
     //void crearUbicacionConNombreNullLanzaExcepcion() {
     //    assertThrows(NullPointerException.class, () -> new Santuario(null,0));
@@ -39,11 +40,11 @@ public class UbicacionTest {
 
     @Test
     void eliminarEspirituTest() {
-        Espiritu pasion = new EspirituDemoniaco(100, "Cervecero, hoy hay que ganar", new Santuario("Lanús",1));
+        Espiritu pasion = new EspirituDemoniaco(100, "Cervecero, hoy hay que ganar", new Santuario("Lanús", 1));
         quilmes.agregarEspiritu(pasion);
         assertEquals(pasion, quilmes.getEspiritus().getFirst());
         quilmes.eliminarEspiritu(pasion);
         assertTrue(quilmes.getEspiritus().isEmpty());
     }
-   
+
 }

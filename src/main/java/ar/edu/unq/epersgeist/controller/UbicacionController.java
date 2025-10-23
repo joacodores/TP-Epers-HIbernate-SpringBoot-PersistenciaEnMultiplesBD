@@ -1,7 +1,6 @@
 package ar.edu.unq.epersgeist.controller;
 
 import ar.edu.unq.epersgeist.controller.dto.espiritu.RecuperarEspirituDTO;
-import ar.edu.unq.epersgeist.controller.dto.medium.ActualizarMediumDTO;
 import ar.edu.unq.epersgeist.controller.dto.medium.RecuperarMediumDTO;
 import ar.edu.unq.epersgeist.controller.dto.ubicacion.ActualizarUbicacionDTO;
 import ar.edu.unq.epersgeist.controller.dto.ubicacion.CrearUbicacionDTO;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -76,7 +74,7 @@ public class UbicacionController {
 
     @PutMapping("/{id}")
     public ResponseEntity<RecuperarUbicacionDTO> actualizarUbicacion(@PathVariable Long id,
-                                                               @RequestBody ActualizarUbicacionDTO ubicacionDTO) {
+                                                                     @RequestBody ActualizarUbicacionDTO ubicacionDTO) {
         var ubicacionAActualizar = ubicacionService.recuperar(id);
         if (ubicacionAActualizar.isEmpty()) throw new UbicacionNoEncontradaException("");
         var ubicacion = ubicacionAActualizar.get();
@@ -97,11 +95,10 @@ public class UbicacionController {
         return ResponseEntity.noContent().build(); // 204
     }
 
-
     @PostMapping("/{idOrigen}/conectar/{idDestino}/{costo}")
     public ResponseEntity<RecuperarUbicacionDTO> conectar(@PathVariable Long idOrigen,
-                                         @PathVariable Long  idDestino,
-                                         @PathVariable Long costo) {
+                                                          @PathVariable Long idDestino,
+                                                          @PathVariable Long costo) {
         ubicacionService.conectar(idOrigen, idDestino, costo);
         var ubicacionConConexion = ubicacionService.recuperar(idOrigen)
                 .orElseThrow(() -> new ActualizarRecursoException("la ubicacion origen"));
@@ -112,10 +109,19 @@ public class UbicacionController {
 
     @GetMapping("/{idOrigen}/conectadas/{idDestino}")
     public ResponseEntity<Boolean> estanConectadas(@PathVariable Long idOrigen,
-                                                              @PathVariable Long idDestino) {
+                                                   @PathVariable Long idDestino) {
         boolean conectadas = ubicacionService.estanConectadas(idOrigen, idDestino);
         return ResponseEntity.ok(conectadas);
     }
 
+    @GetMapping("/caminoMasCorto/{idOrigen}/{idDestino}")
+    public ResponseEntity<List<RecuperarUbicacionDTO>> caminoMasCorto(@PathVariable Long idOrigen,
+                                                                      @PathVariable Long idDestino) {
+        var camino = ubicacionService.caminoMasCorto(idOrigen, idDestino);
+        var caminoDto = camino.stream()
+                .map(RecuperarUbicacionDTO::desdeModelo)
+                .toList();
+        return ResponseEntity.ok(caminoDto);
+    }
 
 }

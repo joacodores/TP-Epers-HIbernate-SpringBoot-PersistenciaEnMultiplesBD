@@ -8,10 +8,12 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UbicacionService {
+
     Ubicacion crear(Ubicacion ubicacion);
 
     Optional<Ubicacion> recuperar(Long ubicacionId);
-//    Optional<Ubicacion> recuperarConConexiones(Long ubicacionId);
+
+    //    Optional<Ubicacion> recuperarConConexiones(Long ubicacionId);
     void actualizar(Ubicacion ubicacion);
 
     void eliminar(Long ubicacionId);
@@ -27,4 +29,7 @@ public interface UbicacionService {
     void conectar(Long idOrigen, Long idDestino, Long costo);
 
     Boolean estanConectadas(Long idOrigen, Long idDestino);
+
+    List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino);
+
 }

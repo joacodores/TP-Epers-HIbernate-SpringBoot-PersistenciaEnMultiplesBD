@@ -8,13 +8,12 @@ import ar.edu.unq.epersgeist.persistencia.repository.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repository.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repository.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.UbicacionService;
+import ar.edu.unq.epersgeist.servicios.exceptions.UbicacionesNoConectadasException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @Transactional
@@ -70,9 +69,7 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public void conectar(Long idOrigen, Long idDestino, Long costo) {
-
         ubicacionRepository.conectar(idOrigen, idDestino, costo);
-
     }
 
     @Override
@@ -83,6 +80,20 @@ public class UbicacionServiceImpl implements UbicacionService {
     @Override
     public List<Medium> mediumsSinEspiritusEn(Long ubicacionId) {
         return mediumRepository.mediumsSinEspiritusEn(ubicacionId);
+    }
+
+    @Override
+    public List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino) {
+        if (idOrigen.equals(idDestino)) {
+            return List.of(
+                    recuperar(idOrigen).orElseThrow(() -> new UbicacionNoEncontradaException(""))
+            );
+        }
+        List<Ubicacion> camino = ubicacionRepository.caminoMasCorto(idOrigen, idDestino);
+        if (camino == null || camino.isEmpty()) {
+            throw new UbicacionesNoConectadasException(idOrigen, idDestino);
+        }
+        return camino;
     }
 
 }

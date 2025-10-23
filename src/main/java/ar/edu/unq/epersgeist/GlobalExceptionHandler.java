@@ -4,6 +4,7 @@ import ar.edu.unq.epersgeist.controller.dto.errores.APIError;
 import ar.edu.unq.epersgeist.controller.exceptions.*;
 import ar.edu.unq.epersgeist.modelo.exceptions.*;
 import ar.edu.unq.epersgeist.servicios.exceptions.NoHaySantuarioCorruptoException;
+import ar.edu.unq.epersgeist.servicios.exceptions.UbicacionesNoConectadasException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,7 @@ public class GlobalExceptionHandler {
             EspirituNoEsLibreException.class,
             EspirituNoPuedeInvocarseEnUbicacionException.class,
             MediumNoPuedeTenerMasManaQueSuManaMax.class,
+            UbicacionesNoConectadasException.class
     })
     public ResponseEntity<APIError> handleNotSensibleModelExceptions(RuntimeException e) {
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());

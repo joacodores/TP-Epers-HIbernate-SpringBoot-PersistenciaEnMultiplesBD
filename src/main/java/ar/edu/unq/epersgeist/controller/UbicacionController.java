@@ -134,4 +134,11 @@ public class UbicacionController {
         return ResponseEntity.ok(caminoDto);
     }
 
+    @GetMapping("/ubicacionesSobrecargadas/{umbralDeEnergia}")
+    public ResponseEntity<List<RecuperarUbicacionDTO>> ubicacionesSobrecargadas(@PathVariable Integer umbralDeEnergia) {
+        var ubicaciones = ubicacionService.ubicacionesSobrecargadas(umbralDeEnergia);
+        var ubicacionesDTO = ubicaciones.stream().map(RecuperarUbicacionDTO::desdeModelo).toList();
+        return ResponseEntity.ok(ubicacionesDTO);
+    }
+
 }

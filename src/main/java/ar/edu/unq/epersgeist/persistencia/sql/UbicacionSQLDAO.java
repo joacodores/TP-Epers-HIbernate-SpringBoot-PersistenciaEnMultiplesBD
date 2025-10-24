@@ -12,7 +12,7 @@ import java.util.List;
 public interface UbicacionSQLDAO extends CrudRepository<UbicacionSQL, Long> {
 
     @Query(
-            value = "FROM UbicacionSQL where energia < :umbralDeEnergia"
+            value = "FROM UbicacionSQL where energia > :umbralDeEnergia"
     )
     List<UbicacionSQL> ubicacionesSobrecargadas(@Param("umbralDeEnergia") Integer umbralDeEnergia);
 

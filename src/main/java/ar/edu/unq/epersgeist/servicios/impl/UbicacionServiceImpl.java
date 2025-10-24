@@ -97,6 +97,20 @@ public class UbicacionServiceImpl implements UbicacionService {
     }
 
     @Override
+    public List<Ubicacion> caminoMasRentable(Long idOrigen, Long idDestino) {
+        if (idOrigen.equals(idDestino)) {
+            return List.of(
+                    recuperar(idOrigen).orElseThrow(() -> new UbicacionNoEncontradaException(""))
+            );
+        }
+        List<Ubicacion> camino = ubicacionRepository.caminoMasRentable(idOrigen, idDestino);
+        if (camino == null || camino.isEmpty()) {
+            throw new UbicacionesNoConectadasException(idOrigen, idDestino);
+        }
+        return camino;
+    }
+
+    @Override
     public List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia) {
         return ubicacionRepository.ubicacionesSobrecargadas(umbralDeEnergia);
     }

@@ -133,6 +133,14 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     }
 
     @Override
+    public List<Ubicacion> caminoMasRentable(Long idOrigen, Long idDestino) {
+        List<UbicacionNeo4J> ubicaciones = ubicacionNeo4JDAO.findMostRentablePath(idOrigen, idDestino);
+        return ubicaciones.stream()
+                .map(UbicacionNeo4J::toModel)
+                .toList();
+    }
+
+    @Override
     public List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia) {
         List<UbicacionSQL> ubicaciones = ubicacionSQLDAO.ubicacionesSobrecargadas(umbralDeEnergia);
         return ubicaciones.stream()

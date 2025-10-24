@@ -41,4 +41,20 @@ public interface UbicacionNeo4JDAO extends Neo4jRepository<UbicacionNeo4J, Long>
             """)
     List<UbicacionNeo4J> findShortestPath(Long idOrigen, Long idDestino);
 
+    @Query("""
+             MATCH (source:Ubicacion {id: $idOrigen})
+             MATCH (target:Ubicacion {id: $idDestino})
+             MATCH p = (source)-[:ubicacionesConectadas*..10]->(target)
+             WITH p,
+            reduce(total = 0, r IN relationships(p) | total + coalesce(r.costo, 0)) AS weight,
+            nodes(p) AS ns
+             ORDER BY weight ASC, size(ns) ASC
+             LIMIT 1
+             WITH ns
+             UNWIND range(0, size(ns)-1) AS idx
+             RETURN ns[idx] AS ubicacion
+             ORDER BY idx
+            """)
+    List<UbicacionNeo4J> findMostRentablePath(Long idOrigen, Long idDestino);
+
 }

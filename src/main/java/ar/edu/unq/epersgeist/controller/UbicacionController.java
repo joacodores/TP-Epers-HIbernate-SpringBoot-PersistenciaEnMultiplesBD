@@ -124,4 +124,14 @@ public class UbicacionController {
         return ResponseEntity.ok(caminoDto);
     }
 
+    @GetMapping("/caminoMasRentable/{idOrigen}/{idDestino}")
+    public ResponseEntity<List<RecuperarUbicacionDTO>> caminoMasRentable(@PathVariable Long idOrigen,
+                                                                         @PathVariable Long idDestino) {
+        var camino = ubicacionService.caminoMasRentable(idOrigen, idDestino);
+        var caminoDto = camino.stream()
+                .map(RecuperarUbicacionDTO::desdeModelo)
+                .toList();
+        return ResponseEntity.ok(caminoDto);
+    }
+
 }

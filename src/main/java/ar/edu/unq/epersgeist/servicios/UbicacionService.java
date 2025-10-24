@@ -32,6 +32,8 @@ public interface UbicacionService {
 
     List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino);
 
+    List<Ubicacion> caminoMasRentable(Long idOrigen, Long idDestino);
+
     List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia);
 
 }

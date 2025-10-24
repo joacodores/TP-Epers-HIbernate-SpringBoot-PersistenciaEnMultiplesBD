@@ -264,15 +264,15 @@ public class UbicacionServiceTest {
 
     @Test
     void caminoMasCortoConCicloNoSeEnredaTest() {
-        Ubicacion a = service.crear(new Santuario("A", 5));
-        Ubicacion b = service.crear(new Santuario("B", 5));
-        Ubicacion c = service.crear(new Santuario("C", 5));
-        service.conectar(a.getId(), b.getId(), 5L);
-        service.conectar(b.getId(), c.getId(), 5L);
-        service.conectar(c.getId(), a.getId(), 5L);
+        Ubicacion u = service.crear(new Santuario("U", 5));
+        Ubicacion v = service.crear(new Santuario("V", 5));
+        Ubicacion w = service.crear(new Santuario("W", 5));
+        service.conectar(u.getId(), v.getId(), 5L);
+        service.conectar(v.getId(), w.getId(), 5L);
+        service.conectar(w.getId(), u.getId(), 5L);
         assertEquals(
-                List.of(a.getId(), b.getId(), c.getId()),
-                service.caminoMasCorto(a.getId(), c.getId())
+                List.of(u.getId(), v.getId(), w.getId()),
+                service.caminoMasCorto(u.getId(), w.getId())
                         .stream()
                         .map(Ubicacion::getId)
                         .toList()
@@ -280,15 +280,63 @@ public class UbicacionServiceTest {
     }
 
     @Test
-    void caminoMasCortoConOrigenIgualADestinoTest() {
-        Ubicacion a = service.crear(new Santuario("A", 5));
+    void caminoMasCortoConOrigenIgualADestinoDevuelveUnaListaConSoloElOrigenTest() {
+        Ubicacion origen = service.crear(new Santuario("Origen", 5));
         assertEquals(
-                List.of(a.getId()),
-                service.caminoMasCorto(a.getId(), a.getId())
+                List.of(origen.getId()),
+                service.caminoMasCorto(origen.getId(), origen.getId())
                         .stream()
                         .map(Ubicacion::getId)
                         .toList()
         );
+    }
+
+    @Test
+    void caminoMasRentableTest() {
+        /*
+            Grafo (pesos):
+            A -> D (3)
+            D -> F (5)
+            D -> B (2)
+            B -> F (2)
+
+            Dos caminos A-D-F (3+5=8) y A-D-B-F (3+2+2=7) -> se espera A-D-B-F
+        */
+        Ubicacion a = service.crear(new Santuario("A", 100));
+        Ubicacion d = service.crear(new Santuario("D", 100));
+        Ubicacion b = service.crear(new Santuario("B", 100));
+        Ubicacion f = service.crear(new Santuario("F", 100));
+        service.conectar(a.getId(), d.getId(), 3L);
+        service.conectar(d.getId(), f.getId(), 5L);
+        service.conectar(d.getId(), b.getId(), 2L);
+        service.conectar(b.getId(), f.getId(), 2L);
+        List<Long> resultado = service.caminoMasRentable(a.getId(), f.getId())
+                .stream()
+                .map(Ubicacion::getId)
+                .toList();
+        assertEquals(List.of(a.getId(), d.getId(), b.getId(), f.getId()), resultado);
+    }
+
+    @Test
+    void caminoMasRentableCuandoNoHayCaminoLanzaExcepcionTest() {
+        Ubicacion g = service.crear(new Santuario("G", 50));
+        Ubicacion h = service.crear(new Santuario("H", 50));
+        Ubicacion i = service.crear(new Santuario("I", 50));
+        service.conectar(g.getId(), h.getId(), 10L);
+        assertThrows(UbicacionesNoConectadasException.class,
+                () -> service.caminoMasRentable(h.getId(), i.getId()));
+        assertThrows(UbicacionesNoConectadasException.class,
+                () -> service.caminoMasRentable(g.getId(), i.getId()));
+    }
+
+    @Test
+    void caminoMasRentableOrigenIgualADestinoDevuelveListaConSoloEseNodoTest() {
+        Ubicacion x = service.crear(new Santuario("X", 20));
+        List<Long> resultado = service.caminoMasRentable(x.getId(), x.getId())
+                .stream()
+                .map(Ubicacion::getId)
+                .toList();
+        assertEquals(List.of(x.getId()), resultado);
     }
 
     @Test

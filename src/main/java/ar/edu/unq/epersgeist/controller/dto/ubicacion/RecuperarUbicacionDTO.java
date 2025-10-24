@@ -6,8 +6,8 @@ public record RecuperarUbicacionDTO(Long id,
                                     TipoUbicacionDTO tipo,
                                     String nombre,
                                     Integer energia) {
-    public static RecuperarUbicacionDTO desdeModelo(Ubicacion ubicacion) {
 
+    public static RecuperarUbicacionDTO desdeModelo(Ubicacion ubicacion) {
         return new RecuperarUbicacionDTO(
                 ubicacion.getId(),
                 TipoUbicacionDTO.desdeModelo(ubicacion),
@@ -15,4 +15,5 @@ public record RecuperarUbicacionDTO(Long id,
                 ubicacion.getEnergia()
         );
     }
+
 }

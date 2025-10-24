@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EspirituService {
+
     Espiritu crear(Espiritu espiritu);
 
     Optional<Espiritu> recuperar(Long espirituId);
@@ -23,4 +24,5 @@ public interface EspirituService {
     void eliminar(Long espirituId);
 
     void eliminarTodo();
+
 }

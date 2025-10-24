@@ -1,12 +1,9 @@
 package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituSQL;
-import jakarta.persistence.Entity;
-import lombok.Data;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 public class EspirituDemoniaco extends Espiritu {
+
     @SuppressWarnings("unused")
     public EspirituDemoniaco() {
         super();
@@ -31,7 +28,7 @@ public class EspirituDemoniaco extends Espiritu {
 
     @Override
     protected void validarUbicacionPorTipo() {
-        if (getUbicacion().esSantuario()){
+        if (getUbicacion().esSantuario()) {
             this.disminuirConexion(10);
         }
     }
@@ -60,4 +57,5 @@ public class EspirituDemoniaco extends Espiritu {
     public boolean esAngelical() {
         return false;
     }
+
 }

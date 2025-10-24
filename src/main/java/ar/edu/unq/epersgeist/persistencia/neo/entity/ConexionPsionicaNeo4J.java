@@ -11,6 +11,7 @@ import org.springframework.data.neo4j.core.schema.TargetNode;
 @Setter
 @RelationshipProperties
 public class ConexionPsionicaNeo4J {
+
     @Id
     @Getter
     @GeneratedValue
@@ -25,11 +26,12 @@ public class ConexionPsionicaNeo4J {
     @Setter
     private Integer costo;
 
-    public ConexionPsionicaNeo4J(){
+    public ConexionPsionicaNeo4J() {
     }
+
     public ConexionPsionicaNeo4J(UbicacionNeo4J destino, Integer costo) {
         this.destino = destino;
-        this.costo =  Math.max(0, Math.min(100, costo));
+        this.costo = Math.max(0, Math.min(100, costo));
     }
 
 }

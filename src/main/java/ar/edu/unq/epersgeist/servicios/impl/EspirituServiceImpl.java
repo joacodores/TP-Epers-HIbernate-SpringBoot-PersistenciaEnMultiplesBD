@@ -8,16 +8,12 @@ import ar.edu.unq.epersgeist.persistencia.repository.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repository.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repository.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.EspirituService;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @Transactional
@@ -35,7 +31,6 @@ public class EspirituServiceImpl implements EspirituService {
 
     @Override
     public Espiritu crear(Espiritu espiritu) {
-
         return espirituRepository.crear(espiritu);
     }
 

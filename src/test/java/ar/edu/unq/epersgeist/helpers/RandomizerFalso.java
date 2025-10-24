@@ -10,6 +10,7 @@ import java.util.Queue;
 
 @NoArgsConstructor
 public class RandomizerFalso implements Randomizer {
+
     private final Queue<Integer> secAtaques = new LinkedList<>();
     private final Queue<Integer> secDefensas = new LinkedList<>();
 
@@ -52,4 +53,5 @@ public class RandomizerFalso implements Randomizer {
     public int lanzarDadoDeDefensa() {
         return this.obtenerResultado(this.secDefensas, "No quedan más tiradas de defensa en la secuencia");
     }
+
 }

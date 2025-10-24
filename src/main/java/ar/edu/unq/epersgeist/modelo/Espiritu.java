@@ -4,27 +4,26 @@ import ar.edu.unq.epersgeist.modelo.exceptions.NivelDeConexionFueraDeRangoExcept
 import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituSQL;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.MediumSQL;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.SantuarioSQL;
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
-import static jakarta.persistence.GenerationType.AUTO;
-
-@Getter @Setter
+@Getter
+@Setter
 @AllArgsConstructor
 public abstract class Espiritu {
+
+    private final int maxNivelDeConexion = 100;
+    private final int minNivelDeConexion = 0;
+    private final Date createdAt = new Date();
+    protected Randomizer randomizer;
     private Long id;
     private int nivelDeConexion;
     private String nombre;
-    private final int maxNivelDeConexion = 100;
-    private final int minNivelDeConexion = 0;
     private Ubicacion ubicacion;
     private Medium owner;
-    protected Randomizer randomizer;
-    private final Date createdAt = new Date();
     private Date updatedAt;
     private Boolean deletedAt = false;
 
@@ -41,23 +40,26 @@ public abstract class Espiritu {
         ubicacion.agregarEspiritu(this);
     }
 
-
     public Espiritu(EspirituSQL espirituSQL) {
         validarNivelDeConexion(espirituSQL.getNivelDeConexion());
         this.id = espirituSQL.getId();
         this.nombre = espirituSQL.getNombre();
         this.randomizer = new RandomizerImpl();
-        if (espirituSQL.getUbicacion() instanceof SantuarioSQL){
+        if (espirituSQL.getUbicacion() instanceof SantuarioSQL) {
             this.ubicacion = new Santuario(espirituSQL.getUbicacion().getNombre(), espirituSQL.getUbicacion().getEnergia());
             this.ubicacion.setId(espirituSQL.getUbicacion().getId());
-        }else{
+        } else {
             this.ubicacion = new Cementerio(espirituSQL.getUbicacion().getNombre(), espirituSQL.getUbicacion().getEnergia());
             this.ubicacion.setId(espirituSQL.getUbicacion().getId());
         }
+        if (espirituSQL.getOwner() != null) {
+            MediumSQL ownerSQL = espirituSQL.getOwner();
+            Medium owner = new Medium();
+            owner.setId(ownerSQL.getId());
+            owner.setNombre(ownerSQL.getNombre());
+            this.owner = owner;
+        }
     }
-
-    void internalSetOwner(Medium m) { this.owner = m; }
-    void internalSetUbicacion(Ubicacion u) { this.ubicacion = u; }
 
     public abstract boolean puedeExorcizar();
 
@@ -128,4 +130,5 @@ public abstract class Espiritu {
     public abstract boolean esDemoniaco();
 
     public abstract boolean esAngelical();
+
 }

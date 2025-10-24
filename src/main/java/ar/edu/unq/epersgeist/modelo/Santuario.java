@@ -1,26 +1,20 @@
 package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.persistencia.sql.entity.UbicacionSQL;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
-public class Santuario extends Ubicacion{
+public class Santuario extends Ubicacion {
 
-    public Santuario(String nombre, Integer energia){
+    public Santuario(String nombre, Integer energia) {
         super(nombre, energia);
     }
 
-    public Santuario(UbicacionSQL ubicacionSQL){
+    public Santuario(UbicacionSQL ubicacionSQL) {
         super(ubicacionSQL);
     }
 
     public static Santuario from(UbicacionSQL ubicacionSQL) {
         return new Santuario(ubicacionSQL);
     }
-
 
     @Override
     public boolean permiteInvocar(Espiritu e) {
@@ -37,7 +31,6 @@ public class Santuario extends Ubicacion{
         return e.esAngelical() ? getEnergia() : 0;
     }
 
-
     @Override
     public boolean esSantuario() {
         return true;
@@ -47,4 +40,5 @@ public class Santuario extends Ubicacion{
     public boolean esCementerio() {
         return false;
     }
+
 }

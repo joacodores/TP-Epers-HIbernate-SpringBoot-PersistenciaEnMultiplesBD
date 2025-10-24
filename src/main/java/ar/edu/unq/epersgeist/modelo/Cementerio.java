@@ -1,18 +1,10 @@
 package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.persistencia.sql.entity.UbicacionSQL;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
+public class Cementerio extends Ubicacion {
 
-public class Cementerio extends Ubicacion{
-
-    public Cementerio(String nombre, Integer energia){
+    public Cementerio(String nombre, Integer energia) {
         super(nombre, energia);
     }
 

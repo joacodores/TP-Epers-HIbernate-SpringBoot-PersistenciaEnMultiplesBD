@@ -14,6 +14,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MediumTest {
+
     private Santuario fuerteApache;
     private Santuario bocaPredio;
     private Cementerio riber;
@@ -29,8 +30,8 @@ public class MediumTest {
 
     @BeforeEach
     void prepare() {
-        fuerteApache = new Santuario("Fuerte Apache",50);
-        bocaPredio = new Santuario("Boca Predio",10);
+        fuerteApache = new Santuario("Fuerte Apache", 50);
+        bocaPredio = new Santuario("Boca Predio", 10);
         riber = new Cementerio("Descendido", 40);
         picolo = new Medium("Picolo", 100, 40, riber);
         majinBu = new EspirituDemoniaco(80, "Majin Buu", fuerteApache);
@@ -244,8 +245,8 @@ public class MediumTest {
         Medium tai = new Medium("Tai", 100, 10, fuerteApache);
         tai.descansar();
         assertEquals(85, tai.getMana()); //150% de 50 = 75 + 10(mana de Tai)
-
     }
+
     @Test
     void mediumDescansaEnSantuarioYSusEspiritusAngelicalesObtienenEnergiaComoConexion() {
         Medium tai = new Medium("Tai", 100, 10, fuerteApache);
@@ -257,6 +258,7 @@ public class MediumTest {
         assertEquals(52, espirituAngelical2.getNivelDeConexion()); //50 de energia de fuerteApache + 2
         assertEquals(52, espirituAngelical.getNivelDeConexion());
     }
+
     @Test
     void mediumDescansaEnSantuarioYSusEspiritusDemoniacosNoObtienenConexion() {
         ConexionPsionica conexionPsionica = new ConexionPsionica(fuerteApache, 10);
@@ -273,13 +275,14 @@ public class MediumTest {
         assertEquals(0, demonio.getNivelDeConexion()); //luego de descansar sigue en 0
         assertEquals(0, demonio2.getNivelDeConexion());
     }
+
     @Test
     void mediumDescansaEnCementerioYObtiene50PorcientoDeEnergiaComoMna() {
         Medium tai = new Medium("Tai", 100, 10, riber);
         tai.descansar();
         assertEquals(30, tai.getMana()); //50% de 40 = 20 + 10(mana de Tai)
-
     }
+
     @Test
     void mediumDescansaEnCementerioYSusEspiritusDemoniacosObtienenEnergiaComoConexion() {
         Medium chopper = new Medium("Chopper", 100, 10, riber);
@@ -291,6 +294,7 @@ public class MediumTest {
         assertEquals(42, demonio.getNivelDeConexion()); //40 de energia de riber + 2
         assertEquals(42, demonio2.getNivelDeConexion());
     }
+
     @Test
     void mediumDescansaEnCementerioYSusEspiritusAngelicalesNoObtienenConexion() {
         ConexionPsionica conexionPsionica = new ConexionPsionica(riber, 10);
@@ -307,6 +311,7 @@ public class MediumTest {
         assertEquals(0, espirituAngelical.getNivelDeConexion()); //luego de descansar sigue en 0
         assertEquals(0, espirituAngelical2.getNivelDeConexion());
     }
+
     @Test
     void mediumPuedeInvocarEspirituAngelicalEnSantuario() {
         assertEquals(fuerteApache, carlitos.getUbicacion());
@@ -315,6 +320,7 @@ public class MediumTest {
         assertEquals(bocaPredio, carlitos.getUbicacion());
         assertTrue(bocaPredio.getEspiritus().contains(carlitos));
     }
+
     @Test
     void mediumPuedeInvocarEspirituDemoniacoEnCementerio() {
         assertEquals(riber, picolo.getUbicacion());
@@ -323,7 +329,6 @@ public class MediumTest {
         assertEquals(riber, majinBu.getUbicacion());
         assertTrue(riber.getEspiritus().contains(majinBu));
     }
-
 
     @Test
     void invocarSinManaNoCambiaNada() {
@@ -405,11 +410,12 @@ public class MediumTest {
     }
 
     @Test
-    void mediumNoPuedeInvocarEspirituAngelicalEnCementerioTest(){
+    void mediumNoPuedeInvocarEspirituAngelicalEnCementerioTest() {
         assertThrows(EspirituNoPuedeInvocarseEnUbicacionException.class, () -> picolo.invocar(carlitos));
     }
+
     @Test
-    void mediumNoPuedeInvocarEspirituDemoniacoEnSantuarioTest(){
+    void mediumNoPuedeInvocarEspirituDemoniacoEnSantuarioTest() {
         assertThrows(EspirituNoPuedeInvocarseEnUbicacionException.class, () -> palermo.invocar(majinBu));
     }
 
@@ -424,7 +430,6 @@ public class MediumTest {
         riber.getConexiones().add(conexionPsionica);
         Medium chopper = new Medium("Chopper", 100, 10, riber);
         chopper.mover(fuerteApache);
-
         assertEquals(chopper.getUbicacion(), fuerteApache);
     }
 
@@ -434,7 +439,7 @@ public class MediumTest {
         riber.getConexiones().add(conexionPsionica);
         Medium chopper = new Medium("Chopper", 100, 50, riber);
         chopper.mover(fuerteApache);
-
-        assertEquals( 40, chopper.getMana());
+        assertEquals(40, chopper.getMana());
     }
+
 }

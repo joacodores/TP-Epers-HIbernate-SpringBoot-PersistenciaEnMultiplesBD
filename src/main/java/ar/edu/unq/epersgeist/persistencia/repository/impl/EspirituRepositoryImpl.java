@@ -6,10 +6,10 @@ import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
 import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
 import ar.edu.unq.epersgeist.persistencia.dao.ReporteSantuarioMasCorruptoProjection;
 import ar.edu.unq.epersgeist.persistencia.repository.EspirituRepository;
-import ar.edu.unq.epersgeist.persistencia.repository.UbicacionRepository;
 import ar.edu.unq.epersgeist.persistencia.sql.EspirituSQLDAO;
-import ar.edu.unq.epersgeist.persistencia.sql.UbicacionSQLDAO;
-import ar.edu.unq.epersgeist.persistencia.sql.entity.*;
+import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituAngelicalSQL;
+import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituDemoniacoSQL;
+import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituSQL;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -32,7 +32,7 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     @Override
     public Espiritu crear(Espiritu espiritu) {
         EspirituSQL espirituSQL;
-        if(espiritu.esAngelical()) {
+        if (espiritu.esAngelical()) {
             espirituSQL = new EspirituAngelicalSQL(espiritu);
         } else {
             espirituSQL = new EspirituDemoniacoSQL(espiritu);
@@ -45,7 +45,7 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     @Override
     public Optional<Espiritu> recuperar(Long espirituId) {
         EspirituSQL espirituSQL = espirituSQLDAO.findById(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(""));
-        if(espirituSQL instanceof EspirituAngelicalSQL) {
+        if (espirituSQL instanceof EspirituAngelicalSQL) {
             return Optional.of(new EspirituAngelical(espirituSQL));
         } else {
             return Optional.of(new EspirituDemoniaco(espirituSQL));
@@ -57,7 +57,7 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         var iterable = espirituSQLDAO.findAll();
         List<EspirituSQL> espiritusSQLS = StreamSupport.stream(iterable.spliterator(), false).toList();
         return espiritusSQLS.stream().map(espirituSQL -> {
-            if(espirituSQL instanceof EspirituAngelicalSQL) {
+            if (espirituSQL instanceof EspirituAngelicalSQL) {
                 return new EspirituAngelical(espirituSQL);
             } else {
                 return new EspirituDemoniaco(espirituSQL);
@@ -74,7 +74,7 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         );
         List<EspirituSQL> espirituSQLS = espirituSQLDAO.espiritusDemoniacos(pageable).getContent();
         return espirituSQLS.stream().map(espirituSQL -> {
-            if(espirituSQL instanceof EspirituAngelicalSQL) {
+            if (espirituSQL instanceof EspirituAngelicalSQL) {
                 return new EspirituAngelical(espirituSQL);
             } else {
                 return new EspirituDemoniaco(espirituSQL);
@@ -85,7 +85,7 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     @Override
     public void actualizar(Espiritu espiritu) {
         EspirituSQL espirituSQL;
-        if(espiritu.esAngelical()) {
+        if (espiritu.esAngelical()) {
             espirituSQL = new EspirituAngelicalSQL(espiritu);
         } else {
             espirituSQL = new EspirituDemoniacoSQL(espiritu);
@@ -108,7 +108,7 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     public List<Espiritu> espiritusEn(Long ubicacionId) {
         List<EspirituSQL> espiritusSQL = espirituSQLDAO.espiritusEn(ubicacionId);
         return espiritusSQL.stream().map(espirituSQL -> {
-            if(espirituSQL instanceof EspirituAngelicalSQL) {
+            if (espirituSQL instanceof EspirituAngelicalSQL) {
                 return new EspirituAngelical(espirituSQL);
             } else {
                 return new EspirituDemoniaco(espirituSQL);
@@ -120,4 +120,5 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     public List<ReporteSantuarioMasCorruptoProjection> obtenerReporteSantuarioMasCorrupto() {
         return espirituSQLDAO.obtenerReporteSantuarioMasCorrupto();
     }
+
 }

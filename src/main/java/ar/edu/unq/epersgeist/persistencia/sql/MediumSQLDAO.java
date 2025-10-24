@@ -1,6 +1,5 @@
 package ar.edu.unq.epersgeist.persistencia.sql;
 
-import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.MediumSQL;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -11,6 +10,7 @@ import java.util.List;
 
 @Repository
 public interface MediumSQLDAO extends CrudRepository<MediumSQL, Long> {
+
     @Query(
             "from MediumSQL m where m.ubicacion.id = :ubicacionId and m.espiritus is empty "
     )
@@ -20,4 +20,5 @@ public interface MediumSQLDAO extends CrudRepository<MediumSQL, Long> {
             "from MediumSQL m where m.id = :mediumId"
     )
     MediumSQL recuperar(Long mediumId);
+
 }

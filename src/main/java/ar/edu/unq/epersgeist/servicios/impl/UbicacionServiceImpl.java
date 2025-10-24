@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
 
 @Service
 @Transactional
@@ -82,32 +83,25 @@ public class UbicacionServiceImpl implements UbicacionService {
         return mediumRepository.mediumsSinEspiritusEn(ubicacionId);
     }
 
-    @Override
-    public List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino) {
-        if (idOrigen.equals(idDestino)) {
-            return List.of(
-                    recuperar(idOrigen).orElseThrow(() -> new UbicacionNoEncontradaException(""))
-            );
-        }
-        List<Ubicacion> camino = ubicacionRepository.caminoMasCorto(idOrigen, idDestino);
-        if (camino == null || camino.isEmpty()) {
-            throw new UbicacionesNoConectadasException(idOrigen, idDestino);
-        }
-        return camino;
+    private List<Ubicacion> findPath(
+            Long idOrigen,
+            Long idDestino,
+            BiFunction<Long, Long, List<Ubicacion>> finder
+    ) {
+        return idOrigen.equals(idDestino)
+                ? List.of(recuperar(idOrigen)
+                .orElseThrow(() -> new UbicacionNoEncontradaException("")))
+                : Optional.ofNullable(finder.apply(idOrigen, idDestino))
+                .filter(c -> !c.isEmpty())
+                .orElseThrow(() -> new UbicacionesNoConectadasException(idOrigen, idDestino));
     }
 
-    @Override
+    public List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino) {
+        return findPath(idOrigen, idDestino, ubicacionRepository::caminoMasCorto);
+    }
+
     public List<Ubicacion> caminoMasRentable(Long idOrigen, Long idDestino) {
-        if (idOrigen.equals(idDestino)) {
-            return List.of(
-                    recuperar(idOrigen).orElseThrow(() -> new UbicacionNoEncontradaException(""))
-            );
-        }
-        List<Ubicacion> camino = ubicacionRepository.caminoMasRentable(idOrigen, idDestino);
-        if (camino == null || camino.isEmpty()) {
-            throw new UbicacionesNoConectadasException(idOrigen, idDestino);
-        }
-        return camino;
+        return findPath(idOrigen, idDestino, ubicacionRepository::caminoMasRentable);
     }
 
     @Override

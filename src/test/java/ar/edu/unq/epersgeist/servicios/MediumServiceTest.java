@@ -49,8 +49,7 @@ public class MediumServiceTest {
     @Test
     void recuperarMediumNoPersistidoLanzaExcepcionTest() {
         Medium medium = service.crear(new Medium("Thiago", 50, 30, santuario));
-        assertThrows(MediumNoEncontradoException.class, () -> {service.recuperar(medium.getId() + 1);
-        });
+        assertThrows(MediumNoEncontradoException.class, () -> service.recuperar(medium.getId() + 1));
     }
 
     @Test
@@ -274,6 +273,7 @@ public class MediumServiceTest {
         Medium mediumRecuperado = service.recuperar(medium.getId()).orElseThrow();
         assertEquals(mediumRecuperado.getId(), mediumId);
     }
+
     @AfterEach
     void cleanup() {
         espirituService.eliminarTodo();

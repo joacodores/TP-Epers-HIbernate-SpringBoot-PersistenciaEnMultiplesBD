@@ -1,12 +1,12 @@
 package ar.edu.unq.epersgeist.persistencia.repository;
 
-import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface MediumRepository {
+
     Medium crear(Medium medium);
 
     Optional<Medium> recuperar(Long mediumId);
@@ -20,4 +20,5 @@ public interface MediumRepository {
     void eliminarTodo();
 
     List<Medium> mediumsSinEspiritusEn(Long ubicacionId);
+
 }

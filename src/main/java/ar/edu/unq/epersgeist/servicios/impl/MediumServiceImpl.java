@@ -4,19 +4,18 @@ import ar.edu.unq.epersgeist.controller.exceptions.EspirituNoEncontradoException
 import ar.edu.unq.epersgeist.controller.exceptions.MediumNoEncontradoException;
 import ar.edu.unq.epersgeist.controller.exceptions.UbicacionLejanaException;
 import ar.edu.unq.epersgeist.controller.exceptions.UbicacionNoEncontradaException;
-import ar.edu.unq.epersgeist.modelo.ConexionPsionica;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.persistencia.repository.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repository.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repository.UbicacionRepository;
-import ar.edu.unq.epersgeist.persistencia.sql.UbicacionSQLDAO;
 import ar.edu.unq.epersgeist.servicios.MediumService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -46,7 +45,6 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public List<Medium> recuperarTodos() {
-
         return mediumRepository.recuperarTodos();
     }
 
@@ -69,7 +67,7 @@ public class MediumServiceImpl implements MediumService {
     public void exorcizar(Long idMediumExorcista, Long idMediumAExorcizar) {
         Medium exorcista = mediumRepository.recuperar(idMediumExorcista).orElseThrow(() -> new MediumNoEncontradoException("Medium no encontrado"));
         Medium mediumAExorcizar = mediumRepository.recuperar(idMediumAExorcizar).orElseThrow(() -> new MediumNoEncontradoException("Medium no encontrado"));
-        if (exorcista.getUbicacion().getId() == mediumAExorcizar.getUbicacion().getId()) {
+        if (Objects.equals(exorcista.getUbicacion().getId(), mediumAExorcizar.getUbicacion().getId())) {
             exorcista.exorcizar(mediumAExorcizar);
             mediumRepository.actualizar(exorcista);
             mediumRepository.actualizar(mediumAExorcizar);
@@ -78,9 +76,9 @@ public class MediumServiceImpl implements MediumService {
 
     @Override
     public void descansar(Long mediumId) {
-         Medium medium = mediumRepository.recuperar(mediumId).orElseThrow(() -> new  MediumNoEncontradoException("Medium no encontrado"));
-         medium.descansar();
-         mediumRepository.actualizar(medium);
+        Medium medium = mediumRepository.recuperar(mediumId).orElseThrow(() -> new MediumNoEncontradoException("Medium no encontrado"));
+        medium.descansar();
+        mediumRepository.actualizar(medium);
     }
 
     @Override
@@ -104,20 +102,17 @@ public class MediumServiceImpl implements MediumService {
     public void mover(Long mediumId, Long ubicacionId) {
         Medium medium = mediumRepository.recuperar(mediumId).orElseThrow(() -> new MediumNoEncontradoException(""));
         Ubicacion ubicacion = ubicacionRepository.recuperar(ubicacionId).orElseThrow(() -> new UbicacionNoEncontradaException(""));
-
-        if(!ubicacionRepository.estanConectadas(medium.getUbicacion().getId(), ubicacion.getId())) {
+        if (!ubicacionRepository.estanConectadas(medium.getUbicacion().getId(), ubicacion.getId())) {
             throw new UbicacionLejanaException("Las ubicaciones no están conectadas");
         }
         Ubicacion ubicacionOrigen = ubicacionRepository.recuperar(medium.getUbicacion().getId()).orElseThrow(() -> new UbicacionNoEncontradaException(""));
         medium.getUbicacion().setConexiones(ubicacionOrigen.getConexiones());
         medium.mover(ubicacion);
-
-        if(medium.getMana() == 0) {
+        if (medium.getMana() == 0) {
             mediumRepository.eliminar(mediumId);
         } else {
             mediumRepository.actualizar(medium);
         }
-
     }
 
 }

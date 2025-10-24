@@ -7,13 +7,14 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class EspirituTest {
+
     private Espiritu rika;
     private Medium yuta;
     private Ubicacion puebloPaleta;
 
     @BeforeEach
     void crearModelo() {
-        puebloPaleta = new Cementerio("Pueblo Paleta",50);
+        puebloPaleta = new Cementerio("Pueblo Paleta", 50);
         rika = new EspirituAngelical(50, "Rika", puebloPaleta);
         yuta = new Medium("Yuta", 100, 100, puebloPaleta);
     }
@@ -42,7 +43,6 @@ public class EspirituTest {
     void crearEspirituConUbicacionNullLanzaExcepcionTest() {
         assertThrows(NullPointerException.class, () -> new EspirituAngelical(10, "hola", null));
     }
-
     //@Test
     //void crearEspirituConNombreNullLanzaExcepcionTest() {
     //    assertThrows(NullPointerException.class, () -> new EspirituAngelical(10, null, puebloPaleta));
@@ -128,4 +128,5 @@ public class EspirituTest {
         assertEquals(50, rika.getNivelDeConexion());
         assertEquals(100, sukuna.getNivelDeConexion());
     }
+
 }

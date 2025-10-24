@@ -12,6 +12,7 @@ public record CrearEspirituDTO(String nombre,
                                TipoEspirituDTO tipo,
                                Integer nivelDeConexion,
                                Long ubicacionId) {
+
     public Espiritu aModelo(Ubicacion ubicacion) {
         if (tipo.equals(ANGELICAL)) {
             return new EspirituAngelical(nivelDeConexion, nombre, ubicacion);
@@ -20,4 +21,5 @@ public record CrearEspirituDTO(String nombre,
         }
         throw new IllegalArgumentException("Tipo de espiritu invalido");
     }
+
 }

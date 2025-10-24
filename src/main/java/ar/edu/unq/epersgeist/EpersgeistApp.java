@@ -7,6 +7,7 @@ import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
 @SpringBootApplication
 @EnableNeo4jRepositories
 public class EpersgeistApp {
+
     public static void main(String[] args) {
         epersASCII();
         SpringApplication.run(EpersgeistApp.class, args);
@@ -24,4 +25,5 @@ public class EpersgeistApp {
         System.out.println("       _\\/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_\\/\\\\\\_____________\\/\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\_\\/\\\\\\______\\//\\\\\\_\\///\\\\\\\\\\\\\\\\\\/_____");
         System.out.println("        _\\///////////////__\\///______________\\///////////////__\\///________\\///____\\///////////_____");
     }
+
 }

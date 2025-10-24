@@ -7,8 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin
 public class HelloController {
+
     @PostMapping("/hello")
     public String hello() {
         return "Hello LORDS OF THE STRINGS!";
     }
+
 }

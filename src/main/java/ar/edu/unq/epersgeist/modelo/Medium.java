@@ -2,32 +2,34 @@ package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.controller.exceptions.ConexionPsionicaException;
 import ar.edu.unq.epersgeist.modelo.exceptions.*;
-import ar.edu.unq.epersgeist.persistencia.sql.entity.*;
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituAngelicalSQL;
+import ar.edu.unq.epersgeist.persistencia.sql.entity.MediumSQL;
+import ar.edu.unq.epersgeist.persistencia.sql.entity.SantuarioSQL;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static jakarta.persistence.GenerationType.AUTO;
 import static java.lang.Integer.min;
 
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Medium {
 
+    private final Date createdAt = new Date();
     private Long id;
     private String nombre;
     private Integer manaMax;
     private Integer mana;
     private List<Espiritu> espiritus = new ArrayList<>();
     private Ubicacion ubicacion;
-    private final Date createdAt = new Date();
     private Date updatedAt;
     private Boolean deletedAt = false;
 
@@ -44,9 +46,9 @@ public class Medium {
         this.nombre = mediumSQL.getNombre();
         this.manaMax = mediumSQL.getManaMax();
         this.mana = mediumSQL.getMana();
-        for (var espirituSQL : mediumSQL.getEspiritus()){
+        for (var espirituSQL : mediumSQL.getEspiritus()) {
             Espiritu espiritu;
-            if(espirituSQL instanceof EspirituAngelicalSQL) {
+            if (espirituSQL instanceof EspirituAngelicalSQL) {
                 espiritu = new EspirituAngelical(espirituSQL);
             } else {
                 espiritu = new EspirituDemoniaco(espirituSQL);
@@ -54,10 +56,10 @@ public class Medium {
             this.espiritus.add(espiritu);
             espiritu.setOwner(this);
         }
-        if (mediumSQL.getUbicacion() instanceof SantuarioSQL){
+        if (mediumSQL.getUbicacion() instanceof SantuarioSQL) {
             this.ubicacion = new Santuario(mediumSQL.getUbicacion().getNombre(), mediumSQL.getUbicacion().getEnergia());
             this.ubicacion.setId(mediumSQL.getUbicacion().getId());
-        }else{
+        } else {
             this.ubicacion = new Cementerio(mediumSQL.getUbicacion().getNombre(), mediumSQL.getUbicacion().getEnergia());
             this.ubicacion.setId(mediumSQL.getUbicacion().getId());
         }
@@ -76,7 +78,7 @@ public class Medium {
     }
 
     public boolean comparteUbicacion(Espiritu espiritu) {
-        return (this.ubicacion.getId() != null ? this.ubicacion.getId() == espiritu.getUbicacion().getId() : this.ubicacion == espiritu.getUbicacion());
+        return (this.ubicacion.getId() != null ? this.ubicacion.getId().equals(espiritu.getUbicacion().getId()) : this.ubicacion == espiritu.getUbicacion());
     }
 
     public void desvincularEspiritu(Espiritu espiritu) {
@@ -151,7 +153,7 @@ public class Medium {
 
     public void mover(Ubicacion ubicacionDestino) {
         Optional<ConexionPsionica> conexionOptional = this.ubicacion.getConexiones().stream().filter(conexion -> conexion.getDestino().getNombre().equals(ubicacionDestino.getNombre())).findFirst();
-        if(conexionOptional.isEmpty()) {
+        if (conexionOptional.isEmpty()) {
             throw new ConexionPsionicaException("La conexion no existe");
         }
         setUbicacion(ubicacionDestino);
@@ -164,8 +166,4 @@ public class Medium {
         this.updatedAt = new Date();
     }
 
-    void internalSetUbicacion(Ubicacion u) { this.ubicacion = u; }
-    void internalAddEspiritu(Espiritu e) {
-        if (e != null && !espiritus.contains(e)) espiritus.add(e);
-    }
 }

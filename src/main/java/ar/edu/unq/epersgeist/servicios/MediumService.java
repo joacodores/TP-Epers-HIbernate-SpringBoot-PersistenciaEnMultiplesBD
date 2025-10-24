@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MediumService {
+
     Medium crear(Medium medium);
 
     Optional<Medium> recuperar(Long mediumId);
@@ -28,4 +29,5 @@ public interface MediumService {
     List<Espiritu> espiritus(Long mediumId);
 
     void mover(Long mediumId, Long ubicacionId);
+
 }

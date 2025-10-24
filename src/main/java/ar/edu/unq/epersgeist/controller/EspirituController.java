@@ -107,7 +107,6 @@ public class EspirituController {
         return ResponseEntity.ok(espiritusRecuperados);
     }
 
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarEspiritu(@PathVariable Long id) {
         var espirituRecuperado = espirituService.recuperar(id);
@@ -115,4 +114,5 @@ public class EspirituController {
         espirituService.eliminar(espirituRecuperado.get().getId());
         return ResponseEntity.noContent().build();
     }
+
 }

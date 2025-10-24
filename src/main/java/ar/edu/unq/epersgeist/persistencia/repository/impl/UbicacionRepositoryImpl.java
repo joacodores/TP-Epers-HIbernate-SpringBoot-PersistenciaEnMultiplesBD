@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.stream.StreamSupport;
 
 @Component
@@ -124,20 +125,21 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         ubicacionNeo4JDAO.deleteAll();
     }
 
-    @Override
-    public List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino) {
-        List<UbicacionNeo4J> ubicaciones = ubicacionNeo4JDAO.findShortestPath(idOrigen, idDestino);
-        return ubicaciones.stream()
+    private List<Ubicacion> findPath(Long idOrigen, Long idDestino, BiFunction<Long, Long, List<UbicacionNeo4J>> finder) {
+        return finder.apply(idOrigen, idDestino)
+                .stream()
                 .map(UbicacionNeo4J::toModel)
                 .toList();
     }
 
     @Override
+    public List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino) {
+        return findPath(idOrigen, idDestino, ubicacionNeo4JDAO::findShortestPath);
+    }
+
+    @Override
     public List<Ubicacion> caminoMasRentable(Long idOrigen, Long idDestino) {
-        List<UbicacionNeo4J> ubicaciones = ubicacionNeo4JDAO.findMostRentablePath(idOrigen, idDestino);
-        return ubicaciones.stream()
-                .map(UbicacionNeo4J::toModel)
-                .toList();
+        return findPath(idOrigen, idDestino, ubicacionNeo4JDAO::findMostRentablePath);
     }
 
     @Override

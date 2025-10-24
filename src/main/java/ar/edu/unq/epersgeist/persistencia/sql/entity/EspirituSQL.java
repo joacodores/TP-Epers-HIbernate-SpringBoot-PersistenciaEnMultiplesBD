@@ -1,9 +1,7 @@
 package ar.edu.unq.epersgeist.persistencia.sql.entity;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.modelo.Randomizer;
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,9 +17,20 @@ import static jakarta.persistence.GenerationType.AUTO;
 @Entity
 @Table(name = "Espiritu")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "dtype", discriminatorType = DiscriminatorType.STRING, length = 50)
 @SQLDelete(sql = "UPDATE Espiritu SET deleted_at = true WHERE id=?")
 @Where(clause = "deleted_at=false")
 public abstract class EspirituSQL {
+
+    private final int maxNivelDeConexion = 100;
+    private final int minNivelDeConexion = 0;
+
+    @Temporal(TemporalType.DATE)
+    private final Date createdAt = new Date();
+
+    @Transient
+    protected Randomizer randomizer;
+
     @Id
     @GeneratedValue(strategy = AUTO)
     private Long id;
@@ -31,20 +40,12 @@ public abstract class EspirituSQL {
 
     @Column(nullable = false, length = 500)
     private String nombre;
-    private final int maxNivelDeConexion = 100;
-    private final int minNivelDeConexion = 0;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private UbicacionSQL ubicacion;
 
     @ManyToOne
     private MediumSQL owner;
-
-    @Transient
-    protected Randomizer randomizer;
-
-    @Temporal(TemporalType.DATE)
-    private final Date createdAt = new Date();
 
     @Temporal(TemporalType.DATE)
     private Date updatedAt;
@@ -57,17 +58,24 @@ public abstract class EspirituSQL {
         this.id = espiritu.getId();
         this.nombre = espiritu.getNombre();
         this.nivelDeConexion = espiritu.getNivelDeConexion();
-        if(espiritu.getUbicacion().esSantuario()) {
+        if (espiritu.getUbicacion().esSantuario()) {
             this.ubicacion = new SantuarioSQL(espiritu.getUbicacion());
-        }else {
+        } else {
             this.ubicacion = new CementerioSQL(espiritu.getUbicacion());
+        }
+        if (espiritu.getOwner() != null) {
+            this.owner = new MediumSQL(espiritu.getOwner().getId(), espiritu.getOwner().getNombre());
+        } else {
+            this.owner = null;
         }
     }
 
-    public EspirituSQL() {}
+    public EspirituSQL() {
+    }
 
     public EspirituSQL(Long id, String nombre) {
         this.id = id;
         this.nombre = nombre;
     }
+
 }

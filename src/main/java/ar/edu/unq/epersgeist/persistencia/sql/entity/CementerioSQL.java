@@ -12,9 +12,14 @@ import org.hibernate.annotations.Where;
 @DiscriminatorValue("CEMENTERIO")
 @SQLDelete(sql = "UPDATE Ubicacion SET deleted_at = true WHERE id=?")
 @Where(clause = "deleted_at=false")
-public class CementerioSQL extends UbicacionSQL{
+public class CementerioSQL extends UbicacionSQL {
+
     public CementerioSQL(Ubicacion ubicacion) {
         super(ubicacion);
     }
-    public CementerioSQL(long id, String nombre) {super(id, nombre);}
+
+    public CementerioSQL(long id, String nombre) {
+        super(id, nombre);
+    }
+
 }

@@ -71,7 +71,7 @@ public class EspirituServiceTest {
         Ubicacion ubi = crearUbicacion("North Blue", 15);
         EspirituDemoniaco demonio = crearEspirituDemoniaco(36, "Zoro", ubi);
         Long demonioID = service.crear(demonio).getId();
-        assertThrows( EspirituNoEncontradoException.class, () -> service.recuperar(demonioID + 1));
+        assertThrows(EspirituNoEncontradoException.class, () -> service.recuperar(demonioID + 1));
     }
 
     @Test
@@ -186,7 +186,6 @@ public class EspirituServiceTest {
         service.conectar(zoroId, sanjiId);
         assertEquals("Zoro", mediumService.espiritus(sanjiId).getFirst().getNombre());
     }
-
 
     @AfterEach
     void afterEach() {

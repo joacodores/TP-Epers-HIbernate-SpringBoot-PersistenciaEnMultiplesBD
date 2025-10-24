@@ -1,16 +1,11 @@
 package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituSQL;
-import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import static java.lang.Math.min;
 
-
 public class EspirituAngelical extends Espiritu {
+
     @SuppressWarnings("unused")
     public EspirituAngelical() {
         super();
@@ -35,7 +30,7 @@ public class EspirituAngelical extends Espiritu {
 
     @Override
     protected void validarUbicacionPorTipo() {
-        if (getUbicacion().esCementerio()){
+        if (getUbicacion().esCementerio()) {
             this.disminuirConexion(5);
         }
     }
@@ -63,4 +58,5 @@ public class EspirituAngelical extends Espiritu {
     public boolean esAngelical() {
         return true;
     }
+
 }

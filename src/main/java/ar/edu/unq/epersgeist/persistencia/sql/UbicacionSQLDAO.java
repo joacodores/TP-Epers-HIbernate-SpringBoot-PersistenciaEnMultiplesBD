@@ -1,6 +1,5 @@
 package ar.edu.unq.epersgeist.persistencia.sql;
 
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.UbicacionSQL;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -13,7 +12,8 @@ import java.util.List;
 public interface UbicacionSQLDAO extends CrudRepository<UbicacionSQL, Long> {
 
     @Query(
-            value="FROM UbicacionSQL where energia < :umbralDeEnergia"
+            value = "FROM UbicacionSQL where energia < :umbralDeEnergia"
     )
     List<UbicacionSQL> ubicacionesSobrecargadas(@Param("umbralDeEnergia") Integer umbralDeEnergia);
+
 }

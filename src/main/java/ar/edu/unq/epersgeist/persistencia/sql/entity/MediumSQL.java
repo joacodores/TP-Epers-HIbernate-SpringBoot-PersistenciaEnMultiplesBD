@@ -1,10 +1,7 @@
 package ar.edu.unq.epersgeist.persistencia.sql.entity;
 
-import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +21,10 @@ import static jakarta.persistence.GenerationType.AUTO;
 @SQLDelete(sql = "UPDATE Medium SET deleted_at = true WHERE id=?")
 @Where(clause = "deleted_at=false")
 public class MediumSQL {
+
+    @Temporal(TemporalType.DATE)
+    private final Date createdAt = new Date();
+
     @Getter
     @Setter
     @Id
@@ -55,9 +56,6 @@ public class MediumSQL {
     @ManyToOne
     private UbicacionSQL ubicacion;
 
-    @Temporal(TemporalType.DATE)
-    private final Date createdAt = new Date();
-
     @Setter
     @Temporal(TemporalType.DATE)
     private Date updatedAt;
@@ -73,7 +71,7 @@ public class MediumSQL {
         this.mana = medium.getMana();
         this.espiritus = medium.getEspiritus().stream().map(espiritu -> {
             EspirituSQL espirituSQL;
-            if(espiritu.esAngelical()) {
+            if (espiritu.esAngelical()) {
                 espirituSQL = new EspirituAngelicalSQL(espiritu);
             } else {
                 espirituSQL = new EspirituDemoniacoSQL(espiritu);
@@ -81,9 +79,9 @@ public class MediumSQL {
             espirituSQL.setOwner(this);
             return espirituSQL;
         }).collect(Collectors.toList());
-        if(medium.getUbicacion().esSantuario()) {
+        if (medium.getUbicacion().esSantuario()) {
             this.ubicacion = new SantuarioSQL(medium.getUbicacion());
-        }else {
+        } else {
             this.ubicacion = new CementerioSQL(medium.getUbicacion());
         }
     }
@@ -92,4 +90,5 @@ public class MediumSQL {
         this.id = id;
         this.nombre = nombre;
     }
+
 }

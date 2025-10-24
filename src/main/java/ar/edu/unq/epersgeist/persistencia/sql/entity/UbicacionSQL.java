@@ -27,6 +27,9 @@ import static jakarta.persistence.GenerationType.AUTO;
 @Where(clause = "deleted_at=false")
 public abstract class UbicacionSQL {
 
+    @Temporal(TemporalType.DATE)
+    private final Date createdAt = new Date();
+
     @Setter
     @Id
     @GeneratedValue(strategy = AUTO)
@@ -49,9 +52,6 @@ public abstract class UbicacionSQL {
     @Setter
     @Column(name = "energia", nullable = false, columnDefinition = "INTEGER CHECK(energia BETWEEN 1 AND 100)")
     private Integer energia;
-
-    @Temporal(TemporalType.DATE)
-    private final Date createdAt = new Date();
 
     @Setter
     @Temporal(TemporalType.DATE)

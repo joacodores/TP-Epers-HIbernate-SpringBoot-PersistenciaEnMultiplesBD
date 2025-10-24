@@ -340,14 +340,23 @@ public class UbicacionServiceTest {
     }
 
     @Test
-    void ubicacionesConEnergiaPorDebajoDelUmbralTest() {
-        service.crear(new Santuario("Templo de Luz", 30));
+    void ubicacionesConEnergiaSuperiorAlUmbralTest() {
+        service.crear(new Santuario("Templo de Luz", 80));
         service.crear(new Cementerio("Cementerio Sombrío", 70));
         service.crear(new Santuario("Bosque Espectral", 10));
-        List<Ubicacion> resultado = service.ubicacionesSobrecargadas(50);
+        List<Ubicacion> resultado = service.ubicacionesSobrecargadas(20);
         assertEquals(2, resultado.size());
-        List<Ubicacion> resultado2 = service.ubicacionesSobrecargadas(20);
+        List<Ubicacion> resultado2 = service.ubicacionesSobrecargadas(75);
         assertEquals(1, resultado2.size());
+    }
+
+    @Test
+    void noHayUbicacionesConEnergiaSuperiorAlUmbralTest() {
+        service.crear(new Santuario("Templo de Luz", 80));
+        service.crear(new Cementerio("Cementerio Sombrío", 70));
+        service.crear(new Santuario("Bosque Espectral", 10));
+        List<Ubicacion> resultado = service.ubicacionesSobrecargadas(90);
+        assertEquals(0, resultado.size());
     }
 
     @AfterEach

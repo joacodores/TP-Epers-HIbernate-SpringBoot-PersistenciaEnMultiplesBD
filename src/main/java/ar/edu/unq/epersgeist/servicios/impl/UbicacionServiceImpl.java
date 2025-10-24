@@ -96,4 +96,9 @@ public class UbicacionServiceImpl implements UbicacionService {
         return camino;
     }
 
+    @Override
+    public List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia) {
+        return ubicacionRepository.ubicacionesSobrecargadas(umbralDeEnergia);
+    }
+
 }

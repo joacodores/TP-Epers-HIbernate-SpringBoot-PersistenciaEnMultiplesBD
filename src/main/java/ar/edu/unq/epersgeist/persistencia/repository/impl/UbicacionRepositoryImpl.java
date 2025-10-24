@@ -132,4 +132,20 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
                 .toList();
     }
 
+    @Override
+    public List<Ubicacion> ubicacionesSobrecargadas(Integer umbralDeEnergia) {
+        List<UbicacionSQL> ubicaciones = ubicacionSQLDAO.ubicacionesSobrecargadas(umbralDeEnergia);
+        return ubicaciones.stream()
+                .map(ubicacionSQL -> {
+                    UbicacionNeo4J ubiNeo = ubicacionNeo4JDAO.findById(ubicacionSQL.getId())
+                            .orElseThrow(() -> new UbicacionNoEncontradaException("ubicacion"));
+                    if (ubicacionSQL instanceof SantuarioSQL) {
+                        return Santuario.from(ubicacionSQL, ubiNeo);
+                    } else {
+                        return Cementerio.from(ubicacionSQL, ubiNeo);
+                    }
+                })
+                .toList();
+    }
+
 }

@@ -1,0 +1,1402 @@
+[
+  {
+    "sensor_id": "sensor_3",
+    "tipo": "sonido",
+    "valor": 79,
+    "unidad": "dB",
+    "fecha": "2025-10-29T16:03:40.709Z"
+  },
+  {
+    "sensor_id": "sensor_4",
+    "tipo": "presion",
+    "valor": 0.98,
+    "unidad": "atm",
+    "fecha": "2025-10-30T12:55:45.655Z"
+  },
+  {
+    "sensor_id": "sensor_3",
+    "tipo": "presion",
+    "valor": 745,
+    "unidad": "mmHg",
+    "fecha": "2025-10-29T12:39:37.347Z"
+  },
+  {
+    "sensor_id": "sensor_7",
+    "tipo": "proximidad",
+    "valor": 2169.2423194447347,
+    "unidad": "metros",
+    "fecha": "2025-10-29T17:53:36.546Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "presion",
+    "valor": 778,
+    "unidad": "mmHg",
+    "fecha": "2025-10-30T02:19:27.849Z"
+  },
+  {
+    "sensor_id": "sensor_8",
+    "tipo": "presion",
+    "valor": 757,
+    "unidad": "mmHg",
+    "fecha": "2025-10-30T14:30:04.912Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "presion",
+    "valor": 1041,
+    "unidad": "hPa",
+    "fecha": "2025-10-30T12:41:48.924Z"
+  },
+  {
+    "sensor_id": "sensor_4",
+    "tipo": "proximidad",
+    "valor": 3.1493597879297432,
+    "unidad": "kilometros",
+    "fecha": "2025-10-29T22:05:51.077Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "temperatura",
+    "valor": 284,
+    "unidad": "K",
+    "fecha": "2025-10-29T17:22:30.228Z"
+  },
+  {
+    "sensor_id": "sensor_7",
+    "tipo": "temperatura",
+    "valor": 261,
+    "unidad": "K",
+    "fecha": "2025-10-29T13:16:03.304Z"
+  },
+  {
+    "sensor_id": "sensor_5",
+    "tipo": "presion",
+    "valor": 763,
+    "unidad": "mmHg",
+    "fecha": "2025-10-30T15:12:12.559Z"
+  },
+  {
+    "sensor_id": "sensor_4",
+    "tipo": "proximidad",
+    "valor": 8261.14173395559,
+    "unidad": "metros",
+    "fecha": "2025-10-30T00:12:32.188Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "temperatura",
+    "valor": -8,
+    "unidad": "C",
+    "fecha": "2025-10-29T14:18:13.499Z"
+  },
+  {
+    "sensor_id": "sensor_7",
+    "tipo": "temperatura",
+    "valor": -3,
+    "unidad": "C",
+    "fecha": "2025-10-30T00:01:20.567Z"
+  },
+  {
+    "sensor_id": "sensor_8",
+    "tipo": "sonido",
+    "valor": 55,
+    "unidad": "dB",
+    "fecha": "2025-10-30T05:27:47.967Z"
+  },
+  {
+    "sensor_id": "sensor_8",
+    "tipo": "proximidad",
+    "valor": 9344.618282513598,
+    "unidad": "metros",
+    "fecha": "2025-10-30T00:33:26.276Z"
+  },
+  {
+    "sensor_id": "sensor_7",
+    "tipo": "proximidad",
+    "valor": 0.0111457910844166,
+    "unidad": "kilometros",
+    "fecha": "2025-10-30T01:41:27.844Z"
+  },
+  {
+    "sensor_id": "sensor_8",
+    "tipo": "sonido",
+    "valor": 17,
+    "unidad": "sones",
+    "fecha": "2025-10-30T12:05:20.476Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "proximidad",
+    "valor": 8.853561559251446,
+    "unidad": "kilometros",
+    "fecha": "2025-10-29T21:14:18.082Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "temperatura",
+    "valor": 36,
+    "unidad": "F",
+    "fecha": "2025-10-30T10:55:54.849Z"
+  },
+  {
+    "sensor_id": "sensor_6",
+    "tipo": "presion",
+    "valor": 1021,
+    "unidad": "hPa",
+    "fecha": "2025-10-29T14:51:17.108Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "proximidad",
+    "valor": 6.113483309405954,
+    "unidad": "kilometros",
+    "fecha": "2025-10-30T15:07:26.986Z"
+  },
+  {
+    "sensor_id": "sensor_3",
+    "tipo": "sonido",
+    "valor": 6.01,
+    "unidad": "sones",
+    "fecha": "2025-10-30T04:44:50.111Z"
+  },
+  {
+    "sensor_id": "sensor_8",
+    "tipo": "proximidad",
+    "valor": 3.3226696077942397,
+    "unidad": "millas",
+    "fecha": "2025-10-30T02:34:12.166Z"
+  },
+  {
+    "sensor_id": "sensor_4",
+    "tipo": "temperatura",
+    "valor": 266,
+    "unidad": "K",
+    "fecha": "2025-10-29T22:57:46.836Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "temperatura",
+    "valor": 106,
+    "unidad": "F",
+    "fecha": "2025-10-29T14:48:05.316Z"
+  },
+  {
+    "sensor_id": "sensor_7",
+    "tipo": "presion",
+    "valor": 1038,
+    "unidad": "hPa",
+    "fecha": "2025-10-29T17:01:00.547Z"
+  },
+  {
+    "sensor_id": "sensor_8",
+    "tipo": "proximidad",
+    "valor": 2.418019380849259,
+    "unidad": "kilometros",
+    "fecha": "2025-10-30T13:06:49.377Z"
+  },
+  {
+    "sensor_id": "sensor_3",
+    "tipo": "presion",
+    "valor": 756,
+    "unidad": "mmHg",
+    "fecha": "2025-10-30T09:49:38.368Z"
+  },
+  {
+    "sensor_id": "sensor_5",
+    "tipo": "proximidad",
+    "valor": 18232.596497201597,
+    "unidad": "pies",
+    "fecha": "2025-10-30T11:37:41.933Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "presion",
+    "valor": 1.05,
+    "unidad": "atm",
+    "fecha": "2025-10-29T21:19:37.405Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "temperatura",
+    "valor": 29,
+    "unidad": "F",
+    "fecha": "2025-10-29T13:10:32.651Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "sonido",
+    "valor": 1.49,
+    "unidad": "sones",
+    "fecha": "2025-10-30T07:23:53.749Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "sonido",
+    "valor": 10.7,
+    "unidad": "sones",
+    "fecha": "2025-10-29T12:45:55.843Z"
+  },
+  {
+    "sensor_id": "sensor_4",
+    "tipo": "presion",
+    "valor": 1037,
+    "unidad": "hPa",
+    "fecha": "2025-10-30T15:43:13.297Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "temperatura",
+    "valor": 90,
+    "unidad": "F",
+    "fecha": "2025-10-29T17:36:35.491Z"
+  },
+  {
+    "sensor_id": "sensor_7",
+    "tipo": "proximidad",
+    "valor": 25012.07063062825,
+    "unidad": "pies",
+    "fecha": "2025-10-30T06:10:14.436Z"
+  },
+  {
+    "sensor_id": "sensor_1",
+    "tipo": "presion",
+    "valor": 741,
+    "unidad": "mmHg",
+    "fecha": "2025-10-30T05:52:35.981Z"
+  },
+  {
+    "sensor_id": "sensor_8",
+    "tipo": "presion",
+    "valor": 0.99,
+    "unidad": "atm",
+    "fecha": "2025-10-30T08:14:22.703Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "presion",
+    "valor": 1027,
+    "unidad": "hPa",
+    "fecha": "2025-10-29T19:12:28.732Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "sonido",
+    "valor": 19.98,
+    "unidad": "sones",
+    "fecha": "2025-10-30T07:37:07.141Z"
+  },
+  {
+    "sensor_id": "sensor_3",
+    "tipo": "sonido",
+    "valor": 2.36,
+    "unidad": "sones",
+    "fecha": "2025-10-30T10:20:22.307Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "proximidad",
+    "valor": 20185.760266698984,
+    "unidad": "pies",
+    "fecha": "2025-10-30T07:12:47.794Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "proximidad",
+    "valor": 8.022726395736473,
+    "unidad": "kilometros",
+    "fecha": "2025-10-29T17:38:58.290Z"
+  },
+  {
+    "sensor_id": "sensor_5",
+    "tipo": "presion",
+    "valor": 714,
+    "unidad": "mmHg",
+    "fecha": "2025-10-30T00:04:18.095Z"
+  },
+  {
+    "sensor_id": "sensor_8",
+    "tipo": "temperatura",
+    "valor": 323,
+    "unidad": "K",
+    "fecha": "2025-10-29T13:51:35.310Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "temperatura",
+    "valor": -8,
+    "unidad": "C",
+    "fecha": "2025-10-30T14:51:11.680Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "presion",
+    "valor": 1.04,
+    "unidad": "atm",
+    "fecha": "2025-10-30T11:52:08.264Z"
+  },
+  {
+    "sensor_id": "sensor_5",
+    "tipo": "sonido",
+    "valor": 19.26,
+    "unidad": "sones",
+    "fecha": "2025-10-30T06:47:51.889Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "temperatura",
+    "valor": 34,
+    "unidad": "C",
+    "fecha": "2025-10-29T18:40:04.101Z"
+  },
+  {
+    "sensor_id": "sensor_3",
+    "tipo": "proximidad",
+    "valor": 10204.006273594032,
+    "unidad": "metros",
+    "fecha": "2025-10-30T03:19:01.893Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "presion",
+    "valor": 1.01,
+    "unidad": "atm",
+    "fecha": "2025-10-29T14:40:16.918Z"
+  },
+  {
+    "sensor_id": "sensor_6",
+    "tipo": "presion",
+    "valor": 1.04,
+    "unidad": "atm",
+    "fecha": "2025-10-30T13:28:24.021Z"
+  },
+  {
+    "sensor_id": "sensor_7",
+    "tipo": "sonido",
+    "valor": 22.74,
+    "unidad": "sones",
+    "fecha": "2025-10-29T21:18:55.950Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "sonido",
+    "valor": 97,
+    "unidad": "dB",
+    "fecha": "2025-10-30T06:10:40.171Z"
+  },
+  {
+    "sensor_id": "sensor_8",
+    "tipo": "sonido",
+    "valor": 82,
+    "unidad": "dB",
+    "fecha": "2025-10-30T03:54:23.075Z"
+  },
+  {
+    "sensor_id": "sensor_4",
+    "tipo": "sonido",
+    "valor": 9.57,
+    "unidad": "sones",
+    "fecha": "2025-10-30T04:35:25.329Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "temperatura",
+    "valor": 258,
+    "unidad": "K",
+    "fecha": "2025-10-29T12:50:02.192Z"
+  },
+  {
+    "sensor_id": "sensor_5",
+    "tipo": "sonido",
+    "valor": 0.05,
+    "unidad": "sones",
+    "fecha": "2025-10-30T01:42:23.255Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "sonido",
+    "valor": 31.99,
+    "unidad": "sones",
+    "fecha": "2025-10-30T14:26:35.127Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "presion",
+    "valor": 745,
+    "unidad": "mmHg",
+    "fecha": "2025-10-30T15:12:07.578Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "temperatura",
+    "valor": 283,
+    "unidad": "K",
+    "fecha": "2025-10-30T09:52:21.652Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "proximidad",
+    "valor": 5248.888514890323,
+    "unidad": "pies",
+    "fecha": "2025-10-29T19:14:21.661Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "sonido",
+    "valor": 13.39,
+    "unidad": "sones",
+    "fecha": "2025-10-30T01:54:14.626Z"
+  },
+  {
+    "sensor_id": "sensor_4",
+    "tipo": "temperatura",
+    "valor": 17,
+    "unidad": "F",
+    "fecha": "2025-10-29T14:43:59.732Z"
+  },
+  {
+    "sensor_id": "sensor_3",
+    "tipo": "sonido",
+    "valor": 27.32,
+    "unidad": "sones",
+    "fecha": "2025-10-30T15:43:48.489Z"
+  },
+  {
+    "sensor_id": "sensor_7",
+    "tipo": "proximidad",
+    "valor": 0.5586137186266571,
+    "unidad": "millas",
+    "fecha": "2025-10-30T03:47:58.259Z"
+  },
+  {
+    "sensor_id": "sensor_7",
+    "tipo": "presion",
+    "valor": 995,
+    "unidad": "hPa",
+    "fecha": "2025-10-30T04:04:13.287Z"
+  },
+  {
+    "sensor_id": "sensor_5",
+    "tipo": "sonido",
+    "valor": 8.07,
+    "unidad": "sones",
+    "fecha": "2025-10-29T16:33:15.715Z"
+  },
+  {
+    "sensor_id": "sensor_1",
+    "tipo": "sonido",
+    "valor": 19.38,
+    "unidad": "sones",
+    "fecha": "2025-10-29T22:58:24.946Z"
+  },
+  {
+    "sensor_id": "sensor_1",
+    "tipo": "proximidad",
+    "valor": 7.005204674208505,
+    "unidad": "millas",
+    "fecha": "2025-10-29T18:25:27.683Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "sonido",
+    "valor": 26.29,
+    "unidad": "sones",
+    "fecha": "2025-10-30T00:16:43.966Z"
+  },
+  {
+    "sensor_id": "sensor_1",
+    "tipo": "temperatura",
+    "valor": 282,
+    "unidad": "K",
+    "fecha": "2025-10-30T15:15:15.942Z"
+  },
+  {
+    "sensor_id": "sensor_8",
+    "tipo": "presion",
+    "valor": 1.01,
+    "unidad": "atm",
+    "fecha": "2025-10-29T14:56:22.700Z"
+  },
+  {
+    "sensor_id": "sensor_4",
+    "tipo": "sonido",
+    "valor": 118,
+    "unidad": "dB",
+    "fecha": "2025-10-30T10:00:25.296Z"
+  },
+  {
+    "sensor_id": "sensor_7",
+    "tipo": "presion",
+    "valor": 967,
+    "unidad": "hPa",
+    "fecha": "2025-10-30T08:20:45.480Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "sonido",
+    "valor": 11.41,
+    "unidad": "sones",
+    "fecha": "2025-10-30T02:33:05.336Z"
+  },
+  {
+    "sensor_id": "sensor_5",
+    "tipo": "proximidad",
+    "valor": 5.573089363393645,
+    "unidad": "kilometros",
+    "fecha": "2025-10-30T11:33:11.483Z"
+  },
+  {
+    "sensor_id": "sensor_3",
+    "tipo": "sonido",
+    "valor": 105,
+    "unidad": "dB",
+    "fecha": "2025-10-30T05:15:10.336Z"
+  },
+  {
+    "sensor_id": "sensor_1",
+    "tipo": "presion",
+    "valor": 1029,
+    "unidad": "hPa",
+    "fecha": "2025-10-29T22:26:26.830Z"
+  },
+  {
+    "sensor_id": "sensor_5",
+    "tipo": "temperatura",
+    "valor": 107,
+    "unidad": "F",
+    "fecha": "2025-10-30T00:08:51.202Z"
+  },
+  {
+    "sensor_id": "sensor_5",
+    "tipo": "proximidad",
+    "valor": 3937.1070857753543,
+    "unidad": "metros",
+    "fecha": "2025-10-30T04:04:08.941Z"
+  },
+  {
+    "sensor_id": "sensor_4",
+    "tipo": "proximidad",
+    "valor": 3.2157748311688494,
+    "unidad": "millas",
+    "fecha": "2025-10-30T09:37:07.024Z"
+  },
+  {
+    "sensor_id": "sensor_3",
+    "tipo": "proximidad",
+    "valor": 6.169386616009584,
+    "unidad": "millas",
+    "fecha": "2025-10-29T12:35:27.122Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "proximidad",
+    "valor": 10722.82597371407,
+    "unidad": "metros",
+    "fecha": "2025-10-30T14:47:14.136Z"
+  },
+  {
+    "sensor_id": "sensor_5",
+    "tipo": "proximidad",
+    "valor": 45042.46240702026,
+    "unidad": "pies",
+    "fecha": "2025-10-30T12:19:49.223Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "proximidad",
+    "valor": 7.257860334753035,
+    "unidad": "millas",
+    "fecha": "2025-10-30T10:42:20.365Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "presion",
+    "valor": 783,
+    "unidad": "mmHg",
+    "fecha": "2025-10-29T19:20:43.583Z"
+  },
+  {
+    "sensor_id": "sensor_6",
+    "tipo": "sonido",
+    "valor": 47,
+    "unidad": "dB",
+    "fecha": "2025-10-29T20:14:15.827Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "proximidad",
+    "valor": 9.262350129616063,
+    "unidad": "kilometros",
+    "fecha": "2025-10-29T14:51:14.624Z"
+  },
+  {
+    "sensor_id": "sensor_6",
+    "tipo": "sonido",
+    "valor": 116,
+    "unidad": "dB",
+    "fecha": "2025-10-30T09:42:10.292Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "sonido",
+    "valor": 13.42,
+    "unidad": "sones",
+    "fecha": "2025-10-29T12:33:15.071Z"
+  },
+  {
+    "sensor_id": "sensor_4",
+    "tipo": "temperatura",
+    "valor": 42,
+    "unidad": "C",
+    "fecha": "2025-10-30T15:30:12.905Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "proximidad",
+    "valor": 11.060585490282683,
+    "unidad": "kilometros",
+    "fecha": "2025-10-30T06:45:50.849Z"
+  },
+  {
+    "sensor_id": "sensor_7",
+    "tipo": "presion",
+    "valor": 0.97,
+    "unidad": "atm",
+    "fecha": "2025-10-29T22:33:50.924Z"
+  },
+  {
+    "sensor_id": "sensor_1",
+    "tipo": "temperatura",
+    "valor": 29,
+    "unidad": "C",
+    "fecha": "2025-10-29T22:05:09.970Z"
+  },
+  {
+    "sensor_id": "sensor_6",
+    "tipo": "sonido",
+    "valor": 115,
+    "unidad": "dB",
+    "fecha": "2025-10-29T17:22:49.929Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "proximidad",
+    "valor": 10.773613107569275,
+    "unidad": "kilometros",
+    "fecha": "2025-10-29T18:16:51.199Z"
+  },
+  {
+    "sensor_id": "sensor_3",
+    "tipo": "temperatura",
+    "valor": 274,
+    "unidad": "K",
+    "fecha": "2025-10-30T05:16:24.359Z"
+  },
+  {
+    "sensor_id": "sensor_5",
+    "tipo": "sonido",
+    "valor": 47,
+    "unidad": "dB",
+    "fecha": "2025-10-29T19:32:48.181Z"
+  },
+  {
+    "sensor_id": "sensor_5",
+    "tipo": "sonido",
+    "valor": 113,
+    "unidad": "dB",
+    "fecha": "2025-10-30T11:17:35.408Z"
+  },
+  {
+    "sensor_id": "sensor_6",
+    "tipo": "sonido",
+    "valor": 78,
+    "unidad": "dB",
+    "fecha": "2025-10-29T22:08:07.763Z"
+  },
+  {
+    "sensor_id": "sensor_1",
+    "tipo": "temperatura",
+    "valor": 2,
+    "unidad": "C",
+    "fecha": "2025-10-30T14:44:12.106Z"
+  },
+  {
+    "sensor_id": "sensor_7",
+    "tipo": "proximidad",
+    "valor": 51522.091588481475,
+    "unidad": "pies",
+    "fecha": "2025-10-29T19:30:55.874Z"
+  },
+  {
+    "sensor_id": "sensor_1",
+    "tipo": "sonido",
+    "valor": 27.6,
+    "unidad": "sones",
+    "fecha": "2025-10-29T16:13:45.328Z"
+  },
+  {
+    "sensor_id": "sensor_7",
+    "tipo": "presion",
+    "valor": 1.02,
+    "unidad": "atm",
+    "fecha": "2025-10-29T13:52:22.219Z"
+  },
+  {
+    "sensor_id": "sensor_7",
+    "tipo": "sonido",
+    "valor": 18.88,
+    "unidad": "sones",
+    "fecha": "2025-10-29T15:54:24.803Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "proximidad",
+    "valor": 42550.98536224131,
+    "unidad": "pies",
+    "fecha": "2025-10-30T02:23:47.378Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "presion",
+    "valor": 1.03,
+    "unidad": "atm",
+    "fecha": "2025-10-29T15:42:23.315Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "presion",
+    "valor": 754,
+    "unidad": "mmHg",
+    "fecha": "2025-10-30T15:46:07.557Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "presion",
+    "valor": 1.04,
+    "unidad": "atm",
+    "fecha": "2025-10-30T14:06:36.431Z"
+  },
+  {
+    "sensor_id": "sensor_7",
+    "tipo": "presion",
+    "valor": 1021,
+    "unidad": "hPa",
+    "fecha": "2025-10-30T09:39:50.985Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "temperatura",
+    "valor": -2,
+    "unidad": "C",
+    "fecha": "2025-10-29T17:56:33.713Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "temperatura",
+    "valor": -2,
+    "unidad": "C",
+    "fecha": "2025-10-30T12:37:44.670Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "proximidad",
+    "valor": 7.484353557341123,
+    "unidad": "kilometros",
+    "fecha": "2025-10-29T18:50:09.325Z"
+  },
+  {
+    "sensor_id": "sensor_3",
+    "tipo": "temperatura",
+    "valor": 48,
+    "unidad": "C",
+    "fecha": "2025-10-29T17:21:22.504Z"
+  },
+  {
+    "sensor_id": "sensor_4",
+    "tipo": "sonido",
+    "valor": 23.96,
+    "unidad": "sones",
+    "fecha": "2025-10-29T21:07:11.953Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "sonido",
+    "valor": 24.56,
+    "unidad": "sones",
+    "fecha": "2025-10-30T14:00:21.636Z"
+  },
+  {
+    "sensor_id": "sensor_1",
+    "tipo": "proximidad",
+    "valor": 11.75409738737034,
+    "unidad": "kilometros",
+    "fecha": "2025-10-29T22:22:42.493Z"
+  },
+  {
+    "sensor_id": "sensor_7",
+    "tipo": "presion",
+    "valor": 1030,
+    "unidad": "hPa",
+    "fecha": "2025-10-30T04:01:19.237Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "presion",
+    "valor": 961,
+    "unidad": "hPa",
+    "fecha": "2025-10-30T11:45:14.225Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "presion",
+    "valor": 752,
+    "unidad": "mmHg",
+    "fecha": "2025-10-29T13:08:49.892Z"
+  },
+  {
+    "sensor_id": "sensor_3",
+    "tipo": "sonido",
+    "valor": 68,
+    "unidad": "dB",
+    "fecha": "2025-10-30T02:34:24.879Z"
+  },
+  {
+    "sensor_id": "sensor_1",
+    "tipo": "proximidad",
+    "valor": 6.399774194573178,
+    "unidad": "millas",
+    "fecha": "2025-10-30T04:11:10.328Z"
+  },
+  {
+    "sensor_id": "sensor_8",
+    "tipo": "sonido",
+    "valor": 69,
+    "unidad": "dB",
+    "fecha": "2025-10-29T13:26:32.361Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "proximidad",
+    "valor": 14.708739160446164,
+    "unidad": "kilometros",
+    "fecha": "2025-10-30T06:22:45.160Z"
+  },
+  {
+    "sensor_id": "sensor_5",
+    "tipo": "proximidad",
+    "valor": 2.926251276003753,
+    "unidad": "millas",
+    "fecha": "2025-10-30T02:06:18.936Z"
+  },
+  {
+    "sensor_id": "sensor_8",
+    "tipo": "presion",
+    "valor": 0.96,
+    "unidad": "atm",
+    "fecha": "2025-10-30T14:22:19.988Z"
+  },
+  {
+    "sensor_id": "sensor_7",
+    "tipo": "sonido",
+    "valor": 43,
+    "unidad": "dB",
+    "fecha": "2025-10-29T13:20:27.603Z"
+  },
+  {
+    "sensor_id": "sensor_5",
+    "tipo": "proximidad",
+    "valor": 48579.799828962736,
+    "unidad": "pies",
+    "fecha": "2025-10-30T11:16:37.974Z"
+  },
+  {
+    "sensor_id": "sensor_5",
+    "tipo": "temperatura",
+    "valor": -2,
+    "unidad": "C",
+    "fecha": "2025-10-29T20:57:49.735Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "presion",
+    "valor": 1.02,
+    "unidad": "atm",
+    "fecha": "2025-10-29T18:18:23.116Z"
+  },
+  {
+    "sensor_id": "sensor_4",
+    "tipo": "proximidad",
+    "valor": 9122.645876892631,
+    "unidad": "metros",
+    "fecha": "2025-10-29T19:59:07.626Z"
+  },
+  {
+    "sensor_id": "sensor_5",
+    "tipo": "temperatura",
+    "valor": 79,
+    "unidad": "F",
+    "fecha": "2025-10-30T10:44:55.771Z"
+  },
+  {
+    "sensor_id": "sensor_8",
+    "tipo": "temperatura",
+    "valor": 257,
+    "unidad": "K",
+    "fecha": "2025-10-29T17:49:34.704Z"
+  },
+  {
+    "sensor_id": "sensor_1",
+    "tipo": "presion",
+    "valor": 1.03,
+    "unidad": "atm",
+    "fecha": "2025-10-30T14:47:38.999Z"
+  },
+  {
+    "sensor_id": "sensor_8",
+    "tipo": "sonido",
+    "valor": 25.46,
+    "unidad": "sones",
+    "fecha": "2025-10-29T21:14:34.642Z"
+  },
+  {
+    "sensor_id": "sensor_8",
+    "tipo": "temperatura",
+    "valor": 38,
+    "unidad": "C",
+    "fecha": "2025-10-30T15:29:51.737Z"
+  },
+  {
+    "sensor_id": "sensor_8",
+    "tipo": "sonido",
+    "valor": 29.42,
+    "unidad": "sones",
+    "fecha": "2025-10-30T07:20:47.575Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "temperatura",
+    "valor": 298,
+    "unidad": "K",
+    "fecha": "2025-10-30T08:17:10.508Z"
+  },
+  {
+    "sensor_id": "sensor_6",
+    "tipo": "sonido",
+    "valor": 22.96,
+    "unidad": "sones",
+    "fecha": "2025-10-30T14:33:14.454Z"
+  },
+  {
+    "sensor_id": "sensor_1",
+    "tipo": "presion",
+    "valor": 730,
+    "unidad": "mmHg",
+    "fecha": "2025-10-29T19:37:21.211Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "presion",
+    "valor": 741,
+    "unidad": "mmHg",
+    "fecha": "2025-10-29T12:22:27.871Z"
+  },
+  {
+    "sensor_id": "sensor_5",
+    "tipo": "presion",
+    "valor": 769,
+    "unidad": "mmHg",
+    "fecha": "2025-10-29T19:29:52.353Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "sonido",
+    "valor": 67,
+    "unidad": "dB",
+    "fecha": "2025-10-29T12:17:22.656Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "sonido",
+    "valor": 0.99,
+    "unidad": "sones",
+    "fecha": "2025-10-29T17:03:19.207Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "temperatura",
+    "valor": 296,
+    "unidad": "K",
+    "fecha": "2025-10-30T03:08:29.092Z"
+  },
+  {
+    "sensor_id": "sensor_1",
+    "tipo": "temperatura",
+    "valor": 277,
+    "unidad": "K",
+    "fecha": "2025-10-29T14:00:37.999Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "presion",
+    "valor": 1035,
+    "unidad": "hPa",
+    "fecha": "2025-10-29T23:48:59.137Z"
+  },
+  {
+    "sensor_id": "sensor_3",
+    "tipo": "sonido",
+    "valor": 35,
+    "unidad": "dB",
+    "fecha": "2025-10-29T17:04:31.321Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "temperatura",
+    "valor": -18,
+    "unidad": "C",
+    "fecha": "2025-10-30T13:45:05.225Z"
+  },
+  {
+    "sensor_id": "sensor_4",
+    "tipo": "presion",
+    "valor": 1,
+    "unidad": "atm",
+    "fecha": "2025-10-30T00:47:25.202Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "presion",
+    "valor": 1.02,
+    "unidad": "atm",
+    "fecha": "2025-10-30T07:28:23.420Z"
+  },
+  {
+    "sensor_id": "sensor_1",
+    "tipo": "sonido",
+    "valor": 8.8,
+    "unidad": "sones",
+    "fecha": "2025-10-29T12:01:50.999Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "temperatura",
+    "valor": 91,
+    "unidad": "F",
+    "fecha": "2025-10-29T14:32:22.881Z"
+  },
+  {
+    "sensor_id": "sensor_6",
+    "tipo": "proximidad",
+    "valor": 0.07745100498774704,
+    "unidad": "kilometros",
+    "fecha": "2025-10-30T14:18:38.511Z"
+  },
+  {
+    "sensor_id": "sensor_3",
+    "tipo": "proximidad",
+    "valor": 11.508007217389764,
+    "unidad": "kilometros",
+    "fecha": "2025-10-29T18:02:46.458Z"
+  },
+  {
+    "sensor_id": "sensor_7",
+    "tipo": "sonido",
+    "valor": 23.64,
+    "unidad": "sones",
+    "fecha": "2025-10-29T14:03:16.092Z"
+  },
+  {
+    "sensor_id": "sensor_6",
+    "tipo": "presion",
+    "valor": 1043,
+    "unidad": "hPa",
+    "fecha": "2025-10-29T14:39:53.290Z"
+  },
+  {
+    "sensor_id": "sensor_7",
+    "tipo": "presion",
+    "valor": 742,
+    "unidad": "mmHg",
+    "fecha": "2025-10-30T08:18:51.485Z"
+  },
+  {
+    "sensor_id": "sensor_6",
+    "tipo": "proximidad",
+    "valor": 5.635281429778189,
+    "unidad": "millas",
+    "fecha": "2025-10-29T13:50:15.795Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "presion",
+    "valor": 996,
+    "unidad": "hPa",
+    "fecha": "2025-10-30T01:29:36.809Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "presion",
+    "valor": 1,
+    "unidad": "atm",
+    "fecha": "2025-10-30T05:07:10.416Z"
+  },
+  {
+    "sensor_id": "sensor_8",
+    "tipo": "sonido",
+    "valor": 29,
+    "unidad": "sones",
+    "fecha": "2025-10-30T13:04:45.801Z"
+  },
+  {
+    "sensor_id": "sensor_8",
+    "tipo": "temperatura",
+    "valor": 320,
+    "unidad": "K",
+    "fecha": "2025-10-30T07:48:25.324Z"
+  },
+  {
+    "sensor_id": "sensor_8",
+    "tipo": "presion",
+    "valor": 985,
+    "unidad": "hPa",
+    "fecha": "2025-10-30T02:50:45.175Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "presion",
+    "valor": 1.02,
+    "unidad": "atm",
+    "fecha": "2025-10-30T11:21:48.576Z"
+  },
+  {
+    "sensor_id": "sensor_7",
+    "tipo": "proximidad",
+    "valor": 9338.23032835801,
+    "unidad": "pies",
+    "fecha": "2025-10-30T06:49:02.936Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "sonido",
+    "valor": 103,
+    "unidad": "dB",
+    "fecha": "2025-10-29T15:02:28.443Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "sonido",
+    "valor": 47,
+    "unidad": "dB",
+    "fecha": "2025-10-30T13:11:47.450Z"
+  },
+  {
+    "sensor_id": "sensor_6",
+    "tipo": "temperatura",
+    "valor": 31,
+    "unidad": "C",
+    "fecha": "2025-10-30T04:15:16.941Z"
+  },
+  {
+    "sensor_id": "sensor_6",
+    "tipo": "temperatura",
+    "valor": 46,
+    "unidad": "C",
+    "fecha": "2025-10-30T05:28:54.732Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "sonido",
+    "valor": 38,
+    "unidad": "dB",
+    "fecha": "2025-10-30T02:06:51.942Z"
+  },
+  {
+    "sensor_id": "sensor_6",
+    "tipo": "sonido",
+    "valor": 66,
+    "unidad": "dB",
+    "fecha": "2025-10-29T14:47:54.711Z"
+  },
+  {
+    "sensor_id": "sensor_7",
+    "tipo": "proximidad",
+    "valor": 9.562144221167975,
+    "unidad": "millas",
+    "fecha": "2025-10-29T21:15:51.912Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "proximidad",
+    "valor": 6.25369498717447,
+    "unidad": "millas",
+    "fecha": "2025-10-30T13:22:45.216Z"
+  },
+  {
+    "sensor_id": "sensor_1",
+    "tipo": "presion",
+    "valor": 0.98,
+    "unidad": "atm",
+    "fecha": "2025-10-29T18:36:04.009Z"
+  },
+  {
+    "sensor_id": "sensor_1",
+    "tipo": "sonido",
+    "valor": 77,
+    "unidad": "dB",
+    "fecha": "2025-10-30T05:54:14.846Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "proximidad",
+    "valor": 0.6011232563810438,
+    "unidad": "kilometros",
+    "fecha": "2025-10-30T05:48:31.467Z"
+  },
+  {
+    "sensor_id": "sensor_8",
+    "tipo": "proximidad",
+    "valor": 8887.008416436845,
+    "unidad": "metros",
+    "fecha": "2025-10-30T10:55:15.940Z"
+  },
+  {
+    "sensor_id": "sensor_1",
+    "tipo": "proximidad",
+    "valor": 13931.494597793502,
+    "unidad": "metros",
+    "fecha": "2025-10-29T20:46:45.919Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "temperatura",
+    "valor": 119,
+    "unidad": "F",
+    "fecha": "2025-10-30T06:40:11.170Z"
+  },
+  {
+    "sensor_id": "sensor_3",
+    "tipo": "presion",
+    "valor": 972,
+    "unidad": "hPa",
+    "fecha": "2025-10-30T12:40:38.467Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "temperatura",
+    "valor": 112,
+    "unidad": "F",
+    "fecha": "2025-10-29T17:44:28.533Z"
+  },
+  {
+    "sensor_id": "sensor_4",
+    "tipo": "presion",
+    "valor": 967,
+    "unidad": "hPa",
+    "fecha": "2025-10-29T20:49:31.091Z"
+  },
+  {
+    "sensor_id": "sensor_8",
+    "tipo": "presion",
+    "valor": 722,
+    "unidad": "mmHg",
+    "fecha": "2025-10-29T19:05:56.398Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "temperatura",
+    "valor": 31,
+    "unidad": "C",
+    "fecha": "2025-10-30T09:24:15.747Z"
+  },
+  {
+    "sensor_id": "sensor_3",
+    "tipo": "sonido",
+    "valor": 76,
+    "unidad": "dB",
+    "fecha": "2025-10-30T12:35:07.110Z"
+  },
+  {
+    "sensor_id": "sensor_5",
+    "tipo": "sonido",
+    "valor": 23.54,
+    "unidad": "sones",
+    "fecha": "2025-10-30T04:41:31.585Z"
+  },
+  {
+    "sensor_id": "sensor_1",
+    "tipo": "proximidad",
+    "valor": 3.124628647120995,
+    "unidad": "millas",
+    "fecha": "2025-10-29T16:00:55.027Z"
+  },
+  {
+    "sensor_id": "sensor_5",
+    "tipo": "sonido",
+    "valor": 13.67,
+    "unidad": "sones",
+    "fecha": "2025-10-30T06:02:22.167Z"
+  },
+  {
+    "sensor_id": "sensor_6",
+    "tipo": "proximidad",
+    "valor": 13803.333711549167,
+    "unidad": "metros",
+    "fecha": "2025-10-29T23:14:58.272Z"
+  },
+  {
+    "sensor_id": "sensor_1",
+    "tipo": "proximidad",
+    "valor": 6.471679541595783,
+    "unidad": "kilometros",
+    "fecha": "2025-10-29T22:05:37.940Z"
+  },
+  {
+    "sensor_id": "sensor_6",
+    "tipo": "proximidad",
+    "valor": 7.6142177073539585,
+    "unidad": "millas",
+    "fecha": "2025-10-30T04:14:47.975Z"
+  },
+  {
+    "sensor_id": "sensor_10",
+    "tipo": "sonido",
+    "valor": 79,
+    "unidad": "dB",
+    "fecha": "2025-10-30T10:25:52.062Z"
+  },
+  {
+    "sensor_id": "sensor_9",
+    "tipo": "proximidad",
+    "valor": 8.46538279068098,
+    "unidad": "millas",
+    "fecha": "2025-10-29T12:12:14.498Z"
+  },
+  {
+    "sensor_id": "sensor_4",
+    "tipo": "temperatura",
+    "valor": 20,
+    "unidad": "F",
+    "fecha": "2025-10-30T15:30:09.703Z"
+  },
+  {
+    "sensor_id": "sensor_2",
+    "tipo": "sonido",
+    "valor": 11.57,
+    "unidad": "sones",
+    "fecha": "2025-10-29T20:11:01.221Z"
+  },
+  {
+    "sensor_id": "sensor_3",
+    "tipo": "temperatura",
+    "valor": 258,
+    "unidad": "K",
+    "fecha": "2025-10-29T13:59:42.400Z"
+  },
+  {
+    "sensor_id": "sensor_8",
+    "tipo": "presion",
+    "valor": 1,
+    "unidad": "atm",
+    "fecha": "2025-10-29T15:40:55.146Z"
+  }
+]

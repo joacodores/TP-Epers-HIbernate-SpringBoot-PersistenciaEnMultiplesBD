@@ -77,14 +77,6 @@ public class UbicacionServiceTest {
         assertEquals(List.of("Ubicacion", "Bernal", "Mordor"), service.recuperarTodos().stream().map(Ubicacion::getNombre).toList());
     }
 
-    /*
-        @Test
-        void eliminarUbicacionNoPersistidaNoLanzaExcepcionTest() {
-            service.crear(ubicacion);
-            Ubicacion ubicacion2 = new Cementerio("Nueva Ubicación", 50);
-            assertDoesNotThrow(() -> service.eliminar(ubicacion2.getId()));
-        }
-    */
     @Test
     void eliminarUbicacionTest() {
         service.crear(ubicacion);

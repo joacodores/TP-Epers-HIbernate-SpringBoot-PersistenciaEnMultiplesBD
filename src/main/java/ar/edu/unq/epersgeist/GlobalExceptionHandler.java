@@ -29,6 +29,11 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
     }
 
+    @ExceptionHandler(TipoNuloException.class)
+    public ResponseEntity<APIError> handleTipoNulo(TipoNuloException e) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
     @ExceptionHandler(ActualizarRecursoException.class)
     public ResponseEntity<APIError> handleActualizarRecurso(ActualizarRecursoException e) {
         return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());

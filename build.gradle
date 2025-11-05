@@ -13,6 +13,7 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-neo4j'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter', version: '5.9.2'
 

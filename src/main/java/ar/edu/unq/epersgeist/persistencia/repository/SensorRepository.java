@@ -1,22 +1,19 @@
-package ar.edu.unq.epersgeist.servicios;
+package ar.edu.unq.epersgeist.persistencia.repository;
 
 import ar.edu.unq.epersgeist.controller.dto.estadistica.*;
-import ar.edu.unq.epersgeist.modelo.ReporteSantuarioMasCorrupto;
 import ar.edu.unq.epersgeist.persistencia.mongo.entity.SensorNormalizado;
 
 import java.util.List;
 
-public interface EstadisticaService {
+public interface SensorRepository {
 
-    ReporteSantuarioMasCorrupto santuarioCorrupto();
+    void normalizeData();
 
-    void normalizeSensorData();
-
-    List<ReportePromedioPorTipoDTO> obtenerValoresPromedioPorTipoDeSensor();
+    List<ReportePromedioPorTipoDTO> obtenerPromediosPorTipo();
 
     List<SensorNormalizado> obtenerMedicionesAnomalas(String tipo, Double min, Double max);
 
-    List<ReporteCantidadPorTipoDTO> obtenerCantidadPorTipoDeSensor();
+    List<ReporteCantidadPorTipoDTO> obtenerCantidadPorTipo();
 
     List<ReporteCantidadPorSensorDTO> obtenerCantidadPorSensor();
 

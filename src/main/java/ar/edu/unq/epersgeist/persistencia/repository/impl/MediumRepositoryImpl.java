@@ -2,6 +2,8 @@ package ar.edu.unq.epersgeist.persistencia.repository.impl;
 
 import ar.edu.unq.epersgeist.controller.exceptions.MediumNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.Medium;
+import ar.edu.unq.epersgeist.persistencia.mongo.MediumMongoDAO;
+import ar.edu.unq.epersgeist.persistencia.mongo.entity.MediumMongo;
 import ar.edu.unq.epersgeist.persistencia.repository.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.sql.MediumSQLDAO;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.MediumSQL;
@@ -17,9 +19,11 @@ import java.util.stream.StreamSupport;
 public class MediumRepositoryImpl implements MediumRepository {
 
     private final MediumSQLDAO mediumSQLDAO;
+    private final MediumMongoDAO mediumMongoDAO;
 
-    public MediumRepositoryImpl(MediumSQLDAO mediumSQLDAO) {
+    public MediumRepositoryImpl(MediumSQLDAO mediumSQLDAO, MediumMongoDAO mediumMongoDAO) {
         this.mediumSQLDAO = mediumSQLDAO;
+        this.mediumMongoDAO =mediumMongoDAO;
     }
 
     @Override
@@ -27,20 +31,31 @@ public class MediumRepositoryImpl implements MediumRepository {
         MediumSQL mediumSQL = new MediumSQL(medium);
         mediumSQLDAO.save(mediumSQL);
         medium.setId(mediumSQL.getId());
+
+        MediumMongo mediumMongo = new MediumMongo(medium);
+        mediumMongoDAO.insert(mediumMongo);
+
         return medium;
     }
 
     @Override
     public Optional<Medium> recuperar(Long mediumId) {
         MediumSQL mediumSQL = mediumSQLDAO.findById(mediumId).orElseThrow(() -> new MediumNoEncontradoException(""));
-        return Optional.of(new Medium(mediumSQL));
+        MediumMongo mediumMongo = mediumMongoDAO.findByMediumId(mediumId).orElseThrow(() -> new MediumNoEncontradoException(""));
+        return Optional.of(Medium.from(mediumSQL, mediumMongo));
     }
 
     @Override
     public List<Medium> recuperarTodos() {
         var iterable = mediumSQLDAO.findAll();
-        List<MediumSQL> mediumsSQLS = StreamSupport.stream(iterable.spliterator(), false).toList();
-        return mediumsSQLS.stream().map(Medium::from).collect(Collectors.toList());
+        List<MediumSQL> mediumsSQL = StreamSupport.stream(iterable.spliterator(), false).toList();
+        return mediumsSQL.stream()
+                .map(sql -> {
+                    MediumMongo mongo = mediumMongoDAO.findByMediumId(sql.getId())
+                            .orElseThrow(() -> new MediumNoEncontradoException(" " ));
+                    return Medium.from(sql, mongo);
+                })
+                .toList();
     }
 
     @Override
@@ -53,17 +68,26 @@ public class MediumRepositoryImpl implements MediumRepository {
     @Override
     public void eliminar(Long mediumId) {
         mediumSQLDAO.deleteById(mediumId);
+        mediumMongoDAO.findByMediumId(mediumId)
+                .ifPresent(mediumMongo -> mediumMongoDAO.deleteById(mediumMongo.getId()));
     }
 
     @Override
     public void eliminarTodo() {
         mediumSQLDAO.deleteAll();
+        mediumMongoDAO.deleteAll();
     }
 
     @Override
     public List<Medium> mediumsSinEspiritusEn(Long ubicacionId) {
         List<MediumSQL> mediumsSQL = mediumSQLDAO.mediumsSinEspiritusEn(ubicacionId);
-        return mediumsSQL.stream().map(Medium::from).collect(Collectors.toList());
+        return mediumsSQL.stream()
+                .map(sql -> {
+                    MediumMongo mongo = mediumMongoDAO.findByMediumId(sql.getId())
+                            .orElseThrow(() -> new MediumNoEncontradoException(" "));
+                    return Medium.from(sql, mongo);
+                })
+                .toList();
     }
 
 }

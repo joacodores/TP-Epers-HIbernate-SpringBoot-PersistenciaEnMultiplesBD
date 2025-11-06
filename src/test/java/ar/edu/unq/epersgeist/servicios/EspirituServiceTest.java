@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,8 +32,15 @@ public class EspirituServiceTest {
     @Autowired
     private EntityManager em;
 
+
+
     private Ubicacion crearUbicacion(String nombre, int energia) {
-        Ubicacion ubicacion = new Cementerio(nombre, energia);
+        Set<Coordenada> coordsBA = Set.of(
+                new Coordenada(-34.6037, -58.3816),
+                new Coordenada(-34.6100, -58.3852),
+                new Coordenada(-34.6075, -58.3748)
+        );
+        Ubicacion ubicacion = new Cementerio(nombre, energia, coordsBA);
         ubicacionService.crear(ubicacion);
         return ubicacion;
     }

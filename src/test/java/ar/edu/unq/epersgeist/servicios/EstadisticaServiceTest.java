@@ -14,6 +14,11 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,6 +42,27 @@ public class EstadisticaServiceTest {
 
     @Autowired
     private UbicacionService ubicacionService;
+    private Set<Coordenada> coordsBA;
+    private Set<Coordenada> coordsCBA;
+    private Set<Coordenada> coordsMZA;
+    @BeforeEach
+    void setUp(){ //no tienen que ver con avellaneda y tokyo pero para que zafe el test se agregaron asi
+         coordsBA = Set.of(
+                new Coordenada(-34.6037, -58.3816),
+                new Coordenada(-34.6100, -58.3852),
+                new Coordenada(-34.6075, -58.3748)
+        );
+        coordsCBA = Set.of(
+                new Coordenada(-31.4201, -64.1888),
+                new Coordenada(-31.4259, -64.1905),
+                new Coordenada(-31.4172, -64.1810)
+        );
+        coordsMZA = Set.of(
+                new Coordenada(-32.8894, -68.8458),
+                new Coordenada(-32.8850, -68.8420),
+                new Coordenada(-32.8905, -68.8365)
+        );
+    }
 
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -48,8 +74,8 @@ public class EstadisticaServiceTest {
 
     @Test
     void santuarioCorruptoTest() {
-        Ubicacion avellaneda = ubicacionService.crear(new Santuario("Avellaneda", 10));
-        Ubicacion tokyo = ubicacionService.crear(new Santuario("Tokyo", 100));
+        Ubicacion avellaneda = ubicacionService.crear(new Santuario("Avellaneda", 10, coordsBA));
+        Ubicacion tokyo = ubicacionService.crear(new Santuario("Tokyo", 100, coordsMZA));
         // Avellaneda: 5 demonios, 4 ángeles. Diferencia = 1
         for (int i = 1; i <= 5; i++) {
             espirituService.crear(new EspirituDemoniaco(100, "demonio" + i, avellaneda));
@@ -74,8 +100,8 @@ public class EstadisticaServiceTest {
 
     @Test
     void santuarioMasCorruptoNoPuedeSerUnCementerioTest() {
-        Ubicacion avellaneda = ubicacionService.crear(new Santuario("Avellaneda", 10));
-        Ubicacion tokyo = ubicacionService.crear(new Cementerio("Tokyo", 100));
+        Ubicacion avellaneda = ubicacionService.crear(new Santuario("Avellaneda", 10, coordsBA));
+        Ubicacion tokyo = ubicacionService.crear(new Cementerio("Tokyo", 100, coordsMZA));
         // Avellaneda: 5 demonios, 4 ángeles. Diferencia = 1
         for (int i = 1; i <= 5; i++) {
             espirituService.crear(new EspirituDemoniaco(100, "demonio" + i, avellaneda));
@@ -96,7 +122,7 @@ public class EstadisticaServiceTest {
 
     @Test
     void siNoExisteSantuarioConMasDemoniosQueAngelesSeLanzaExcepcionTest() {
-        Ubicacion avellaneda = ubicacionService.crear(new Santuario("Avellaneda", 10));
+        Ubicacion avellaneda = ubicacionService.crear(new Santuario("Avellaneda", 10, coordsBA));
         // Avellaneda: 4 demonios, 4 ángeles. Diferencia = 0
         for (int i = 1; i <= 4; i++) {
             espirituService.crear(new EspirituDemoniaco(100, "demonio" + i, avellaneda));
@@ -333,7 +359,6 @@ public class EstadisticaServiceTest {
 
     @AfterEach
     void cleanup() {
-        mongoTemplate.dropCollection("epersgeist_normalized");
         espirituService.eliminarTodo();
         mediumService.eliminarTodo();
         ubicacionService.eliminarTodo();

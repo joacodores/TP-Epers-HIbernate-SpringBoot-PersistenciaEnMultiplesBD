@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,12 +28,30 @@ public class MediumTest {
     private RandomizerFalso randomizer;
     private Medium picolo;
     private Espiritu majinBu;
+    private Set<Coordenada> coordsBA;
+    private Set<Coordenada> coordsCBA;
+    private Set<Coordenada> coordsMZA;
 
     @BeforeEach
     void prepare() {
-        fuerteApache = new Santuario("Fuerte Apache", 50);
-        bocaPredio = new Santuario("Boca Predio", 10);
-        riber = new Cementerio("Descendido", 40);
+        coordsBA = Set.of(
+                new Coordenada(-34.6037, -58.3816),
+                new Coordenada(-34.6100, -58.3852),
+                new Coordenada(-34.6075, -58.3748)
+        );
+        coordsCBA = Set.of(
+                new Coordenada(-31.4201, -64.1888),
+                new Coordenada(-31.4259, -64.1905),
+                new Coordenada(-31.4172, -64.1810)
+        );
+        coordsMZA = Set.of(
+                new Coordenada(-32.8894, -68.8458),
+                new Coordenada(-32.8850, -68.8420),
+                new Coordenada(-32.8905, -68.8365)
+        );
+        fuerteApache = new Santuario("Fuerte Apache", 50, coordsBA);
+        bocaPredio = new Santuario("Boca Predio", 10, coordsCBA);
+        riber = new Cementerio("Descendido", 40, coordsMZA);
         picolo = new Medium("Picolo", 100, 40, riber);
         majinBu = new EspirituDemoniaco(80, "Majin Buu", fuerteApache);
         palermo = new Medium("Martin Palermo", 100, 25, fuerteApache);

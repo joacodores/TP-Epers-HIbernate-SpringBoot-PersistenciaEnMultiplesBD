@@ -1,6 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
-import ar.edu.unq.epersgeist.persistencia.sql.entity.CoordenadaSQL;
+import ar.edu.unq.epersgeist.persistencia.mongo.entity.CoordenadaMongo;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,7 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Coordenada {
-    private Long id;
     private double latitud;
     private double longitud;
 
@@ -17,10 +16,9 @@ public class Coordenada {
         this.longitud = longitud;
     }
 
-    public Coordenada(CoordenadaSQL coordenadaSQL){
-        this.id = coordenadaSQL.getId();
-        this.longitud = coordenadaSQL.getLongitud();
-        this.latitud = coordenadaSQL.getLatitud();
+    public Coordenada(CoordenadaMongo coordenada){
+        this.longitud = coordenada.getLongitud();
+        this.latitud = coordenada.getLatitud();
     }
 
     public double distanciaEnKm(Coordenada coordenada){

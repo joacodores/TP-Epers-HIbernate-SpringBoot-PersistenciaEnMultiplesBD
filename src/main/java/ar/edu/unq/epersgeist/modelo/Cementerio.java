@@ -2,12 +2,16 @@ package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.persistencia.sql.entity.UbicacionSQL;
 
+import java.util.Set;
+
 public class Cementerio extends Ubicacion {
 
-    public Cementerio(String nombre, Integer energia) {
+    public Cementerio(String nombre, Integer energia, Set<Coordenada> coordenadas) {
+        super(nombre, energia, coordenadas );
+    }
+    public Cementerio(String nombre, Integer energia ) {
         super(nombre, energia);
     }
-
     public Cementerio(UbicacionSQL ubicacionSQL) {
         super(ubicacionSQL);
     }

@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.persistencia.mongo.entity.UbicacionMongo;
 import ar.edu.unq.epersgeist.persistencia.neo.entity.UbicacionNeo4J;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituAngelicalSQL;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.SantuarioSQL;
@@ -24,13 +25,15 @@ public abstract class Ubicacion {
     private List<Espiritu> espiritus = new ArrayList<>();
     private List<Medium> mediums = new ArrayList<>();
     private Set<ConexionPsionica> conexiones = new HashSet<>();
+    private Set<Coordenada> coordenadas = new HashSet<>();
     private Integer energia;
     private Date updatedAt;
     private Boolean deletedAt = false;
 
-    public Ubicacion(String nombre, Integer energia) {
+    public Ubicacion(String nombre, Integer energia, Set<Coordenada> coordenadas ) {
         this.nombre = nombre;
         this.energia = energia;
+        this.coordenadas = coordenadas;
     }
 
     public Ubicacion(UbicacionSQL ubicacionSQL) {
@@ -58,8 +61,14 @@ public abstract class Ubicacion {
         this.id = id;
         this.nombre = nombre;
     }
+    public Ubicacion(String nombre, Integer energia ) { // Para mapear conexiones Neo4j en el from
+        this.nombre = nombre;
+        this.energia = energia;
+    }
 
-    public static Ubicacion from(UbicacionSQL ubicacionSQL, UbicacionNeo4J ubicacionNeo4J) {
+
+
+    public static Ubicacion from(UbicacionSQL ubicacionSQL, UbicacionNeo4J ubicacionNeo4J, UbicacionMongo ubicacionMongo) {
         Ubicacion ubi;
         if (ubicacionSQL instanceof SantuarioSQL) {
             ubi = Santuario.from(ubicacionSQL);
@@ -85,6 +94,8 @@ public abstract class Ubicacion {
                         return conexionDestino;
                     }).collect(Collectors.toSet());
         }
+        ubi.coordenadas = ubicacionMongo.getCoordenadas().stream()
+                .map(coordenadaMongo -> new Coordenada(coordenadaMongo.getLatitud(), coordenadaMongo.getLongitud())).collect(Collectors.toSet());
         return ubi;
     }
 
@@ -110,6 +121,46 @@ public abstract class Ubicacion {
     public void eliminarMedium(Medium medium) {
         this.mediums.remove(medium);
         medium.setUbicacion(null);
+    }
+    public Coordenada generarCoordenadaAleatoria() {
+        double minLat = coordenadas.stream().mapToDouble(Coordenada::getLatitud).min().orElseThrow();
+        double maxLat = coordenadas.stream().mapToDouble(Coordenada::getLatitud).max().orElseThrow();
+        double minLon = coordenadas.stream().mapToDouble(Coordenada::getLongitud).min().orElseThrow();
+        double maxLon = coordenadas.stream().mapToDouble(Coordenada::getLongitud).max().orElseThrow();
+
+        Random rnd = new Random();
+
+        while (true) {
+
+            double lat = minLat + rnd.nextDouble() * (maxLat - minLat);
+            double lon = minLon + rnd.nextDouble() * (maxLon - minLon);
+
+            Coordenada punto = new Coordenada(lat, lon);
+
+            if (estaDentro(punto)) {
+                return new Coordenada(lat, lon);
+            }
+        }
+    }
+
+    private boolean estaDentro(Coordenada p) {
+
+        boolean inside = false;
+        List<Coordenada> poly = this.coordenadas.stream().toList();
+
+        for (int i = 0, j = poly.size() - 1; i < poly.size(); j = i++) {
+            double xi = poly.get(i).getLatitud();
+            double yi = poly.get(i).getLongitud();
+            double xj = poly.get(j).getLatitud();
+            double yj = poly.get(j).getLongitud();
+
+            boolean intersect = ((yi > p.getLongitud()) != (yj > p.getLongitud())) &&
+                    (p.getLatitud() < (xj - xi) * (p.getLongitud() - yi) / (yj - yi) + xi);
+
+            if (intersect) inside = !inside;
+        }
+
+        return inside;
     }
 
     public abstract boolean permiteInvocar(Espiritu e);

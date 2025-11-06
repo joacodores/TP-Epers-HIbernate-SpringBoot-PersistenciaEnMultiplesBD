@@ -3,16 +3,23 @@ package ar.edu.unq.epersgeist.modelo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UbicacionTest {
 
     private Ubicacion quilmes;
-
+    private Set<Coordenada> coordsBA;
     @BeforeEach
     void prepare() {
-        quilmes = new Santuario("Quilmes", 10);
+        coordsBA = Set.of(
+                new Coordenada(-34.6037, -58.3816),
+                new Coordenada(-34.6100, -58.3852),
+                new Coordenada(-34.6075, -58.3748)
+        );
+        quilmes = new Santuario("Quilmes", 10, coordsBA);
     }
 
     @Test
@@ -33,14 +40,14 @@ public class UbicacionTest {
 
     @Test
     void agregarEspirituTest() {
-        Espiritu pasion = new EspirituDemoniaco(100, "Cervecero, hoy hay que ganar", new Santuario("Lanús", 1));
+        Espiritu pasion = new EspirituDemoniaco(100, "Cervecero, hoy hay que ganar", new Santuario("Lanús", 1, coordsBA));
         quilmes.agregarEspiritu(pasion);
         assertEquals(pasion, quilmes.getEspiritus().getFirst());
     }
 
     @Test
     void eliminarEspirituTest() {
-        Espiritu pasion = new EspirituDemoniaco(100, "Cervecero, hoy hay que ganar", new Santuario("Lanús", 1));
+        Espiritu pasion = new EspirituDemoniaco(100, "Cervecero, hoy hay que ganar", new Santuario("Lanús", 1, coordsBA));
         quilmes.agregarEspiritu(pasion);
         assertEquals(pasion, quilmes.getEspiritus().getFirst());
         quilmes.eliminarEspiritu(pasion);

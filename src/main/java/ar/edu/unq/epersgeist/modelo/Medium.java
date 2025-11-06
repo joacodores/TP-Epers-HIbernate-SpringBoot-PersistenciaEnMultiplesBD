@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.controller.exceptions.ConexionPsionicaException;
 import ar.edu.unq.epersgeist.modelo.exceptions.*;
+import ar.edu.unq.epersgeist.persistencia.mongo.entity.MediumMongo;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituAngelicalSQL;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.MediumSQL;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.SantuarioSQL;
@@ -30,14 +31,16 @@ public class Medium {
     private Integer mana;
     private List<Espiritu> espiritus = new ArrayList<>();
     private Ubicacion ubicacion;
+    private Coordenada coordenada;
     private Date updatedAt;
     private Boolean deletedAt = false;
 
-    public Medium(String nombre, Integer manaMax, Integer mana, Ubicacion ubicacion) {
+    public Medium(String nombre, Integer manaMax, Integer mana, Ubicacion ubicacion ) {
         this.nombre = nombre;
         this.manaMax = manaMax;
         this.mana = min(manaMax, mana);
         this.ubicacion = ubicacion;
+        this.coordenada = ubicacion.generarCoordenadaAleatoria();
         ubicacion.agregarMedium(this);
     }
 
@@ -65,8 +68,10 @@ public class Medium {
         }
     }
 
-    public static Medium from(MediumSQL mediumSQL) {
-        return new Medium(mediumSQL);
+    public static Medium from(MediumSQL mediumSQL, MediumMongo mediumMongo) {
+        Medium m = new Medium(mediumSQL);
+        m.coordenada = new Coordenada(mediumMongo.getCoordenada());
+        return m;
     }
 
     public void conectarseAEspiritu(Espiritu espiritu) {

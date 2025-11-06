@@ -4,6 +4,8 @@ import ar.edu.unq.epersgeist.controller.exceptions.UbicacionNoEncontradaExceptio
 import ar.edu.unq.epersgeist.modelo.Cementerio;
 import ar.edu.unq.epersgeist.modelo.Santuario;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.persistencia.mongo.UbicacionMongoDAO;
+import ar.edu.unq.epersgeist.persistencia.mongo.entity.UbicacionMongo;
 import ar.edu.unq.epersgeist.persistencia.neo.UbicacionNeo4JDAO;
 import ar.edu.unq.epersgeist.persistencia.neo.entity.UbicacionNeo4J;
 import ar.edu.unq.epersgeist.persistencia.repository.UbicacionRepository;
@@ -24,10 +26,12 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     private final UbicacionSQLDAO ubicacionSQLDAO;
     private final UbicacionNeo4JDAO ubicacionNeo4JDAO;
+    private final UbicacionMongoDAO ubicacionMongoDAO;
 
-    public UbicacionRepositoryImpl(UbicacionSQLDAO ubicacionSQLDAO, UbicacionNeo4JDAO ubicacionNeo4JDAO) {
+    public UbicacionRepositoryImpl(UbicacionSQLDAO ubicacionSQLDAO, UbicacionNeo4JDAO ubicacionNeo4JDAO, UbicacionMongoDAO ubicacionMongoDAO) {
         this.ubicacionSQLDAO = ubicacionSQLDAO;
         this.ubicacionNeo4JDAO = ubicacionNeo4JDAO;
+        this.ubicacionMongoDAO = ubicacionMongoDAO;
     }
 
     @Override
@@ -44,6 +48,9 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
         ubicacion.getMediums().forEach(m -> m.setUbicacion(ubicacion));
         UbicacionNeo4J ubicacionNeo = new UbicacionNeo4J(ubicacion);
         ubicacionNeo4JDAO.save(ubicacionNeo);
+
+        UbicacionMongo ubicacionMongo = new UbicacionMongo(ubicacion);
+        ubicacionMongoDAO.insert(ubicacionMongo);
         return ubicacion;
     }
 
@@ -53,7 +60,9 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
                 .orElseThrow(() -> new UbicacionNoEncontradaException(""));
         UbicacionNeo4J ubicacionNeo4j = ubicacionNeo4JDAO.findById(ubicacionId)
                 .orElseThrow(() -> new UbicacionNoEncontradaException(""));
-        return Optional.of(Ubicacion.from(ubicacionSQL, ubicacionNeo4j));
+        UbicacionMongo ubicacionMongo = ubicacionMongoDAO.findById(String.valueOf(ubicacionId))
+                .orElseThrow(() -> new UbicacionNoEncontradaException(""));
+        return Optional.of(Ubicacion.from(ubicacionSQL, ubicacionNeo4j, ubicacionMongo));
     }
 
     @Override
@@ -75,6 +84,7 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     public void eliminar(Long ubicacionId) {
         ubicacionSQLDAO.deleteById(ubicacionId);
         ubicacionNeo4JDAO.deleteById(ubicacionId);
+        ubicacionMongoDAO.deleteById(String.valueOf(ubicacionId));
     }
 
     @Override
@@ -113,6 +123,7 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
     public void eliminarTodo() {
         ubicacionSQLDAO.deleteAll();
         ubicacionNeo4JDAO.deleteAll();
+        ubicacionMongoDAO.deleteAll();
     }
 
     private List<Ubicacion> findPath(Long idOrigen, Long idDestino, BiFunction<Long, Long, List<UbicacionNeo4J>> finder) {
@@ -139,10 +150,12 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
                 .map(ubicacionSQL -> {
                     UbicacionNeo4J ubiNeo = ubicacionNeo4JDAO.findById(ubicacionSQL.getId())
                             .orElseThrow(() -> new UbicacionNoEncontradaException("ubicacion"));
+                    UbicacionMongo ubiMongo = ubicacionMongoDAO.findById(String.valueOf(ubicacionSQL.getId()))
+                            .orElseThrow(() -> new UbicacionNoEncontradaException("ubicacion"));
                     if (ubicacionSQL instanceof SantuarioSQL) {
-                        return Santuario.from(ubicacionSQL, ubiNeo);
+                        return Santuario.from(ubicacionSQL, ubiNeo, ubiMongo);
                     } else {
-                        return Cementerio.from(ubicacionSQL, ubiNeo);
+                        return Cementerio.from(ubicacionSQL, ubiNeo, ubiMongo);
                     }
                 })
                 .toList();

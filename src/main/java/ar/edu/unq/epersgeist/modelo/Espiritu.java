@@ -1,9 +1,9 @@
 package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.modelo.exceptions.NivelDeConexionFueraDeRangoException;
-import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituSQL;
-import ar.edu.unq.epersgeist.persistencia.sql.entity.MediumSQL;
-import ar.edu.unq.epersgeist.persistencia.sql.entity.SantuarioSQL;
+import ar.edu.unq.epersgeist.persistencia.mongo.entity.EspirituMongo;
+import ar.edu.unq.epersgeist.persistencia.mongo.entity.MediumMongo;
+import ar.edu.unq.epersgeist.persistencia.sql.entity.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +22,7 @@ public abstract class Espiritu {
     private Long id;
     private int nivelDeConexion;
     private String nombre;
+    private Coordenada coordenada;
     private Ubicacion ubicacion;
     private Medium owner;
     private Date updatedAt;
@@ -37,6 +38,7 @@ public abstract class Espiritu {
         this.nombre = nombre;
         this.ubicacion = ubicacion;
         this.randomizer = new RandomizerImpl();
+        this.coordenada = ubicacion.generarCoordenadaAleatoria();
         ubicacion.agregarEspiritu(this);
     }
 
@@ -60,6 +62,17 @@ public abstract class Espiritu {
             this.owner = owner;
         }
     }
+    public static Espiritu from(EspirituSQL espirituSQL, EspirituMongo espirituMongo) {
+        Espiritu e;
+        if (espirituSQL instanceof EspirituAngelicalSQL) {
+            e = new EspirituAngelical(espirituSQL);
+        } else {
+            e = new EspirituDemoniaco(espirituSQL);
+        }
+        e.coordenada = new Coordenada(espirituMongo.getCoordenada());
+        return e;
+    }
+
 
     public abstract boolean puedeExorcizar();
 

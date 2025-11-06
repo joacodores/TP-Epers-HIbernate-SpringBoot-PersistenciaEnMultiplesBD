@@ -4,6 +4,8 @@ import ar.edu.unq.epersgeist.modelo.exceptions.NivelDeConexionFueraDeRangoExcept
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class EspirituTest {
@@ -11,10 +13,16 @@ public class EspirituTest {
     private Espiritu rika;
     private Medium yuta;
     private Ubicacion puebloPaleta;
+    private Set<Coordenada> coordsBA;
 
     @BeforeEach
     void crearModelo() {
-        puebloPaleta = new Cementerio("Pueblo Paleta", 50);
+        coordsBA = Set.of(
+                new Coordenada(-34.6037, -58.3816),
+                new Coordenada(-34.6100, -58.3852),
+                new Coordenada(-34.6075, -58.3748)
+        );
+        puebloPaleta = new Cementerio("Pueblo Paleta", 50, coordsBA);
         rika = new EspirituAngelical(50, "Rika", puebloPaleta);
         yuta = new Medium("Yuta", 100, 100, puebloPaleta);
     }

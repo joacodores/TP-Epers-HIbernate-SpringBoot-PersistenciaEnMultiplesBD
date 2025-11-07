@@ -1,6 +1,7 @@
 package ar.edu.unq.epersgeist.persistencia.neo.entity;
 
 import ar.edu.unq.epersgeist.modelo.Cementerio;
+import ar.edu.unq.epersgeist.modelo.Coordenada;
 import ar.edu.unq.epersgeist.modelo.Santuario;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import lombok.*;
@@ -48,6 +49,7 @@ public class UbicacionNeo4J {
                 })
                 .filter(c -> !c.getDestino().getId().equals(this.id))
                 .collect(Collectors.toSet());
+
     }
 
     public Ubicacion toModel() {

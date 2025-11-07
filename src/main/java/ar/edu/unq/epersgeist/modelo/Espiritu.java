@@ -5,6 +5,7 @@ import ar.edu.unq.epersgeist.modelo.exceptions.NivelDeConexionFueraDeRangoExcept
 import ar.edu.unq.epersgeist.persistencia.mongo.entity.EspirituMongo;
 import ar.edu.unq.epersgeist.persistencia.mongo.entity.MediumMongo;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.*;
+import jakarta.persistence.Embedded;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +27,7 @@ public abstract class Espiritu {
     private Long id;
     private int nivelDeConexion;
     private String nombre;
+    @Embedded
     private Coordenada coordenada;
     private Ubicacion ubicacion;
     private Medium owner;
@@ -147,10 +149,11 @@ public abstract class Espiritu {
         return this.owner == null;
     }
 
-    public void cambiarUbicacion(Ubicacion ubicacionNueva) {
+    public void cambiarUbicacion(Ubicacion ubicacionNueva, Coordenada coordenadaNueva) {
         this.ubicacion.eliminarEspiritu(this);
         ubicacionNueva.agregarEspiritu(this);
         this.validarUbicacionPorTipo();
+        this.coordenada = coordenadaNueva;
     }
 
     public void setUpdatedAt() {
@@ -174,6 +177,10 @@ public abstract class Espiritu {
     public abstract boolean esDemoniaco();
 
     public abstract boolean esAngelical();
+
+    public void cambiarCoordenada(Coordenada coordenadaDestino) {
+        setCoordenada(coordenadaDestino);
+    }
 
     public boolean estaSiendoDominado() {
         return this.dominante != null;

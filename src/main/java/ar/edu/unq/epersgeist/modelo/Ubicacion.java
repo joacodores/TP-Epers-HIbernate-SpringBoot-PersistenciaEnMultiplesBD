@@ -5,6 +5,7 @@ import ar.edu.unq.epersgeist.persistencia.neo.entity.UbicacionNeo4J;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituAngelicalSQL;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.SantuarioSQL;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.UbicacionSQL;
+import jakarta.persistence.Embedded;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,7 @@ public abstract class Ubicacion {
     private List<Espiritu> espiritus = new ArrayList<>();
     private List<Medium> mediums = new ArrayList<>();
     private Set<ConexionPsionica> conexiones = new HashSet<>();
+    @Embedded
     private Set<Coordenada> coordenadas = new HashSet<>();
     private Integer energia;
     private Date updatedAt;
@@ -142,26 +144,27 @@ public abstract class Ubicacion {
             }
         }
     }
-
-    private boolean estaDentro(Coordenada p) {
+    boolean estaDentro(Coordenada p) {
 
         boolean inside = false;
         List<Coordenada> poly = this.coordenadas.stream().toList();
 
         for (int i = 0, j = poly.size() - 1; i < poly.size(); j = i++) {
-            double xi = poly.get(i).getLatitud();
-            double yi = poly.get(i).getLongitud();
-            double xj = poly.get(j).getLatitud();
-            double yj = poly.get(j).getLongitud();
 
-            boolean intersect = ((yi > p.getLongitud()) != (yj > p.getLongitud())) &&
-                    (p.getLatitud() < (xj - xi) * (p.getLongitud() - yi) / (yj - yi) + xi);
+            double xi = poly.get(i).getLongitud();  // x = lon
+            double yi = poly.get(i).getLatitud();   // y = lat
+            double xj = poly.get(j).getLongitud();
+            double yj = poly.get(j).getLatitud();
+
+            boolean intersect = ((yi > p.getLatitud()) != (yj > p.getLatitud())) &&
+                    (p.getLongitud() < (xj - xi) * (p.getLatitud() - yi) / (yj - yi) + xi);
 
             if (intersect) inside = !inside;
         }
 
         return inside;
     }
+
 
     public abstract boolean permiteInvocar(Espiritu e);
 
@@ -172,5 +175,10 @@ public abstract class Ubicacion {
     public abstract boolean esSantuario();
 
     public abstract boolean esCementerio();
+
+
+
+
+
 
 }

@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.persistencia.repository.impl;
 
 import ar.edu.unq.epersgeist.controller.exceptions.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.Cementerio;
+import ar.edu.unq.epersgeist.modelo.Coordenada;
 import ar.edu.unq.epersgeist.modelo.Santuario;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.persistencia.mongo.UbicacionMongoDAO;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.stream.StreamSupport;
@@ -161,4 +163,19 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
                 .toList();
     }
 
+    public Map<String, Object> toGeoJsonPoint(Coordenada coord) {
+        return Map.of(
+                "type", "Point",
+                "coordinates", List.of(coord.getLongitud(), coord.getLatitud()) // lon, lat
+        );
+    }
+
+    @Override
+    public boolean estaDentroDe(Long ubicacionId, Coordenada coord) {
+        Map<String, Object> point = toGeoJsonPoint(coord);
+
+        List<UbicacionMongo> resultado = ubicacionMongoDAO.findUbicacionesQueContienen(point);
+        return resultado.stream()
+                .anyMatch(u -> u.getId().equals(String.valueOf(ubicacionId)));
+    }
 }

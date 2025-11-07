@@ -4,6 +4,8 @@ import ar.edu.unq.epersgeist.controller.exceptions.EspirituDominadoException;
 import ar.edu.unq.epersgeist.controller.exceptions.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.controller.exceptions.EspirituNoPuedeSerDominadoException;
 import ar.edu.unq.epersgeist.modelo.*;
+import ar.edu.unq.epersgeist.persistencia.repository.EspirituRepository;
+import ar.edu.unq.epersgeist.persistencia.repository.UbicacionRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +36,10 @@ public class EspirituServiceTest {
 
     @Autowired
     private EntityManager em;
-
+    @Autowired
+    private EspirituRepository espirituRepository;
+    @Autowired
+    private UbicacionRepository ubicacionRepository;
 
 
     private Ubicacion crearUbicacion(String nombre, int energia) {
@@ -318,6 +323,14 @@ public class EspirituServiceTest {
         service.dominar(demonio.getId(), angel.getId());
 
         assertThrows(EspirituDominadoException.class, () -> service.conectar(angel.getId(), medium.getId()));
+    }
+
+    @Test
+    void espirituSeCreaEnCoordenadaRandomDeUbicacion(){
+        Ubicacion ubi = crearUbicacion("East Blue", 10);
+        Espiritu e = crearEspirituAngelical(58, "Luffy", ubi);
+
+        assertTrue(ubicacionRepository.estaDentroDe(e.getUbicacion().getId(), e.getCoordenada()));
     }
 
     @AfterEach

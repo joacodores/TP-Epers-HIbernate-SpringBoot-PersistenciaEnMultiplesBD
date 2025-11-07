@@ -31,6 +31,9 @@ public class MediumTest {
     private Set<Coordenada> coordsBA;
     private Set<Coordenada> coordsCBA;
     private Set<Coordenada> coordsMZA;
+    private Coordenada coordPruebaBA;
+    private Coordenada coordPruebaCBA;
+    private Coordenada coordPruebaMZA;
 
     @BeforeEach
     void prepare() {
@@ -49,6 +52,9 @@ public class MediumTest {
                 new Coordenada(-32.8850, -68.8420),
                 new Coordenada(-32.8905, -68.8365)
         );
+        coordPruebaBA = new Coordenada(-34.60707, -58.38053);
+        coordPruebaCBA = new Coordenada(-31.42107, -64.18677);
+        coordPruebaMZA = new Coordenada(-32.8883, -68.84143);
         fuerteApache = new Santuario("Fuerte Apache", 50, coordsBA);
         bocaPredio = new Santuario("Boca Predio", 10, coordsCBA);
         riber = new Cementerio("Descendido", 40, coordsMZA);
@@ -287,7 +293,7 @@ public class MediumTest {
         Espiritu demonio2 = new EspirituDemoniaco(0, "sanji", riber);
         chopper.conectarseAEspiritu(demonio);//cuando conectan quedan con 2 de nvlDeConexion (20% de 10)
         chopper.conectarseAEspiritu(demonio2);
-        chopper.mover(fuerteApache);
+        chopper.mover(coordPruebaBA);
         assertEquals(0, demonio.getNivelDeConexion()); //quedan en 0 por el cambio de ubicacion
         assertEquals(0, demonio2.getNivelDeConexion());
         chopper.descansar();
@@ -323,7 +329,7 @@ public class MediumTest {
         Espiritu espirituAngelical2 = new EspirituAngelical(0, "sanji", fuerteApache);
         tai.conectarseAEspiritu(espirituAngelical);//cuando conectan quedan con 2 de nvlDeConexion (20% de 10)
         tai.conectarseAEspiritu(espirituAngelical2);
-        tai.mover(riber);
+        tai.mover(coordPruebaMZA);
         assertEquals(0, espirituAngelical.getNivelDeConexion()); //quedan en 0 por el cambio de ubicacion
         assertEquals(0, espirituAngelical2.getNivelDeConexion());
         tai.descansar();
@@ -387,7 +393,7 @@ public class MediumTest {
         assertTrue(fuerteApache.getEspiritus().contains(carlitos));
         juan.invocar(carlitos);
         assertEquals(mana - 10, juan.getMana());
-        assertEquals(bocaPredio, carlitos.getUbicacion());
+        assertEquals(bocaPredio.getNombre(), carlitos.getUbicacion().getNombre());
         assertFalse(fuerteApache.getEspiritus().contains(carlitos));
         assertTrue(bocaPredio.getEspiritus().contains(carlitos));
     }
@@ -403,7 +409,8 @@ public class MediumTest {
     @Test
     void invocarCuandoYaEstaEnLaMismaUbicacion_Cobra10() {
         // mismo lugar antes de invocar
-        carlitos.cambiarUbicacion(bocaPredio);
+        Coordenada coordenada = coordsCBA.stream().findFirst().get();
+        carlitos.cambiarUbicacion(bocaPredio, coordenada);
         int mana0 = juan.getMana();
         juan.invocar(carlitos);
         assertEquals(mana0 - 10, juan.getMana());           // cobra igual
@@ -440,7 +447,8 @@ public class MediumTest {
 
     @Test
     void mediumAlNoTenerUnaConexionConLaUbicacionDestinoLanzaExceptionTest() {
-        assertThrows(ConexionPsionicaException.class, () -> picolo.mover(fuerteApache));
+        Coordenada coordenada = coordsBA.stream().findAny().get();
+        assertThrows(ConexionPsionicaException.class, () -> picolo.mover(coordenada));
     }
 
     @Test
@@ -448,7 +456,7 @@ public class MediumTest {
         ConexionPsionica conexionPsionica = new ConexionPsionica(fuerteApache, 10);
         riber.getConexiones().add(conexionPsionica);
         Medium chopper = new Medium("Chopper", 100, 10, riber);
-        chopper.mover(fuerteApache);
+        chopper.mover(coordPruebaBA);
         assertEquals(chopper.getUbicacion(), fuerteApache);
     }
 
@@ -457,7 +465,7 @@ public class MediumTest {
         ConexionPsionica conexionPsionica = new ConexionPsionica(fuerteApache, 10);
         riber.getConexiones().add(conexionPsionica);
         Medium chopper = new Medium("Chopper", 100, 50, riber);
-        chopper.mover(fuerteApache);
+        chopper.mover(coordPruebaBA);
         assertEquals(40, chopper.getMana());
     }
 

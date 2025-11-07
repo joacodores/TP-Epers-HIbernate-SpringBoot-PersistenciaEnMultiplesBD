@@ -9,7 +9,7 @@ public class ConexionPsionica {
 
     private Long id;
     private Ubicacion destino;
-    private int costo;
+    private Integer costo;
 
     public ConexionPsionica(Ubicacion destino, int costo) {
         this.destino = destino;

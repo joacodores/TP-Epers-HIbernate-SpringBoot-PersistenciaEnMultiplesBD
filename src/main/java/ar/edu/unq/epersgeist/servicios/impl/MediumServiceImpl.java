@@ -1,12 +1,7 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
-import ar.edu.unq.epersgeist.controller.exceptions.EspirituNoEncontradoException;
-import ar.edu.unq.epersgeist.controller.exceptions.MediumNoEncontradoException;
-import ar.edu.unq.epersgeist.controller.exceptions.UbicacionLejanaException;
-import ar.edu.unq.epersgeist.controller.exceptions.UbicacionNoEncontradaException;
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.Medium;
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.controller.exceptions.*;
+import ar.edu.unq.epersgeist.modelo.*;
 import ar.edu.unq.epersgeist.persistencia.repository.EspirituRepository;
 import ar.edu.unq.epersgeist.persistencia.repository.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repository.UbicacionRepository;
@@ -86,6 +81,10 @@ public class MediumServiceImpl implements MediumService {
         Medium invocador = mediumRepository.recuperar(mediumId).orElseThrow(() -> new MediumNoEncontradoException(""));
         Espiritu espirituAInvocar = espirituRepository.recuperar(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(""));
         Ubicacion ubicacionDeInvocacion = invocador.getUbicacion();
+        Coordenada coordenadaAInvocar = invocador.getCoordenada();
+        if (coordenadaAInvocar.distanciaEnKm(espirituAInvocar.getCoordenada()) >= 50){
+            throw new UbicacionLejanaException("Las ubicaciones no están conectadas");
+        }
         invocador.invocar(espirituAInvocar);
         espirituRepository.actualizar(espirituAInvocar);
         ubicacionRepository.actualizar(ubicacionDeInvocacion);
@@ -99,20 +98,44 @@ public class MediumServiceImpl implements MediumService {
     }
 
     @Override
-    public void mover(Long mediumId, Long ubicacionId) {
+    public void mover(Long mediumId, Double latitud, Double longitud){
         Medium medium = mediumRepository.recuperar(mediumId).orElseThrow(() -> new MediumNoEncontradoException(""));
-        Ubicacion ubicacion = ubicacionRepository.recuperar(ubicacionId).orElseThrow(() -> new UbicacionNoEncontradaException(""));
-        if (!ubicacionRepository.estanConectadas(medium.getUbicacion().getId(), ubicacion.getId())) {
-            throw new UbicacionLejanaException("Las ubicaciones no están conectadas");
-        }
+        Coordenada coordenada = new Coordenada(latitud, longitud);
         Ubicacion ubicacionOrigen = ubicacionRepository.recuperar(medium.getUbicacion().getId()).orElseThrow(() -> new UbicacionNoEncontradaException(""));
-        medium.getUbicacion().setConexiones(ubicacionOrigen.getConexiones());
-        medium.mover(ubicacion);
+
+        if ((coordenada.distanciaEnKm(medium.getCoordenada()) > 30) ){
+            throw new UbicacionLejanaException("Las coordenadas estan muy lejos");
+        }
+
+        boolean dentroDeUbiActual = ubicacionRepository.estaDentroDe(ubicacionOrigen.getId(), coordenada);
+        boolean dentroDeUbiConectada = false;
+
+        if (!dentroDeUbiActual){
+            for (ConexionPsionica conexion : ubicacionOrigen.getConexiones()) {
+
+                Ubicacion ubi = ubicacionRepository.recuperar(conexion.getDestino().getId()).get();
+                conexion.getDestino().setCoordenadas(ubi.getCoordenadas());
+                medium.setearConexiones(ubicacionOrigen.getConexiones());
+
+                if (ubicacionRepository.estaDentroDe(conexion.getDestino().getId(), coordenada)) {
+                    dentroDeUbiConectada = true;
+                    break;
+                }
+            }
+        }
+
+        if (!dentroDeUbiActual && !dentroDeUbiConectada){
+            throw new UbicacionLejanaException("La coordenada destino no pertenece a la ubicación actual ni a una conectada.");
+        }
+        medium.mover(coordenada);
         if (medium.getMana() == 0) {
             mediumRepository.eliminar(mediumId);
         } else {
             mediumRepository.actualizar(medium);
         }
+
+
+
     }
 
 }

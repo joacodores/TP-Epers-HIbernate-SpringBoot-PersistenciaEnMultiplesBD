@@ -128,10 +128,11 @@ public class MediumController {
         return ResponseEntity.ok(dtos);
     }
 
-    @PatchMapping("/{mediumId}/mover/{ubicacionId}")
+    @PatchMapping("/{mediumId}/mover/{latitud}/{longitud}")
     public ResponseEntity<RecuperarMediumDTO> mover(@PathVariable Long mediumId,
-                                                    @PathVariable Long ubicacionId) {
-        mediumService.mover(mediumId, ubicacionId);
+                                                    @PathVariable Double latitud,
+                                                    @PathVariable Double longitud) {
+        mediumService.mover(mediumId, latitud, longitud);
         var mediumActualizado = mediumService.recuperar(mediumId)
                 .orElseThrow(() -> new ActualizarRecursoException("del medium"));
         var dto = RecuperarMediumDTO.desdeModelo(mediumActualizado);

@@ -6,15 +6,13 @@ import ar.edu.unq.epersgeist.persistencia.mongo.entity.MediumMongo;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituAngelicalSQL;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.MediumSQL;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.SantuarioSQL;
+import jakarta.persistence.Embedded;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.lang.Integer.min;
 
@@ -31,6 +29,7 @@ public class Medium {
     private Integer mana;
     private List<Espiritu> espiritus = new ArrayList<>();
     private Ubicacion ubicacion;
+    @Embedded
     private Coordenada coordenada;
     private Date updatedAt;
     private Boolean deletedAt = false;
@@ -140,7 +139,7 @@ public class Medium {
         if (getMana() < 10) {
             return;
         }
-        espiritu.cambiarUbicacion(ubicacionDeMedium);
+        espiritu.cambiarUbicacion(ubicacionDeMedium, this.getCoordenada());
         disminuirMana(10);
     }
 
@@ -156,19 +155,35 @@ public class Medium {
         this.mana = mana;
     }
 
-    public void mover(Ubicacion ubicacionDestino) {
-        Optional<ConexionPsionica> conexionOptional = this.ubicacion.getConexiones().stream().filter(conexion -> conexion.getDestino().getNombre().equals(ubicacionDestino.getNombre())).findFirst();
+    public void mover(Coordenada coordenadaDestino) {
+
+        if (this.ubicacion.estaDentro(coordenadaDestino)) {
+            setCoordenada(coordenadaDestino);
+            new ArrayList<>(espiritus).forEach(espiritu -> espiritu.cambiarCoordenada(coordenadaDestino));
+            return;
+        }
+
+        Optional<ConexionPsionica> conexionOptional = this.ubicacion.getConexiones().stream()
+            .filter(conexion -> conexion.getDestino().estaDentro(coordenadaDestino))
+            .findFirst();
         if (conexionOptional.isEmpty()) {
             throw new ConexionPsionicaException("La conexion no existe");
         }
-        setUbicacion(ubicacionDestino);
-        this.mana = Math.max(0, this.mana - conexionOptional.get().getCosto());
+        Ubicacion ubi = conexionOptional.get().getDestino();
+        Integer costoConexion = conexionOptional.get().getCosto();
+        setCoordenada(coordenadaDestino);
+        setUbicacion(ubi);
+
+        this.mana = Math.max(0, this.mana - costoConexion);
         // iteramos sobre una copia para evitar ConcurrentModificationException
-        new ArrayList<>(espiritus).forEach(espiritu -> espiritu.cambiarUbicacion(ubicacionDestino));
+        new ArrayList<>(espiritus).forEach(espiritu -> espiritu.cambiarUbicacion(ubi, coordenadaDestino));
     }
 
     public void setUpdatedAt() {
         this.updatedAt = new Date();
     }
 
+    public void setearConexiones(Set<ConexionPsionica> conexiones) {
+        this.ubicacion.setConexiones(conexiones);
+    }
 }

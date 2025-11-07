@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.servicios;
 
 import ar.edu.unq.epersgeist.controller.exceptions.UbicacionNoEncontradaException;
 import ar.edu.unq.epersgeist.modelo.*;
+import ar.edu.unq.epersgeist.persistencia.repository.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.exceptions.UbicacionesNoConectadasException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,6 +33,9 @@ public class UbicacionServiceTest {
     private Set<Coordenada> coordsBA;
     private Set<Coordenada> coordsCBA;
     private Set<Coordenada> coordsMZA;
+    @Autowired
+    private UbicacionRepository ubicacionRepository;
+
     @BeforeEach
     void prepare() {
         coordsBA = Set.of(
@@ -372,11 +377,29 @@ public class UbicacionServiceTest {
         assertEquals(0, resultado.size());
     }
 
+    @Test
+    void unaCoordenadaEstaDentroDeUnaUbicacionTest(){
+        Coordenada puntoDentro = new Coordenada(-34.6070667, -58.3805333); // CENTROIDE
+        Ubicacion ubi = ubicacionRepository.crear(ubicacion);
+        assertTrue(ubicacionRepository.estaDentroDe(ubi.getId(), puntoDentro));
+    }
+
+
+    @Test
+    void unaCoordenadaNoEstaDentroDeUnaUbicacionTest() {
+        Coordenada puntoDentro = new Coordenada(-4.6070667, -5.3805333); // CENTROIDE
+        Ubicacion ubi = ubicacionRepository.crear(ubicacion);
+        assertFalse(ubicacionRepository.estaDentroDe(ubi.getId(), puntoDentro));
+    }
+
+
     @AfterEach
     void cleanup() {
         espirituService.eliminarTodo();
         mediumService.eliminarTodo();
         service.eliminarTodo();
     }
+
+
 
 }

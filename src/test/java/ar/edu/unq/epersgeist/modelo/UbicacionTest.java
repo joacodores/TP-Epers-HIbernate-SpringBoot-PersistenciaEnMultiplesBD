@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UbicacionTest {
 
@@ -54,4 +53,22 @@ public class UbicacionTest {
         assertTrue(quilmes.getEspiritus().isEmpty());
     }
 
+    @Test
+    void unaCoordenadaEstaDentroDeUnaUbicacionTest(){
+        Coordenada puntoDentro = new Coordenada(-34.6070667, -58.3805333); // CENTROIDE
+        assertTrue(quilmes.estaDentro(puntoDentro));
+    }
+
+    @Test
+    void unaCoordenadaNoEstaDentroDeUnaUbicacionTest() {
+        Coordenada puntoDentro = new Coordenada(-34.62, -58.40); // CENTROIDE
+        assertFalse(quilmes.estaDentro(puntoDentro));
+    }
+
+    @Test
+    void unaUbicaciongeneraUnaCoordenadaRandomDentroDeElla(){
+        Coordenada generada = quilmes.generarCoordenadaAleatoria();
+        assertNotNull(generada);
+        assertTrue(quilmes.estaDentro(generada));
+    }
 }

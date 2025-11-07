@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.persistencia.repository;
 
+import ar.edu.unq.epersgeist.modelo.Coordenada;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 
 import java.util.List;
@@ -23,6 +24,8 @@ public interface UbicacionRepository {
     Boolean estanConectadas(Long idOrigen, Long idDestino);
 
     void eliminarTodo();
+
+    boolean estaDentroDe(Long ubicacionId, Coordenada coord);
 
     List<Ubicacion> caminoMasCorto(Long idOrigen, Long idDestino);
 

@@ -82,6 +82,7 @@ public class MediumSQL {
         } else {
             this.ubicacion = new CementerioSQL(medium.getUbicacion());
         }
+        //this.coordenada = new CoordenadaSQL(medium.getCoordenada());
     }
 
     public MediumSQL(Long id, String nombre) {

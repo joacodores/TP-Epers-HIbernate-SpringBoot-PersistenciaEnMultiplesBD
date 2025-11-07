@@ -10,6 +10,7 @@ public record RecuperarEspirituDTO(Long id,
                                    Long mediumId,
                                    RecuperarUbicacionDTO ubicacion) {
 
+    //TODO: actualizar cuando se haga el controller de coordenada
     public static RecuperarEspirituDTO desdeModelo(Espiritu espiritu) {
         return new RecuperarEspirituDTO(
                 espiritu.getId(),

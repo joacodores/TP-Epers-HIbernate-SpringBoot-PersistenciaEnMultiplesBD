@@ -51,8 +51,11 @@ public class EspirituRepositoryImpl implements EspirituRepository {
     @Override
     public Optional<Espiritu> recuperar(Long espirituId) {
         EspirituSQL espirituSQL = espirituSQLDAO.findById(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(""));
-        EspirituMongo espirituMongo = espirituMongoDAO.findByEspirituId(espirituId).orElseThrow(() -> new EspirituNoEncontradoException(""));
-        return Optional.of(Espiritu.from(espirituSQL, espirituMongo));
+        List<EspirituMongo> espirituMongoList = espirituMongoDAO.findByEspirituId(espirituId);
+        if (espirituMongoList.isEmpty()) {
+            throw new EspirituNoEncontradoException("");
+        }
+        return Optional.of(Espiritu.from(espirituSQL, espirituMongoList.getFirst()));
     }
 
     @Override
@@ -60,8 +63,11 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         var iterable = espirituSQLDAO.findAll();
         List<EspirituSQL> espiritusSQLS = StreamSupport.stream(iterable.spliterator(), false).toList();
         return espiritusSQLS.stream().map(espirituSQL -> {
-            EspirituMongo espirituMongo = espirituMongoDAO.findByEspirituId(espirituSQL.getId()).orElseThrow(() -> new EspirituNoEncontradoException(""));
-            return Espiritu.from(espirituSQL, espirituMongo);
+            List<EspirituMongo> espirituMongoList = espirituMongoDAO.findByEspirituId(espirituSQL.getId());
+            if (espirituMongoList.isEmpty()) {
+                throw new EspirituNoEncontradoException("");
+            }
+            return Espiritu.from(espirituSQL, espirituMongoList.getFirst());
         }).toList();
     }
 
@@ -74,8 +80,11 @@ public class EspirituRepositoryImpl implements EspirituRepository {
         );
         List<EspirituSQL> espirituSQLS = espirituSQLDAO.espiritusDemoniacos(pageable).getContent();
         return espirituSQLS.stream().map(espirituSQL -> {
-            EspirituMongo espirituMongo = espirituMongoDAO.findByEspirituId(espirituSQL.getId()).orElseThrow(() -> new EspirituNoEncontradoException(""));
-            return Espiritu.from(espirituSQL, espirituMongo);
+            List<EspirituMongo> espirituMongoList = espirituMongoDAO.findByEspirituId(espirituSQL.getId());
+            if (espirituMongoList.isEmpty()) {
+                throw new EspirituNoEncontradoException("");
+            }
+            return Espiritu.from(espirituSQL, espirituMongoList.getFirst());
         }).toList();
     }
 
@@ -88,27 +97,33 @@ public class EspirituRepositoryImpl implements EspirituRepository {
             espirituSQL = new EspirituDemoniacoSQL(espiritu);
         }
         espirituSQL.setUpdatedAt(new Date());
+        EspirituMongo espirituMongo = new EspirituMongo(espiritu);
+
+        espirituMongoDAO.save(espirituMongo);
         espirituSQLDAO.save(espirituSQL);
     }
 
     @Override
     public void eliminar(Long espirituId) {
         espirituSQLDAO.deleteById(espirituId);
-        espirituMongoDAO.findByEspirituId(espirituId)
-                .ifPresent(espirituMongo -> espirituMongoDAO.deleteById(espirituMongo.getId()));
+        espirituMongoDAO.deleteByEspirituId(espirituId);
     }
 
     @Override
     public void eliminarTodo() {
-        espirituSQLDAO.deleteAll(); espirituMongoDAO.deleteAll();
+        espirituSQLDAO.deleteAll();
+        espirituMongoDAO.deleteAll();
     }
 
     @Override
     public List<Espiritu> espiritusEn(Long ubicacionId) {
         List<EspirituSQL> espiritusSQL = espirituSQLDAO.espiritusEn(ubicacionId);
         return espiritusSQL.stream().map(espirituSQL -> {
-            EspirituMongo espirituMongo = espirituMongoDAO.findByEspirituId(espirituSQL.getId()).orElseThrow(() -> new EspirituNoEncontradoException(""));
-            return Espiritu.from(espirituSQL, espirituMongo);
+            List<EspirituMongo> espirituMongoList = espirituMongoDAO.findByEspirituId(espirituSQL.getId());
+            if (espirituMongoList.isEmpty()) {
+                throw new EspirituNoEncontradoException("");
+            }
+            return Espiritu.from(espirituSQL, espirituMongoList.getFirst());
         }).toList();
     }
 

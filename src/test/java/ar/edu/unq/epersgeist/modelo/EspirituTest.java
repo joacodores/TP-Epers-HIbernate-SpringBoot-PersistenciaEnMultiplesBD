@@ -1,9 +1,11 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.controller.exceptions.EspirituNoPuedeSerDominadoException;
 import ar.edu.unq.epersgeist.modelo.exceptions.NivelDeConexionFueraDeRangoException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Random;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,6 +27,37 @@ public class EspirituTest {
         puebloPaleta = new Cementerio("Pueblo Paleta", 50, coordsBA);
         rika = new EspirituAngelical(50, "Rika", puebloPaleta);
         yuta = new Medium("Yuta", 100, 100, puebloPaleta);
+    }
+
+    public Coordenada generarCoordenadaCercana(Coordenada origen, double minKm, double maxKm) {
+        Random rnd = new Random();
+
+        while (true) {
+            double distanciaKm = minKm + rnd.nextDouble() * (maxKm - minKm);
+
+            double angulo = rnd.nextDouble() * 2 * Math.PI;
+
+            double radioTierra = 6371.0;
+
+            double latOrigenRad = Math.toRadians(origen.getLatitud());
+            double lonOrigenRad = Math.toRadians(origen.getLongitud());
+
+            double nuevaLatitudRad = Math.asin(
+                    Math.sin(latOrigenRad) * Math.cos(distanciaKm / radioTierra) +
+                            Math.cos(latOrigenRad) * Math.sin(distanciaKm / radioTierra) * Math.cos(angulo)
+            );
+
+            double nuevaLongitudRad = lonOrigenRad + Math.atan2(
+                    Math.sin(angulo) * Math.sin(distanciaKm / radioTierra) * Math.cos(latOrigenRad),
+                    Math.cos(distanciaKm / radioTierra) - Math.sin(latOrigenRad) * Math.sin(nuevaLatitudRad)
+            );
+
+
+            double nuevaLat = Math.toDegrees(nuevaLatitudRad);
+            double nuevaLon = Math.toDegrees(nuevaLongitudRad);
+
+            return new Coordenada(nuevaLat, nuevaLon);
+        }
     }
 
     @Test
@@ -135,6 +168,72 @@ public class EspirituTest {
         rika.recibirAtaque(100, sukuna);
         assertEquals(50, rika.getNivelDeConexion());
         assertEquals(100, sukuna.getNivelDeConexion());
+    }
+
+    @Test
+    void unEspirituNoEstaSiendoDominadoTest() {
+        assertFalse(rika.estaSiendoDominado());
+    }
+
+    @Test
+    void unEspirituSePuedeDominarTest() {
+        Coordenada coordenada = generarCoordenadaCercana(rika.getCoordenada(), 2, 5);
+        EspirituAngelical serua = new EspirituAngelical(40, "Serua", puebloPaleta);
+        serua.setCoordenada(coordenada);
+        assertTrue(rika.sePuedeDominar(serua));
+    }
+
+    @Test
+    void unEspirituNoSePuedeDominarAlNoEstarLibreTest() {
+        rika.conectar(yuta);
+        EspirituAngelical serua = new EspirituAngelical(40, "Serua", puebloPaleta);
+        assertFalse(rika.sePuedeDominar(serua));
+    }
+
+    @Test
+    void unEspirituNoSePuedeDominarAlNoEstarEntre2O5KilometrosDeDistanciaTest() {
+        Set<Coordenada> coordsLejanas = Set.of(
+                new Coordenada(-34.5733, -58.4205), // Palermo
+                new Coordenada(-34.5622, -58.4586), // Belgrano
+                new Coordenada(-34.6795, -58.4698)  // Villa Lugano
+        );
+
+        Cementerio cementerioLejano = new Cementerio("Cementerio Lejano", 60, coordsLejanas);
+
+        EspirituAngelical serua = new EspirituAngelical(40, "Serua", cementerioLejano);
+        serua.setCoordenada(new Coordenada(-34.6795, -58.4698));
+
+        assertFalse(rika.sePuedeDominar(serua));
+    }
+
+    @Test
+    void unEspirituEsDominadoTest() {
+
+        EspirituAngelical serua = new EspirituAngelical(40, "Serua", puebloPaleta);
+        Coordenada coordenada =  generarCoordenadaCercana(rika.getCoordenada(), 2, 5);
+        serua.setCoordenada(coordenada);
+
+        rika.dominar(serua);
+
+        assertEquals(serua.getDominante(), rika);
+    }
+
+    @Test
+    void unEspirituTieneDominadosTest() {
+        EspirituAngelical serua = new EspirituAngelical(40, "Serua", puebloPaleta);
+        Coordenada coordenada =  generarCoordenadaCercana(rika.getCoordenada(), 2, 5);
+        serua.setCoordenada(coordenada);
+
+        rika.dominar(serua);
+
+        assertEquals(1, rika.getDominados().size());
+    }
+
+    @Test
+    void lanzarExcepcionCuandoUnEspirituNoPuedeDominarTest() {
+        rika.conectar(yuta);
+        EspirituAngelical serua = new EspirituAngelical(40, "Serua", puebloPaleta);
+        assertThrows(EspirituNoPuedeSerDominadoException.class, () -> rika.dominar(serua));
     }
 
 }

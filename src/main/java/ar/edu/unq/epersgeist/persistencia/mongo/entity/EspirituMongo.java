@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("mediums")
+@Document("espiritus")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

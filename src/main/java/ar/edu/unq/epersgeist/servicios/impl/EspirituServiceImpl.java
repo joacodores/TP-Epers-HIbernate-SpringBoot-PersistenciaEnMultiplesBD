@@ -1,6 +1,8 @@
 package ar.edu.unq.epersgeist.servicios.impl;
 
+import ar.edu.unq.epersgeist.controller.exceptions.EspirituDominadoException;
 import ar.edu.unq.epersgeist.controller.exceptions.EspirituNoEncontradoException;
+import ar.edu.unq.epersgeist.controller.exceptions.EspirituNoPuedeSerDominadoException;
 import ar.edu.unq.epersgeist.controller.exceptions.MediumNoEncontradoException;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
@@ -68,12 +70,26 @@ public class EspirituServiceImpl implements EspirituService {
     public Medium conectar(Long espirituId, Long mediumId) {
         Espiritu espiritu = espirituRepository.recuperar(espirituId)
                 .orElseThrow(() -> new EspirituNoEncontradoException(""));
+        if(espiritu.estaSiendoDominado()) {
+            throw new EspirituDominadoException("El espiritu esta siendo dominado");
+        }
         Medium medium = mediumRepository.recuperar(mediumId)
                 .orElseThrow(() -> new MediumNoEncontradoException(""));
         medium.conectarseAEspiritu(espiritu);
         mediumRepository.actualizar(medium);
         espirituRepository.actualizar(espiritu);
         return medium;
+    }
+
+    @Override
+    public void dominar(Long espirituDominanteId, Long espirituADominarId) {
+        Espiritu espirituADominar = espirituRepository.recuperar(espirituADominarId).orElseThrow(() -> new EspirituNoEncontradoException(""));
+        Espiritu espirituDominante = espirituRepository.recuperar(espirituDominanteId).orElseThrow(() -> new EspirituNoEncontradoException(""));
+
+        espirituDominante.dominar(espirituADominar);
+
+        espirituRepository.actualizar(espirituDominante);
+        espirituRepository.actualizar(espirituADominar);
     }
 
 }

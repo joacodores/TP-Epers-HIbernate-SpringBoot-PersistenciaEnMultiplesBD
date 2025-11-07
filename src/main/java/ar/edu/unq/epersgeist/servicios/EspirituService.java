@@ -25,4 +25,6 @@ public interface EspirituService {
 
     void eliminarTodo();
 
+    void dominar(Long espirituDominanteId, Long espirituADominarId);
+
 }

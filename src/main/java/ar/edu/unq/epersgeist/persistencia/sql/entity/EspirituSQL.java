@@ -8,7 +8,10 @@ import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static jakarta.persistence.GenerationType.AUTO;
 
@@ -47,6 +50,12 @@ public abstract class EspirituSQL {
     @ManyToOne
     private MediumSQL owner;
 
+    @ManyToOne
+    private EspirituSQL dominante;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<EspirituSQL> dominados = new ArrayList<>();
+
     @Temporal(TemporalType.DATE)
     private Date updatedAt;
 
@@ -67,6 +76,24 @@ public abstract class EspirituSQL {
             this.owner = new MediumSQL(espiritu.getOwner().getId(), espiritu.getOwner().getNombre());
         } else {
             this.owner = null;
+        }
+        this.dominados = espiritu.getDominados().stream().map(dominado -> {
+            EspirituSQL espirituSQL;
+            if (dominado.esAngelical()) {
+                espirituSQL = new EspirituAngelicalSQL(dominado.getId(), dominado.getNombre());
+            } else {
+                espirituSQL = new EspirituDemoniacoSQL(dominado.getId(), dominado.getNombre());
+            }
+            espirituSQL.setDominante(this);
+            return espirituSQL;
+        }).collect(Collectors.toCollection(ArrayList::new));
+
+        if (espiritu.getDominante() != null) {
+            if (espiritu.getDominante().esAngelical()) {
+                this.dominante = new EspirituAngelicalSQL(espiritu.getDominante().getId(), espiritu.getDominante().getNombre());
+            } else {
+                this.dominante = new EspirituDemoniacoSQL(espiritu.getDominante().getId(), espiritu.getDominante().getNombre());
+            }
         }
     }
 

@@ -1,6 +1,8 @@
 package ar.edu.unq.epersgeist.servicios;
 
+import ar.edu.unq.epersgeist.controller.exceptions.EspirituDominadoException;
 import ar.edu.unq.epersgeist.controller.exceptions.EspirituNoEncontradoException;
+import ar.edu.unq.epersgeist.controller.exceptions.EspirituNoPuedeSerDominadoException;
 import ar.edu.unq.epersgeist.modelo.*;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -55,8 +58,39 @@ public class EspirituServiceTest {
         return new EspirituAngelical(conexion, nombre, ubicacion);
     }
 
-    private EspirituDemoniaco crearEspirituDemoniaco(int conexion, String nombre, Ubicacion ubicacion) {
+    private EspirituDemoniaco crearEspirituDemoniaco(int conexion, String nombre, Ubicacion ubicacion ) {
         return new EspirituDemoniaco(conexion, nombre, ubicacion);
+    }
+
+    private Coordenada generarCoordenadaCercana(Coordenada origen, double minKm, double maxKm) {
+        Random rnd = new Random();
+
+        while (true) {
+            double distanciaKm = minKm + rnd.nextDouble() * (maxKm - minKm);
+
+            double angulo = rnd.nextDouble() * 2 * Math.PI;
+
+            double radioTierra = 6371.0;
+
+            double latOrigenRad = Math.toRadians(origen.getLatitud());
+            double lonOrigenRad = Math.toRadians(origen.getLongitud());
+
+            double nuevaLatitudRad = Math.asin(
+                    Math.sin(latOrigenRad) * Math.cos(distanciaKm / radioTierra) +
+                            Math.cos(latOrigenRad) * Math.sin(distanciaKm / radioTierra) * Math.cos(angulo)
+            );
+
+            double nuevaLongitudRad = lonOrigenRad + Math.atan2(
+                    Math.sin(angulo) * Math.sin(distanciaKm / radioTierra) * Math.cos(latOrigenRad),
+                    Math.cos(distanciaKm / radioTierra) - Math.sin(latOrigenRad) * Math.sin(nuevaLatitudRad)
+            );
+
+
+            double nuevaLat = Math.toDegrees(nuevaLatitudRad);
+            double nuevaLon = Math.toDegrees(nuevaLongitudRad);
+
+            return new Coordenada(nuevaLat, nuevaLon);
+        }
     }
 
     @BeforeEach
@@ -193,6 +227,97 @@ public class EspirituServiceTest {
         Long sanjiId = sanji.getId();
         service.conectar(zoroId, sanjiId);
         assertEquals("Zoro", mediumService.espiritus(sanjiId).getFirst().getNombre());
+    }
+
+    @Test
+    void unEspirituNoTieneDominadosTest() {
+        Ubicacion ubi = crearUbicacion("New World", 25);
+        EspirituDemoniaco demonio = crearEspirituDemoniaco(36, "Zoro", ubi);
+
+        assertTrue(demonio.getDominados().isEmpty());
+    }
+
+    @Test
+    void unEspirituNoTieneDominanteTest() {
+        Ubicacion ubi = crearUbicacion("New World", 25);
+        EspirituDemoniaco demonio = crearEspirituDemoniaco(36, "Zoro", ubi);
+
+        assertNull(demonio.getDominante());
+    }
+
+    @Test
+    void unEspirituTieneDominadosTest() {
+        Ubicacion ubi = crearUbicacion("New World", 25);
+        EspirituDemoniaco demonio = crearEspirituDemoniaco(36, "Zoro", ubi);
+        EspirituAngelical angel = crearEspirituAngelical(50, "Sanji", ubi);
+
+
+        Coordenada coordenada = generarCoordenadaCercana(demonio.getCoordenada(), 2, 5);
+        angel.setCoordenada(coordenada);
+
+        service.crear(demonio);
+        service.crear(angel);
+
+        service.dominar(demonio.getId(), angel.getId());
+
+        Espiritu demonioRecuperado = service.recuperar(demonio.getId()).orElseThrow(() -> new EspirituNoEncontradoException(""));
+
+
+        assertEquals(1,  demonioRecuperado.getDominados().size());
+    }
+
+    @Test
+    void unEspirituEsDominadoTest() {
+        Ubicacion ubi = crearUbicacion("New World", 25);
+        EspirituDemoniaco demonio = crearEspirituDemoniaco(36, "Zoro", ubi);
+        EspirituAngelical angel = crearEspirituAngelical(50, "Sanji", ubi);
+
+
+        Coordenada coordenada = generarCoordenadaCercana(demonio.getCoordenada(), 2, 5);
+        angel.setCoordenada(coordenada);
+
+        Espiritu demonioCreado = service.crear(demonio);
+        service.crear(angel);
+
+        service.dominar(demonio.getId(), angel.getId());
+
+        Espiritu angelRecuperado = service.recuperar(angel.getId()).orElseThrow(() -> new EspirituNoEncontradoException(""));
+
+
+        assertEquals(demonioCreado.getId(),  angelRecuperado.getDominante().getId());
+    }
+
+    @Test
+    void seLanzaExcepcionCuandoUnEspirituNoPuedeDominarAOtroTest() {
+        Ubicacion ubi = crearUbicacion("New World", 25);
+        EspirituDemoniaco demonio = crearEspirituDemoniaco(36, "Zoro", ubi);
+        EspirituAngelical angel = crearEspirituAngelical(50, "Sanji", ubi);
+        Medium medium = crearMedium(ubi);
+
+        service.crear(demonio);
+        Espiritu angelCreado = service.crear(angel);
+
+        service.conectar(angelCreado.getId(), medium.getId());
+
+        assertThrows(EspirituNoPuedeSerDominadoException.class, () -> service.dominar(demonio.getId(), angel.getId()));
+    }
+
+    @Test
+    void lanzarExcepcionCuandoSeQuiereConectarUnAUnEspirituDominadoTest() {
+        Ubicacion ubi = crearUbicacion("New World", 25);
+        EspirituDemoniaco demonio = crearEspirituDemoniaco(36, "Zoro", ubi);
+        EspirituAngelical angel = crearEspirituAngelical(50, "Sanji", ubi);
+
+        Coordenada coordenada = generarCoordenadaCercana(demonio.getCoordenada(), 2, 5);
+        angel.setCoordenada(coordenada);
+
+        service.crear(demonio);
+        service.crear(angel);
+        Medium medium = crearMedium(ubi);
+
+        service.dominar(demonio.getId(), angel.getId());
+
+        assertThrows(EspirituDominadoException.class, () -> service.conectar(angel.getId(), medium.getId()));
     }
 
     @AfterEach

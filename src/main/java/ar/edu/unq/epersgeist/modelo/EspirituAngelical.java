@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.persistencia.mongo.entity.EspirituMongo;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituSQL;
 
 import static java.lang.Math.min;
@@ -15,6 +16,10 @@ public class EspirituAngelical extends Espiritu {
         super(nivelDeConexion, nombre, ubicacion);
     }
 
+    public EspirituAngelical(Long id, String nombre) {
+        super(id, nombre);
+    }
+
     public EspirituAngelical(EspirituSQL espirituSQL) {
         super(espirituSQL);
     }
@@ -22,6 +27,7 @@ public class EspirituAngelical extends Espiritu {
     public static EspirituAngelical from(EspirituSQL espirituSQL) {
         return new EspirituAngelical(espirituSQL);
     }
+
 
     @Override
     public boolean puedeExorcizar() {

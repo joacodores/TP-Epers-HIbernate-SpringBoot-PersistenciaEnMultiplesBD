@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.controller.exceptions.EspirituNoPuedeSerDominadoException;
 import ar.edu.unq.epersgeist.modelo.exceptions.NivelDeConexionFueraDeRangoException;
 import ar.edu.unq.epersgeist.persistencia.mongo.entity.EspirituMongo;
 import ar.edu.unq.epersgeist.persistencia.mongo.entity.MediumMongo;
@@ -8,7 +9,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -27,6 +31,8 @@ public abstract class Espiritu {
     private Medium owner;
     private Date updatedAt;
     private Boolean deletedAt = false;
+    private Espiritu dominante;
+    private List<Espiritu> dominados = new ArrayList<>();
 
     @SuppressWarnings("unused")
     public Espiritu() {
@@ -61,7 +67,32 @@ public abstract class Espiritu {
             owner.setNombre(ownerSQL.getNombre());
             this.owner = owner;
         }
+
+        this.dominados = espirituSQL.getDominados().stream().map(dominadoSQL -> {
+            Espiritu espiritu;
+            if (dominadoSQL instanceof EspirituAngelicalSQL) {
+                espiritu = new EspirituAngelical(dominadoSQL.getId(), dominadoSQL.getNombre());
+            } else {
+                espiritu = new EspirituDemoniaco(dominadoSQL.getId(), dominadoSQL.getNombre());
+            }
+            espiritu.setDominante(this);
+            return espiritu;
+        }).collect(Collectors.toList());
+
+        if (espirituSQL.getDominante() != null) {
+            if (espirituSQL.getDominante() instanceof EspirituAngelicalSQL) {
+                this.dominante = EspirituAngelical.from(espirituSQL.getDominante());
+            } else {
+                this.dominante = EspirituDemoniaco.from(espirituSQL.getDominante());;
+            }
+        }
     }
+
+    public Espiritu(Long id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+
     public static Espiritu from(EspirituSQL espirituSQL, EspirituMongo espirituMongo) {
         Espiritu e;
         if (espirituSQL instanceof EspirituAngelicalSQL) {
@@ -143,5 +174,32 @@ public abstract class Espiritu {
     public abstract boolean esDemoniaco();
 
     public abstract boolean esAngelical();
+
+    public boolean estaSiendoDominado() {
+        return this.dominante != null;
+    }
+
+    public void dominar(Espiritu espirituADominar) {
+        if(!espirituADominar.sePuedeDominar(this)) {
+            throw new EspirituNoPuedeSerDominadoException("El espiritu no se puede dominar");
+        }
+        this.dominados.add(espirituADominar);
+        espirituADominar.setDominante(this);
+    }
+
+    public boolean sePuedeDominar(Espiritu espirituDominante) {
+        return esEspirituLibre() && estaEntr2O5KilometrosDeDistancia(espirituDominante.getCoordenada())
+                && !esEspirituDominado(espirituDominante);
+    }
+
+    private boolean estaEntr2O5KilometrosDeDistancia(Coordenada coordenadaDominante) {
+        double distancia = coordenada.distanciaEnKm(coordenadaDominante);
+        return distancia >= 2 && distancia <= 5;
+    }
+
+    private boolean esEspirituDominado(Espiritu espirituDominante) {
+        return this.dominados.stream()
+                .anyMatch(e -> this.id == null ? this == espirituDominante : this.id == espirituDominante.getDominante().getId());
+    }
 
 }

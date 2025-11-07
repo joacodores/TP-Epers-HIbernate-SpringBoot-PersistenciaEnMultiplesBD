@@ -1,9 +1,6 @@
 package ar.edu.unq.epersgeist.controller.dto.espiritu;
 
-import ar.edu.unq.epersgeist.modelo.Espiritu;
-import ar.edu.unq.epersgeist.modelo.EspirituAngelical;
-import ar.edu.unq.epersgeist.modelo.EspirituDemoniaco;
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.*;
 
 import static ar.edu.unq.epersgeist.controller.dto.espiritu.TipoEspirituDTO.ANGELICAL;
 import static ar.edu.unq.epersgeist.controller.dto.espiritu.TipoEspirituDTO.DEMONIO;

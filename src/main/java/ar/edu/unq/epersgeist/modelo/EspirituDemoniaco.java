@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.persistencia.mongo.entity.EspirituMongo;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituSQL;
 
 public class EspirituDemoniaco extends Espiritu {
@@ -11,6 +12,10 @@ public class EspirituDemoniaco extends Espiritu {
 
     public EspirituDemoniaco(Integer nivelDeConexion, String nombre, Ubicacion ubicacion) {
         super(nivelDeConexion, nombre, ubicacion);
+    }
+
+    public EspirituDemoniaco(Long id, String nombre) {
+        super(id, nombre);
     }
 
     public EspirituDemoniaco(EspirituSQL espirituSQL) {

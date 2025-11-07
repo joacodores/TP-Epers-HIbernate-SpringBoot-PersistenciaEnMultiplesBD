@@ -133,9 +133,6 @@ public class MediumServiceImpl implements MediumService {
         } else {
             mediumRepository.actualizar(medium);
         }
-
-
-
     }
 
 }

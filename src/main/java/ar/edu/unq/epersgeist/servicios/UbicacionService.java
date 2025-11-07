@@ -13,7 +13,6 @@ public interface UbicacionService {
 
     Optional<Ubicacion> recuperar(Long ubicacionId);
 
-    //    Optional<Ubicacion> recuperarConConexiones(Long ubicacionId);
     void actualizar(Ubicacion ubicacion);
 
     void eliminar(Long ubicacionId);

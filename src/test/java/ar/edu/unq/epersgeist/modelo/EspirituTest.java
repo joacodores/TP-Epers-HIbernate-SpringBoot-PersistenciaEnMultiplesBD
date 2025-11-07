@@ -84,10 +84,6 @@ public class EspirituTest {
     void crearEspirituConUbicacionNullLanzaExcepcionTest() {
         assertThrows(NullPointerException.class, () -> new EspirituAngelical(10, "hola", null));
     }
-    //@Test
-    //void crearEspirituConNombreNullLanzaExcepcionTest() {
-    //    assertThrows(NullPointerException.class, () -> new EspirituAngelical(10, null, puebloPaleta));
-    //}
 
     @Test
     void aumentarConexionYaEstandoAlMaximoNoHaceNadaTest() {

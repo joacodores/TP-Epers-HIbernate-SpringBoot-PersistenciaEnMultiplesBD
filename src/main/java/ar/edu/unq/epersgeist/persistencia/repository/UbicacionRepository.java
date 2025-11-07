@@ -17,7 +17,6 @@ public interface UbicacionRepository {
     void eliminar(Long ubicacionId);
 
     List<Ubicacion> recuperarTodos();
-    //Optional<Ubicacion> recuperarConConexiones(Long ubicacionId);
 
     void conectar(Long idOrigen, Long idDestino, Long costo);
 

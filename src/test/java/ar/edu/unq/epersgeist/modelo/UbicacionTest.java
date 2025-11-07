@@ -25,10 +25,6 @@ public class UbicacionTest {
     void crearUbicacionTest() {
         assertEquals("Quilmes", quilmes.getNombre());
     }
-    //@Test
-    //void crearUbicacionConNombreNullLanzaExcepcion() {
-    //    assertThrows(NullPointerException.class, () -> new Santuario(null,0));
-    //}
 
     @Test
     void agregarMediumTest() {

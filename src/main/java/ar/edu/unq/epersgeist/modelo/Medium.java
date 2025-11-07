@@ -29,12 +29,13 @@ public class Medium {
     private Integer mana;
     private List<Espiritu> espiritus = new ArrayList<>();
     private Ubicacion ubicacion;
+
     @Embedded
     private Coordenada coordenada;
     private Date updatedAt;
     private Boolean deletedAt = false;
 
-    public Medium(String nombre, Integer manaMax, Integer mana, Ubicacion ubicacion ) {
+    public Medium(String nombre, Integer manaMax, Integer mana, Ubicacion ubicacion) {
         this.nombre = nombre;
         this.manaMax = manaMax;
         this.mana = min(manaMax, mana);
@@ -156,16 +157,14 @@ public class Medium {
     }
 
     public void mover(Coordenada coordenadaDestino) {
-
         if (this.ubicacion.estaDentro(coordenadaDestino)) {
             setCoordenada(coordenadaDestino);
             new ArrayList<>(espiritus).forEach(espiritu -> espiritu.cambiarCoordenada(coordenadaDestino));
             return;
         }
-
         Optional<ConexionPsionica> conexionOptional = this.ubicacion.getConexiones().stream()
-            .filter(conexion -> conexion.getDestino().estaDentro(coordenadaDestino))
-            .findFirst();
+                .filter(conexion -> conexion.getDestino().estaDentro(coordenadaDestino))
+                .findFirst();
         if (conexionOptional.isEmpty()) {
             throw new ConexionPsionicaException("La conexion no existe");
         }
@@ -173,7 +172,6 @@ public class Medium {
         Integer costoConexion = conexionOptional.get().getCosto();
         setCoordenada(coordenadaDestino);
         setUbicacion(ubi);
-
         this.mana = Math.max(0, this.mana - costoConexion);
         // iteramos sobre una copia para evitar ConcurrentModificationException
         new ArrayList<>(espiritus).forEach(espiritu -> espiritu.cambiarUbicacion(ubi, coordenadaDestino));
@@ -186,4 +184,5 @@ public class Medium {
     public void setearConexiones(Set<ConexionPsionica> conexiones) {
         this.ubicacion.setConexiones(conexiones);
     }
+
 }

@@ -126,7 +126,6 @@ public abstract class Espiritu {
     }
 
     public void desvincularDeMedium() {
-        //owner.desvincularEspiritu(this);
         this.getOwner().desvincularEspiritu(this);
         this.setOwner(null);
     }

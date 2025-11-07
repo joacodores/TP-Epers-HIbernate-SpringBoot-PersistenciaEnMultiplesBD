@@ -15,7 +15,6 @@ public record RecuperarMediumDTO(Long id,
                                  RecuperarUbicacionDTO ubicacion) {
 
     public static RecuperarMediumDTO desdeModelo(Medium medium) {
-        // Capaz haya que cambiar los desdeModelo de espiritu y medium para que sean llamadas a los service.
         return new RecuperarMediumDTO(
                 medium.getId(),
                 medium.getNombre(),

@@ -21,12 +21,6 @@ public interface UbicacionNeo4JDAO extends Neo4jRepository<UbicacionNeo4J, Long>
                 RETURN count(*) > 0
             """)
     Boolean estanConectadasDirecto(Long idOrigen, Long idDestino);
-//    @Query("""
-//        MATCH (u:Ubicacion {id:$id})
-//        OPTIONAL MATCH (u)-[r:ubicacionesConectadas]->(d:Ubicacion)
-//        RETURN u, collect(r), collect(d)
-//    """)
-//    Optional<UbicacionNeo4J> findByIdWithConexiones(Long id);
 
     @Query("""
                 MATCH p = shortestPath(

@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+
+  redis:
+    image: redis:8.4-rc1-alpine
+    container_name: redis-cache
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "no"]
+    networks:
+      - cache-net
+
+  app-docker:
+    image: epersgeist-app:latest
+    container_name: epersgeist-app2
+    depends_on:
+      - redis
+    environment:
+      SPRING_APPLICATION_JSON: >
+        {
+          "server": { "port": 8081 },
+          "spring": {
+            "redis": {
+              "host": "redis",
+              "port": 6379
+            }
+          }
+        }
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "8081:8081"
+    networks:
+      - cache-net
+
+networks:
+  cache-net:
+    driver: bridge

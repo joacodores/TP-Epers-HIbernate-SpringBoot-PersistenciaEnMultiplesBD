@@ -20,7 +20,7 @@ import static ar.edu.unq.epersgeist.persistencia.neo.entity.TipoUbicacion.SANTUA
 @AllArgsConstructor
 public abstract class Ubicacion {
 
-    private final Date createdAt = new Date();
+    private Date createdAt = new Date();
     private Long id;
     private String nombre;
     private List<Espiritu> espiritus = new ArrayList<>();
@@ -68,6 +68,8 @@ public abstract class Ubicacion {
         this.energia = energia;
     }
 
+    protected Ubicacion() {
+    }
 
 
     public static Ubicacion from(UbicacionSQL ubicacionSQL, UbicacionNeo4J ubicacionNeo4J, UbicacionMongo ubicacionMongo) {

@@ -9,6 +9,8 @@ import ar.edu.unq.epersgeist.persistencia.repository.MediumRepository;
 import ar.edu.unq.epersgeist.persistencia.repository.UbicacionRepository;
 import ar.edu.unq.epersgeist.servicios.UbicacionService;
 import ar.edu.unq.epersgeist.servicios.exceptions.UbicacionesNoConectadasException;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,31 +32,37 @@ public class UbicacionServiceImpl implements UbicacionService {
     }
 
     @Override
+    @CacheEvict(value= "ubicaciones", allEntries = true)
     public Ubicacion crear(Ubicacion ubicacion) {
         return ubicacionRepository.crear(ubicacion);
     }
 
     @Override
+    @Cacheable(value="ubicaciones", key="#p0")
     public Optional<Ubicacion> recuperar(Long ubicacionId) {
         return ubicacionRepository.recuperar(ubicacionId);
     }
 
     @Override
+    @CacheEvict(value = "ubicaciones", allEntries = true)
     public void actualizar(Ubicacion ubicacion) {
         ubicacionRepository.actualizar(ubicacion);
     }
 
     @Override
+    @CacheEvict(value = "ubicaciones", allEntries = true)
     public void eliminar(Long ubicacionId) {
         ubicacionRepository.eliminar(ubicacionId);
     }
 
     @Override
+    @Cacheable(value="ubicaciones")
     public List<Ubicacion> recuperarTodos() {
         return ubicacionRepository.recuperarTodos();
     }
 
     @Override
+    @CacheEvict(value="ubicaciones", allEntries=true)
     public void eliminarTodo() {
         ubicacionRepository.eliminarTodo();
     }

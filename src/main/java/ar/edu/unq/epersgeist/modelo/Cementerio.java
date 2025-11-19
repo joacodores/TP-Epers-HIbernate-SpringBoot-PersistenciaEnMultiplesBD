@@ -12,6 +12,11 @@ public class Cementerio extends Ubicacion {
     public Cementerio(String nombre, Integer energia ) {
         super(nombre, energia);
     }
+    public Cementerio() {
+        super();
+    }
+
+
     public Cementerio(UbicacionSQL ubicacionSQL) {
         super(ubicacionSQL);
     }

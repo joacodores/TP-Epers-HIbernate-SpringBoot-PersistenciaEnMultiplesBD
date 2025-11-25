@@ -1,10 +1,11 @@
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:21-jdk
 
 WORKDIR /app
 
-# Copia tu jar. Usa wildcard para que no importe el nombre exacto.
-COPY build/libs/*.jar app.jar
+COPY . .
 
-EXPOSE 8081
+RUN ./gradlew build -x test
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+EXPOSE 8080
+
+CMD ["java", "-Dspring.profiles.active=prod", "-jar", "build/libs/app.jar"]

@@ -7,10 +7,12 @@ import ar.edu.unq.epersgeist.controller.dto.ubicacion.CrearUbicacionDTO;
 import ar.edu.unq.epersgeist.controller.dto.ubicacion.RecuperarUbicacionDTO;
 import ar.edu.unq.epersgeist.controller.exceptions.ActualizarRecursoException;
 import ar.edu.unq.epersgeist.controller.exceptions.UbicacionNoEncontradaException;
+import ar.edu.unq.epersgeist.messaging.SseEmitterService;
 import ar.edu.unq.epersgeist.modelo.Ubicacion;
 import ar.edu.unq.epersgeist.servicios.UbicacionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.net.URI;
 import java.util.List;
@@ -22,9 +24,11 @@ import java.util.Optional;
 public class UbicacionController {
 
     private final UbicacionService ubicacionService;
+    private final SseEmitterService emitterService;
 
-    public UbicacionController(UbicacionService ubicacionService) {
+    public UbicacionController(UbicacionService ubicacionService,SseEmitterService emitterService ) {
         this.ubicacionService = ubicacionService;
+        this.emitterService = emitterService;
     }
 
     @PostMapping
@@ -139,6 +143,11 @@ public class UbicacionController {
         var ubicaciones = ubicacionService.ubicacionesSobrecargadas(umbralDeEnergia);
         var ubicacionesDTO = ubicaciones.stream().map(RecuperarUbicacionDTO::desdeModelo).toList();
         return ResponseEntity.ok(ubicacionesDTO);
+    }
+
+    @GetMapping(value = "/{id}/stream", produces = "text/event-stream")
+    public SseEmitter stream(@PathVariable Long id) {
+        return emitterService.subscribe(String.valueOf(id));
     }
 
 }

@@ -51,6 +51,9 @@ public abstract class EspirituSQL {
     private MediumSQL owner;
 
     @ManyToOne
+    private NightBringerSQL nightBringer;
+
+    @ManyToOne
     private EspirituSQL dominante;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

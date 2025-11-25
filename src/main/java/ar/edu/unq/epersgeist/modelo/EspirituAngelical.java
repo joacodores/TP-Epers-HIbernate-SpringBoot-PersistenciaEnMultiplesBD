@@ -1,5 +1,6 @@
 package ar.edu.unq.epersgeist.modelo;
 
+import ar.edu.unq.epersgeist.controller.exceptions.EspirituAngelicalException;
 import ar.edu.unq.epersgeist.persistencia.mongo.entity.EspirituMongo;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituSQL;
 
@@ -28,6 +29,14 @@ public class EspirituAngelical extends Espiritu {
         return new EspirituAngelical(espirituSQL);
     }
 
+
+    @Override
+    public void poseerMedium(Medium medium){
+        throw new EspirituAngelicalException("");
+    }
+
+    @Override
+    public void recibirAtaqueDeLuz(int fuerzaDeAtaque) {};
 
     @Override
     public boolean puedeExorcizar() {

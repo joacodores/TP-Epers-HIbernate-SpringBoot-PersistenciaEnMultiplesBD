@@ -2,8 +2,14 @@ package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.persistencia.mongo.entity.EspirituMongo;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituSQL;
+import lombok.Getter;
+import lombok.Setter;
 
 public class EspirituDemoniaco extends Espiritu {
+
+    @Getter
+    @Setter
+    private NightBringer nightBringer;
 
     @SuppressWarnings("unused")
     public EspirituDemoniaco() {
@@ -24,6 +30,21 @@ public class EspirituDemoniaco extends Espiritu {
 
     public static EspirituDemoniaco from(EspirituSQL espirituSQL) {
         return new EspirituDemoniaco(espirituSQL);
+    }
+
+
+
+    @Override
+    public void poseerMedium(Medium medium){
+        medium.setPoseedor(this);
+    }
+
+    @Override
+    public void recibirAtaqueDeLuz(int fuerzaDeAtaque) {
+        this.setNivelDeConexion(this.getNivelDeConexion() - fuerzaDeAtaque);
+        if (this.getNivelDeConexion() <= 0) {
+            this.setNivelDeConexion(0);
+        }
     }
 
     @Override

@@ -29,6 +29,7 @@ public class Medium {
     private Integer mana;
     private List<Espiritu> espiritus = new ArrayList<>();
     private Ubicacion ubicacion;
+    private Espiritu poseedor;
 
     @Embedded
     private Coordenada coordenada;
@@ -115,6 +116,10 @@ public class Medium {
             throw new ExorcistaSinAngelesException("El medium exorcista %s no puede realizar un exorcismo, ya que no posee ningún Espiritu Angelical");
         }
         this.getEspiritusAngelicales().forEach(a -> mediumAExorcizar.getEspirituAExorcizar().ifPresent(a::atacar));
+    }
+
+    public void iluminar(int fuerzaDeAtaque) {
+        this.poseedor.recibirAtaqueDeLuz(fuerzaDeAtaque);
     }
 
     public void vaciarEspiritus() {

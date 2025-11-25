@@ -185,6 +185,9 @@ public abstract class Espiritu {
         return this.dominante != null;
     }
 
+    public abstract void poseerMedium(Medium medium);
+    public abstract void recibirAtaqueDeLuz(int fuerzaDeAtaque);
+
     public void dominar(Espiritu espirituADominar) {
         if(!espirituADominar.sePuedeDominar(this)) {
             throw new EspirituNoPuedeSerDominadoException("El espiritu no se puede dominar");

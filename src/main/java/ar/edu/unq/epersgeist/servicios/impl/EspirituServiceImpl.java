@@ -4,6 +4,7 @@ import ar.edu.unq.epersgeist.controller.exceptions.EspirituDominadoException;
 import ar.edu.unq.epersgeist.controller.exceptions.EspirituNoEncontradoException;
 import ar.edu.unq.epersgeist.controller.exceptions.EspirituNoPuedeSerDominadoException;
 import ar.edu.unq.epersgeist.controller.exceptions.MediumNoEncontradoException;
+import ar.edu.unq.epersgeist.messaging.RealtimePublisher;
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Medium;
 import ar.edu.unq.epersgeist.persistencia.repository.EspirituRepository;
@@ -23,12 +24,13 @@ public class EspirituServiceImpl implements EspirituService {
 
     private final EspirituRepository espirituRepository;
     private final MediumRepository mediumRepository;
-    private final UbicacionRepository ubicacionRepository;
+    private final RealtimePublisher realtimePublisher;
 
-    public EspirituServiceImpl(EspirituRepository espirituRepository, MediumRepository mediumRepository, UbicacionRepository ubicacionRepository) {
+    public EspirituServiceImpl(EspirituRepository espirituRepository, MediumRepository mediumRepository,RealtimePublisher realtimePublisher) {
         this.espirituRepository = espirituRepository;
         this.mediumRepository = mediumRepository;
-        this.ubicacionRepository = ubicacionRepository;
+        this.realtimePublisher = realtimePublisher;
+
     }
 
     @Override

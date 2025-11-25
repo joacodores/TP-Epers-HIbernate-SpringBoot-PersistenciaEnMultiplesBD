@@ -1,0 +1,22 @@
+# Ignorar artefactos
+build/
+out/
+target/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# SO
+.DS_Store
+
+# Otros
+*.md
+*.local
+.env.local
+
+# Archivos de Docker (estos no deben copiarse al contexto)
+docker-compose.yml
+Dockerfile
+Dockerfile.dev

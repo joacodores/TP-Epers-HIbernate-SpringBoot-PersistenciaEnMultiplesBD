@@ -7,12 +7,14 @@ services:
     container_name: redis-cache
     ports:
       - "6379:6379"
-    command: ["redis-server", "--appendonly", "no"]
+    command: [ "redis-server", "--appendonly", "no" ]
     networks:
       - cache-net
 
   app-docker:
-    image: epersgeist-app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.dev   # <-- usa este Dockerfile para construir
     container_name: epersgeist-app2
     depends_on:
       - redis

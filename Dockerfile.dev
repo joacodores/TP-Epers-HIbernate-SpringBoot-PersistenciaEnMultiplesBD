@@ -21,4 +21,4 @@ RUN ./gradlew clean build -x test --no-daemon
 
 EXPOSE 8081
 
-CMD ["sh", "-c", "java -Dspring.profiles.active=docker -jar build/libs/epersgeist-1.0-SNAPSHOT.jar"]
+CMD ["sh", "-c", "java -Dspring.profiles.active=docker -jar build/libs/*-SNAPSHOT.jar"]

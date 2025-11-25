@@ -15,7 +15,7 @@ public class RealtimePublisher {
         this.redisTemplate = redisTemplate;
     }
 
-    public void publishEspiritus(Long ubicacionId, List<Espiritu> data) {
+    public void publishEspiritu(Long ubicacionId, Espiritu data) {
         redisTemplate.convertAndSend("ubicacion:" + ubicacionId + ":espiritus", data);
     }
 }

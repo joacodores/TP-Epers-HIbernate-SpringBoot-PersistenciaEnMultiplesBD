@@ -58,9 +58,7 @@ public class NightBringerServiceImpl implements NightBringerService {
         ubicacionRepository.actualizar(ubicacion.get());
         nightBringerRepository.actualizar(n);
 
-        List<Espiritu> espiritusEnUbicacion = espirituRepository.espiritusEn(ubicacionId);
-
-        realtimePublisher.publishEspiritus(ubicacionId, espiritusEnUbicacion);
+        realtimePublisher.publishEspiritu(ubicacionId, e);
 
         return e;
     }

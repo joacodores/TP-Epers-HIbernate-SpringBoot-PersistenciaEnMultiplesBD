@@ -1,10 +1,8 @@
 package ar.edu.unq.epersgeist.servicios;
 
 import ar.edu.unq.epersgeist.controller.exceptions.NightBringerNoEncontradoException;
-import ar.edu.unq.epersgeist.modelo.Coordenada;
-import ar.edu.unq.epersgeist.modelo.NightBringer;
-import ar.edu.unq.epersgeist.modelo.Santuario;
-import ar.edu.unq.epersgeist.modelo.Ubicacion;
+import ar.edu.unq.epersgeist.modelo.*;
+import ar.edu.unq.epersgeist.persistencia.repository.UbicacionRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +28,8 @@ public class NightBringerServiceTest {
     private UbicacionService ubicacionService;
     private Ubicacion ubicacion;
     private Set<Coordenada> coordsBA;
+    @Autowired
+    private UbicacionRepository ubicacionRepository;
 
     @BeforeEach
     void prepare() {
@@ -105,6 +105,14 @@ public class NightBringerServiceTest {
         service.spawnearEspirituEnUbicacion(nightBringerId, ubicacionId, "Kaido");
         NightBringer nightBringerRecuperado = service.recuperar(nightBringerId);
         assertEquals(nightBringerRecuperado.getEspiritus().size(), 1);
+    }
+
+    @Test
+    void unNightBringerSpawneaUnEspirituEnUbicacionTest(){
+        Long ubicacionId = ubicacionService.crear(ubicacion).getId();
+        Long nightBringerId = service.crear(nightBringer).getId();
+        Espiritu e = service.spawnearEspirituEnUbicacion(nightBringerId, ubicacionId, "Kaido");
+        assertTrue(ubicacionRepository.estaDentroDe(ubicacionId, e.getCoordenada()));
     }
 
     @AfterEach

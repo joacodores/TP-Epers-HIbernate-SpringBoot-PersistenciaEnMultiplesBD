@@ -48,6 +48,9 @@ public class NightBringerServiceImpl implements NightBringerService {
     }
 
     @Override
+    public void actualizar(NightBringer nightBringer) {nightBringerRepository.actualizar(nightBringer);}
+
+    @Override
     public Espiritu spawnearEspirituEnUbicacion(Long nightbringerId, Long ubicacionId, String nombreEspiritu) {
 
         NightBringer n = nightBringerRepository.recuperar(nightbringerId);
@@ -67,4 +70,7 @@ public class NightBringerServiceImpl implements NightBringerService {
     public void eliminar(Long nightbringerId) {
         nightBringerRepository.eliminar(nightbringerId);
     }
+
+    @Override
+    public void eliminarTodo() {nightBringerRepository.eliminarTodo();}
 }

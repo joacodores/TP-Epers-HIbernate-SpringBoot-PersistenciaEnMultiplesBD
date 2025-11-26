@@ -65,4 +65,7 @@ public class NightBringerRepositoryImpl implements NightBringerRepository {
         nightBringerSQLDAO.deleteById(nightBringerId);
     }
 
+    @Override
+    public void eliminarTodo() {nightBringerSQLDAO.deleteAll();}
+
 }

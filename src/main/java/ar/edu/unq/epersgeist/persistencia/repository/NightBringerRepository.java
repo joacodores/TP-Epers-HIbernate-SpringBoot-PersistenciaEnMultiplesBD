@@ -12,4 +12,6 @@ public interface NightBringerRepository {
     List<NightBringer> recuperarTodos();
     void actualizar(NightBringer nightBringer);
     void eliminar(Long nightBringerId);
+
+    void eliminarTodo();
 }

@@ -14,4 +14,3 @@ services:
 networks:
   cache-net:
     driver: bridge
-c:\Users\nicol\AppData\Local\Packages\5319275A.WhatsAppDesktop_cv1g1gvanyjgm\TempState\192D80A88B27B3E4115E1A45A782FE1B\WhatsApp Image 2025-11-27 at 18.45.02_7ab6e175.jpg

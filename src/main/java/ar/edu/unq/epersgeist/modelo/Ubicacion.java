@@ -5,6 +5,7 @@ import ar.edu.unq.epersgeist.persistencia.neo.entity.UbicacionNeo4J;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.EspirituAngelicalSQL;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.SantuarioSQL;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.UbicacionSQL;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Embedded;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,6 +24,7 @@ public abstract class Ubicacion {
     private Date createdAt = new Date();
     private Long id;
     private String nombre;
+    @JsonManagedReference("cementerio-espiritus")
     private List<Espiritu> espiritus = new ArrayList<>();
     private List<Medium> mediums = new ArrayList<>();
     private Set<ConexionPsionica> conexiones = new HashSet<>();

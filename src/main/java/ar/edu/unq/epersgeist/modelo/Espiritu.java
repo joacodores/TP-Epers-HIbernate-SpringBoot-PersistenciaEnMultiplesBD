@@ -5,6 +5,8 @@ import ar.edu.unq.epersgeist.modelo.exceptions.NivelDeConexionFueraDeRangoExcept
 import ar.edu.unq.epersgeist.persistencia.mongo.entity.EspirituMongo;
 import ar.edu.unq.epersgeist.persistencia.mongo.entity.MediumMongo;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Embedded;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,13 +25,17 @@ public abstract class Espiritu {
     private final int maxNivelDeConexion = 100;
     private final int minNivelDeConexion = 0;
     private final Date createdAt = new Date();
+    @JsonIgnore
     protected Randomizer randomizer;
     private Long id;
     private int nivelDeConexion;
     private String nombre;
     @Embedded
     private Coordenada coordenada;
+    @JsonBackReference("cementerio-espiritus")
     private Ubicacion ubicacion;
+    @JsonBackReference("nb-espiritus")
+    protected NightBringer nightBringer;
     private Medium owner;
     private Date updatedAt;
     private Boolean deletedAt = false;
@@ -55,6 +61,7 @@ public abstract class Espiritu {
         this.id = espirituSQL.getId();
         this.nombre = espirituSQL.getNombre();
         this.randomizer = new RandomizerImpl();
+        this.nightBringer = new NightBringer(espirituSQL.getNightBringer());
         if (espirituSQL.getUbicacion() instanceof SantuarioSQL) {
             this.ubicacion = new Santuario(espirituSQL.getUbicacion().getNombre(), espirituSQL.getUbicacion().getEnergia());
             this.ubicacion.setId(espirituSQL.getUbicacion().getId());

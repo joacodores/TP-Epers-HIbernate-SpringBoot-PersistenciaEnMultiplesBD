@@ -7,9 +7,6 @@ import lombok.Setter;
 
 public class EspirituDemoniaco extends Espiritu {
 
-    @Getter
-    @Setter
-    private NightBringer nightBringer;
 
     @SuppressWarnings("unused")
     public EspirituDemoniaco() {

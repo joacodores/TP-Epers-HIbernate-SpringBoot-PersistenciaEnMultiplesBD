@@ -2,6 +2,7 @@ package ar.edu.unq.epersgeist.persistencia.sql.entity;
 
 import ar.edu.unq.epersgeist.modelo.Espiritu;
 import ar.edu.unq.epersgeist.modelo.Randomizer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +33,7 @@ public abstract class EspirituSQL {
     private final Date createdAt = new Date();
 
     @Transient
+    @JsonIgnore
     protected Randomizer randomizer;
 
     @Id
@@ -79,6 +81,11 @@ public abstract class EspirituSQL {
             this.owner = new MediumSQL(espiritu.getOwner().getId(), espiritu.getOwner().getNombre());
         } else {
             this.owner = null;
+        }
+        if (espiritu.getNightBringer() != null) {
+            this.nightBringer = new NightBringerSQL(espiritu.getNightBringer());
+        } else {
+            this.nightBringer = null;
         }
         this.dominados = espiritu.getDominados().stream().map(dominado -> {
             EspirituSQL espirituSQL;

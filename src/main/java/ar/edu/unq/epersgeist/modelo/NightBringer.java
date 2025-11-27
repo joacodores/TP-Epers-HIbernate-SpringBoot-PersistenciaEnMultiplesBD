@@ -1,6 +1,8 @@
 package ar.edu.unq.epersgeist.modelo;
 
 import ar.edu.unq.epersgeist.persistencia.sql.entity.NightBringerSQL;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ public class NightBringer {
 
     private String nombre;
     private Long id;
+    @JsonManagedReference("nb-espiritus")
     private List<EspirituDemoniaco> espiritus = new ArrayList<>();
 
     public NightBringer(String nombre){

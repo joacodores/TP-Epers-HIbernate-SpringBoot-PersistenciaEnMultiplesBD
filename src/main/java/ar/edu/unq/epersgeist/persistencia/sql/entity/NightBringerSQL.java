@@ -37,6 +37,7 @@ public class NightBringerSQL {
                 espirituSQL.setNivelDeConexion(e.getNivelDeConexion());
                 UbicacionSQL ubicacion = new CementerioSQL(e.getUbicacion());
                 espirituSQL.setUbicacion(ubicacion);
+                espirituSQL.setNightBringer(this);
                 espiritus.add(espirituSQL);
                 return espirituSQL;
             });

@@ -11,6 +11,8 @@ import ar.edu.unq.epersgeist.persistencia.repository.UbicacionRepository;
 import ar.edu.unq.epersgeist.persistencia.sql.NightBringerSQLDAO;
 import ar.edu.unq.epersgeist.persistencia.sql.UbicacionSQLDAO;
 import ar.edu.unq.epersgeist.persistencia.sql.entity.NightBringerSQL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,6 +24,7 @@ public class NightBringerRepositoryImpl implements NightBringerRepository {
     private final UbicacionSQLDAO ubicacionSQLDAO;
     private final UbicacionRepository ubicacionRepository;
     private NightBringerSQLDAO nightBringerSQLDAO;
+    private static final Logger logger = LoggerFactory.getLogger(NightBringerRepositoryImpl.class);
 
     public NightBringerRepositoryImpl(NightBringerSQLDAO nightBringerSQLDAO, UbicacionSQLDAO ubicacionSQLDAO, UbicacionRepository ubicacionRepository) {
         this.nightBringerSQLDAO = nightBringerSQLDAO;
@@ -55,6 +58,8 @@ public class NightBringerRepositoryImpl implements NightBringerRepository {
 
     @Override
     public void actualizar(NightBringer nightBringer) {
+        logger.info("[NB UPDATE] Persistiendo NightBringer {} ({}) con {} espíritus asociados",
+                nightBringer.getNombre(), nightBringer.getId(), nightBringer.getEspiritus().size());
         NightBringerSQL nightBringerSQL = new NightBringerSQL(nightBringer);
         nightBringerSQLDAO.save(nightBringerSQL);
     }

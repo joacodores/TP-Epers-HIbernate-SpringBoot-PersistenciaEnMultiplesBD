@@ -82,11 +82,9 @@ public abstract class EspirituSQL {
         } else {
             this.owner = null;
         }
-        if (espiritu.getNightBringer() != null) {
-            this.nightBringer = new NightBringerSQL(espiritu.getNightBringer());
-        } else {
-            this.nightBringer = null;
-        }
+        // El nightBringer se establecerá después en el repositorio usando la entidad real de la BD
+        // para evitar problemas de persistencia
+        this.nightBringer = null;
         this.dominados = espiritu.getDominados().stream().map(dominado -> {
             EspirituSQL espirituSQL;
             if (dominado.esAngelical()) {

@@ -62,6 +62,14 @@ public class UbicacionController {
     public ResponseEntity<List<RecuperarEspirituDTO>> espiritusEnUbicacion(@PathVariable Long id) {
         var espiritusEnUbicacion = ubicacionService.espiritusEn(id);
         var dtos = espiritusEnUbicacion.stream()
+                .filter(espiritu -> {
+                    // Filtrar espíritus con NightBringer null (datos corruptos)
+                    try {
+                        return espiritu.getNightBringer() != null;
+                    } catch (Exception e) {
+                        return false;
+                    }
+                })
                 .map(RecuperarEspirituDTO::desdeModelo)
                 .toList();
         return ResponseEntity.ok(dtos);

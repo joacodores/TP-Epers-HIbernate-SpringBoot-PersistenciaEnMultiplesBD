@@ -32,14 +32,13 @@ public class NightBringerSQL {
         this.id =  nightBringer.getId();
         this.nombre = nightBringer.getNombre();
         if(nightBringer.getEspiritus()!=null){
-            nightBringer.getEspiritus().stream().map(e -> {
+            nightBringer.getEspiritus().forEach(e -> {
                 EspirituDemoniacoSQL espirituSQL = new EspirituDemoniacoSQL(e.getId(), e.getNombre());
                 espirituSQL.setNivelDeConexion(e.getNivelDeConexion());
                 UbicacionSQL ubicacion = new CementerioSQL(e.getUbicacion());
                 espirituSQL.setUbicacion(ubicacion);
                 espirituSQL.setNightBringer(this);
                 espiritus.add(espirituSQL);
-                return espirituSQL;
             });
         }
 

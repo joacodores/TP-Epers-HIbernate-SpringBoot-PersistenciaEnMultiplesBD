@@ -31,6 +31,10 @@ public class UbicacionServiceImpl implements UbicacionService {
         this.mediumRepository = mediumRepository;
     }
 
+    private void purgarEspiritusCorruptos() {
+        espirituRepository.eliminarEspiritusSinNightBringer();
+    }
+
     @Override
     @CacheEvict(value= "ubicaciones", allEntries = true)
     public Ubicacion crear(Ubicacion ubicacion) {
@@ -40,6 +44,7 @@ public class UbicacionServiceImpl implements UbicacionService {
     @Override
     @Cacheable(value="ubicaciones", key="#p0")
     public Optional<Ubicacion> recuperar(Long ubicacionId) {
+        purgarEspiritusCorruptos();
         return ubicacionRepository.recuperar(ubicacionId);
     }
 
@@ -58,6 +63,7 @@ public class UbicacionServiceImpl implements UbicacionService {
     @Override
     @Cacheable(value="ubicaciones")
     public List<Ubicacion> recuperarTodos() {
+        purgarEspiritusCorruptos();
         return ubicacionRepository.recuperarTodos();
     }
 
@@ -69,6 +75,7 @@ public class UbicacionServiceImpl implements UbicacionService {
 
     @Override
     public List<Espiritu> espiritusEn(Long ubicacionId) {
+        purgarEspiritusCorruptos();
         return espirituRepository.espiritusEn(ubicacionId);
     }
 

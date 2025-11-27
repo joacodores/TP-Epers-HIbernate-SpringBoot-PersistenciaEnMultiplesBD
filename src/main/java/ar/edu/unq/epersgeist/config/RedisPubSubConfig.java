@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
-import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 
 @Configuration
 public class RedisPubSubConfig {
@@ -14,19 +13,14 @@ public class RedisPubSubConfig {
     @Bean
     public RedisMessageListenerContainer redisContainer(
             RedisConnectionFactory connectionFactory,
-            MessageListenerAdapter listenerAdapter
+            RealtimeListener listener
     ) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory);
 
-        container.addMessageListener(listenerAdapter, new PatternTopic("ubicacion:*:espiritus"));
-        container.addMessageListener(listenerAdapter, new PatternTopic("ubicacion:*:mediums"));
+        container.addMessageListener(listener, new PatternTopic("ubicacion:*:espiritus"));
+        container.addMessageListener(listener, new PatternTopic("ubicacion:*:mediums"));
 
         return container;
-    }
-
-    @Bean
-    public MessageListenerAdapter listenerAdapter(RealtimeListener listener) {
-        return new MessageListenerAdapter(listener, "handleMessage");
     }
 }

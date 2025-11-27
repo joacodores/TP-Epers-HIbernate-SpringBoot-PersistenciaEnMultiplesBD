@@ -27,4 +27,6 @@ public interface EspirituRepository {
 
     List<ReporteSantuarioMasCorruptoProjection> obtenerReporteSantuarioMasCorrupto();
 
+    void eliminarEspiritusSinNightBringer();
+
 }

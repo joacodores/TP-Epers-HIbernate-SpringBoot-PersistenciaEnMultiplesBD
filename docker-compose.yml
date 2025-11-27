@@ -11,30 +11,7 @@ services:
     networks:
       - cache-net
 
-  app-docker:
-    build:
-      context: .
-      dockerfile: Dockerfile.dev   # <-- usa este Dockerfile para construir
-    container_name: epersgeist-app2
-    depends_on:
-      - redis
-    environment:
-      SPRING_APPLICATION_JSON: >
-        {
-          "server": { "port": 8081 },
-          "spring": {
-            "redis": {
-              "host": "redis",
-              "port": 6379
-            }
-          }
-        }
-      SPRING_PROFILES_ACTIVE: docker
-    ports:
-      - "8081:8081"
-    networks:
-      - cache-net
-
 networks:
   cache-net:
     driver: bridge
+c:\Users\nicol\AppData\Local\Packages\5319275A.WhatsAppDesktop_cv1g1gvanyjgm\TempState\192D80A88B27B3E4115E1A45A782FE1B\WhatsApp Image 2025-11-27 at 18.45.02_7ab6e175.jpg

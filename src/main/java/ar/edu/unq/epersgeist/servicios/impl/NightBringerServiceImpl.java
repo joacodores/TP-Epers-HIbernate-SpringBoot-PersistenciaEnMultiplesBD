@@ -53,6 +53,7 @@ public class NightBringerServiceImpl implements NightBringerService {
     @Override
     public Espiritu spawnearEspirituEnUbicacion(Long nightbringerId, Long ubicacionId, String nombreEspiritu) {
 
+        espirituRepository.eliminarEspiritusSinNightBringer();
         NightBringer n = nightBringerRepository.recuperar(nightbringerId);
         Optional<Ubicacion> ubicacion = ubicacionRepository.recuperar(ubicacionId);
         EspirituDemoniaco e = n.spawnearEspirituEnUbicacion(ubicacion.get(), nombreEspiritu);

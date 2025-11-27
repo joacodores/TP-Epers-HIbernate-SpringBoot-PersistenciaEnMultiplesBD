@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(error);
     }
 
-    @ExceptionHandler({UbicacionNoEncontradaException.class, EspirituNoEncontradoException.class, MediumNoEncontradoException.class})
+    @ExceptionHandler({UbicacionNoEncontradaException.class, EspirituNoEncontradoException.class, MediumNoEncontradoException.class, NightBringerNoEncontradoException.class})
     public ResponseEntity<APIError> handleNotFound(RuntimeException e) {
         return buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
     }

@@ -68,13 +68,13 @@ public class UbicacionRepositoryImpl implements UbicacionRepository {
 
     @Override
     public void actualizar(Ubicacion ubicacion) {
-        UbicacionSQL ubicacionSQL;
-        if (ubicacion.esSantuario()) {
-            ubicacionSQL = new SantuarioSQL(ubicacion);
-        } else {
-            ubicacionSQL = new CementerioSQL(ubicacion);
-        }
+        UbicacionSQL ubicacionSQL = ubicacionSQLDAO.findById(ubicacion.getId())
+                .orElseThrow(() -> new UbicacionNoEncontradaException(""));
+
+        ubicacionSQL.setNombre(ubicacion.getNombre());
+        ubicacionSQL.setEnergia(ubicacion.getEnergia());
         ubicacionSQL.setUpdatedAt(new Date());
+
         ubicacionSQLDAO.save(ubicacionSQL);
         UbicacionNeo4J ubicacionNeo = new UbicacionNeo4J(ubicacion);
         ubicacionNeo4JDAO.save(ubicacionNeo);

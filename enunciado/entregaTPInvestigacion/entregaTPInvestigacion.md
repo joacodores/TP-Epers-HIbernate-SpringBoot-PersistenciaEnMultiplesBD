@@ -1,8 +1,8 @@
 # TP Investigación - Redis
 
-## Registro oficial de 'Fellowship of the String'
+# Registro oficial de 'Fellowship of the String'
 
-# -- 2025-11-29 16:00hs --
+### -- 2025-11-29 16:00hs --
 
 Durante décadas, un extraño período de paz se extendió sobre la región. Ninguna aparición, ningún susurro sobrenatural, ningún rastro de espíritus. El silencio fue tan profundo que muchos llegaron a creer que la oscuridad había desaparecido para siempre.
 
@@ -16,7 +16,7 @@ Pero la oscuridad nunca queda sin respuesta. La leyenda cuenta que surgieron ser
 El enfrentamiento entre luz y oscuridad culminó, dicen, con el triunfo de los LightBringers. Lo que hoy escuchamos es una simple leyenda…
 O no...?.
 
-# Volviendo al presente
+## Volviendo al presente
 
 Impulsados por los rumores sobre el oscuro pasado del terreno donde hoy yace lo que conocemos como UNQ, como fanaticos de la persistencia y de la resistencia ante las fuerzas oscuras y ocultistas, decidimos investigar por nuestra cuenta.
 
@@ -29,7 +29,7 @@ Y desde las sombras han conspirado durante siglos, esperando la oportunidad de r
 Interesados en el enorme potencial energético del terreno universitario, comenzaron nuevamente a comunicarse con los espíritus…
 Y actualmente están invocando entidades en diferentes zonas de la universidad, debilitando los sellos que alguna vez mantuvieron al Nether bajo control.
 
-# Nuestra misión
+## Nuestra misión
 
 Ante esta amenaza, nos pusimos manos a la obra. Desarrollamos una interfaz capaz de visualizar en tiempo real la presencia de espíritus dentro del campus de la UNQ.
 

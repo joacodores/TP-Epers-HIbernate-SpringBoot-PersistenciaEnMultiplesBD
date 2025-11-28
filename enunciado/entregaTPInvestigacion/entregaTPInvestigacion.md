@@ -112,7 +112,7 @@ El backend, por su parte, escucha el canal de Redis Pub/Sub, y cada mensaje reci
 ## Se pide:
 
 - Implementar las nuevas interfaces
-- Actualizar los servicios MediumService y EspirituService
+- Actualizar e implementar los servicios dados.
 - Crear una clase RedisConfig que gestione las conexiones con Redis, incluyendo la serialización y deserialización de datos en formato JSON
-- Crear una clase RedisPubSubConfig que configure el sistema de publicación/suscripción (Pub/Sub) de Redis, registrando listeners para manejar mensajes publicados en los canales ubicacion:_:espiritus y ubicacion:_:mediums
+- Crear una clase RedisPubSubConfig que configure el sistema de publicación/suscripción (Pub/Sub) de Redis, registrando listeners para manejar mensajes publicados en los canales ubicacion:_:espiritus y ubicacion:_
 - Creen test unitarios para cada unidad de código entregada que prueben todas las funcionalidades pedidas, con casos favorables y desfavorables.

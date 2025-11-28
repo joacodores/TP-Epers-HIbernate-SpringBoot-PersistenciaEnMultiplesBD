@@ -79,7 +79,8 @@ Ver espíritus por ubicación, en tiempo real.
 
 Seleccionar ubicaciones y spawnear espiritus desde la UI.
 
-##Publisher y Listener (Pub/Sub)
+## Publisher y Listener (Pub/Sub)
+
 Se utiliza Redis Pub/Sub para notificar:
 
 Nuevos espíritus invocados.
@@ -96,7 +97,7 @@ Publisher:
 Listener:
 `public void onMessage(Message message, byte[] pattern)`
 
-##SseEmitterService (Server-Sent Events)
+## SseEmitterService (Server-Sent Events)
 
 La aplicación expone un endpoint SSE que permite al frontend suscribirse a actualizaciones en tiempo real.
 Mediante este canal, el backend envía eventos cuando se invoca un nuevo espíritu en alguna ubicación.

@@ -39,12 +39,6 @@ Para esto elaboramos una pocion magica, "poti" para los que saben, una fuente de
 
 Por cada movimiento, como bien sabran, como medium consumimos esta mana. Si el mana se agota, podriamos entrar en un terreno desconocido, y las consecuencias podrían ser irreversibles…
 
-## Funcionalidad
-
-Los espiritus demoniacos ahora pueden poseer a los mediums.
-
-Los mediums puede ilumnar a los espiritus demoniacos.
-
 ## NightBringer
 
 Un Night Bringer se encarga de spawnear espiritus demoniacos, de ellos se sabe lo siguiente.
@@ -52,12 +46,9 @@ Un Night Bringer se encarga de spawnear espiritus demoniacos, de ellos se sabe l
 - Su nombre que debe ser unico.
 - Los espiritus que spawneó.
 
-## LightBringer
+## Funcionalidad
 
-un Light Bringer es el encargado de iluminar a los mediums poseidos por un espiritu, de ellos se sabe lo siguiente.
-
-- Su nombre que debe ser unico.
-- La fuerza de ataque con la cual "ilumina" al medium poseido.
+Los Nightbringer crean espiritus en una ubicacion dada.
 
 ## Servicios
 
@@ -67,21 +58,55 @@ Se debe agregar los siguientes servicios
 
 - Métodos CRUD + `recuperarTodos`.
 
-- `Espiritu spawnearEspirituEnUbicacion(Long nightbringerId, Long ubicacionId, String nombreEspiritu);` - El night bringer spawnea un espiritu con ese nombre en la ubicación dada.
+- `Espiritu spawnearEspirituEnUbicacion(Long nightbringerId, Long ubicacionId, String nombreEspiritu);`
+- El night bringer crea un espiritu con ese nombre y lo spawnea en una coordenada random dentro de las coordenadas de la ubicacion dada.
 
-## LightBringerService
+## CacheL2
 
-- Métodos CRUD + `recuperarTodos`.
+Se incorpora Redis como caché L2 para acelerar:
 
-Y se debe actualizar los siguientes servicios
+Recuperación de Ubicaciones.
 
-## MediumService
+Recuperación de NightBringers.
 
-- adentrarseAlNether(Long mediumId) El medium se adentra al Nether
+## Interfaz Gráfica
 
-## EspirituService
+Se desarrolló una interfaz visual que permite:
 
-- poseerMedium(Long espirituId, Long mediumId) El espiritu posee al medium
+Visualizar las zonas de la UNQ en un mapa.
+
+Ver espíritus por ubicación, en tiempo real.
+
+Seleccionar ubicaciones y spawnear espiritus desde la UI.
+
+##Publisher y Listener (Pub/Sub)
+Se utiliza Redis Pub/Sub para notificar:
+
+Nuevos espíritus invocados.
+
+Cambio de estado de ubicaciones.
+
+Eventos de actividad de NightBringers.
+
+Estos eventos son consumidos por los servicios del backend para actualizar vistas internas y sincronizar la información del dominio.
+
+Publisher:
+`public void publishEspiritu(Long ubicacionId, Espiritu data)`
+
+Listener:
+`public void onMessage(Message message, byte[] pattern)`
+
+##SseEmitterService (Server-Sent Events)
+
+La aplicación expone un endpoint SSE que permite al frontend suscribirse a actualizaciones en tiempo real.
+Mediante este canal, el backend envía eventos cuando se invoca un nuevo espíritu en alguna ubicación.
+
+El frontend mantiene una conexión abierta y recibe estos eventos automáticamente.
+El backend, por su parte, escucha el canal de Redis Pub/Sub, y cada mensaje recibido se retransmite a los clientes conectados vía SSE.
+
+`public SseEmitter subscribe(String ubicacionId)`
+
+`public void send(String ubicacionId, Object data)`
 
 ## Se pide:
 

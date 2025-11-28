@@ -44,7 +44,7 @@ public class RealtimeListener implements MessageListener {
         }
     }
 
-    // Mantener este método por si se usa en otro lugar
+
     public void handleMessage(Object mensaje, String canal) {
         try {
             logger.info("Mensaje Redis recibido en canal (método handleMessage): {}", canal);

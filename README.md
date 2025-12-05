@@ -1,4 +1,16 @@
 
+## Entregas
+- [Entrega 1 - JDBC](enunciado/entrega1/entrega1.md)
+- [Entrega 2 - ORM - Hibernate](enunciado/entrega2/entrega2.md)
+- [Entrega 3 - ORM - Spring](enunciado/entrega3/entrega3.md)
+- [Entrega 4 - NoSQL - Neo4j - Spring](/enunciado/entrega4/entrega4.md)
+- [Entrega 5 - NoSQL - MongoDB - Spring](/enunciado/entrega5/entrega5.md)
+
+## Ultima Integracion - Entrega 6 - RedisCache
+
+Trabajo de Investigacion de la base de datos Redis, donde se deployo a servidores para su muestra, y se desarrollo un frontend con una interfaz grafica tipo mapa de la Universidad de Quilmes, donde todos los usuarios, pueden spawnear espiritus al mismo tiempo, utilizando Redis Pub/Sub + SSE.
+
+## Enunciado inicial dado por la UNQ
 > _Otro viernes en la facu, ¿nada raro, no?_
 > _Cinco personas de informática y un ritual sin razón._
 >
@@ -15,17 +27,4 @@ Miradas desconcertadas volaron entre ellos durante unos minutos, pero todos comp
   <img src="enunciado/epersgeist.png"/>
 </p>
 
-## Entregas
-- [Entrega 1 - JDBC](enunciado/entrega1/entrega1.md)
-- [Entrega 2 - ORM - Hibernate](enunciado/entrega2/entrega2.md)
-- [Entrega 3 - ORM - Spring](enunciado/entrega3/entrega3.md)
-- [Entrega 4 - NoSQL - Neo4j - Spring](/enunciado/entrega4/entrega4.md)
-- [Entrega 5 - NoSQL - MongoDB - Spring](/enunciado/entrega5/entrega5.md)
 
-## Consideraciones
-- Se entregará utilizando git. El grupo deberá subir el código del TP a github, hacer un tag y notificarnos de dicho tag para que podamos corregirlo. [Acá](https://sites.google.com/site/estrategiasdepersistencia/material/entregando-con-git) tienen un breve tutorial sobre cómo hacerlo.
-- Se considerará a un TP como entregado solo cuando tenga implementada toda la funcionalidad que se pide para la entrega.
-- Se evaluará no sólo que el TP cumpla con todos los requisitos, sino la calidad del mismo (buen diseño, simplicidad, buena distribución de responsabilidades, prolijidad del código, código no repetido, formalidad en la entrega, etc)
-- También se evaluará la debida implementación de GitFlow.
-- Se espera que trabajen en el TP durante las dos primeras horas de clase todos los viernes, pero eso no resta que para llegar a cumplir con los tiempos de entrega tengan que trabajar en casa. ¡Planeen conforme a ello! Un TP no entregado a tiempo es un TP reentregado. **Sólo cuentan con 3 reentregas durante la cursada.**
-- Si algo no les funciona o algo no entienden, ¡avisen antes! En el día de la entrega o el anterior ya es demasiado tarde.
